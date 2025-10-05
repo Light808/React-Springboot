@@ -6,15 +6,13 @@ const API_BASE_URL = 'http://localhost:8080/api';
 
 export async function getMemberOverview() {
   const user = getCurrentUserSync();
-  if (!user) throw new Error('Chưa đăng nhập');
+  if (!user) throw new Error('Not logged in');
 
-  // try to call API if there is
   try {
     const res = await fetch(`${API_BASE_URL}/members/${user.id}/overview`);
     if (res.ok) return await res.json();
   } catch {}
 
-  // fallback from localStorage + tickets
   let points = Number(user.rewardPoints || 0);
   try {
     const tickets = await getTicketsByUser(user.id);
@@ -26,20 +24,20 @@ export async function getMemberOverview() {
     name: user.fullName || user.username,
     tier: user.tier || 'Member',
     points,
-    promotions: [`Ưu đãi theo hạng ${user.tier || 'Member'}`]
+    promotions: [`Promotion for ${user.tier || 'Member'}`]
   };
 }
 
 export async function getMemberTransactions() {
   const user = getCurrentUserSync();
-  if (!user) throw new Error('Chưa đăng nhập');
+  if (!user) throw new Error('Not logged in');
   try {
     const res = await fetch(`${API_BASE_URL}/members/${user.id}/transactions`);
     if (res.ok) return await res.json();
   } catch {}
   try {
     const tickets = await getTicketsByUser(user.id);
-    return (tickets || []).map(t => ({ type: 'Mua vé', amount: t.price || 0, time: t.bookingTime || t.createdAt }));
+    return (tickets || []).map(t => ({ type: 'Buy ticket', amount: t.price || 0, time: t.bookingTime || t.createdAt }));
   } catch {
     return [];
   }

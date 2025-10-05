@@ -197,7 +197,7 @@ const MovieDetailPage = () => {
     );
   }
 
-  // Helper functions để xử lý các trường API khác nhau
+  // Helper functions để xử lý các trường API khác nhau 
   const getImageUrl = (movie) => {
     console.log('Movie data:', movie);
     let imageUrl = movie.posterUrl || movie.poster || movie.imageUrl || movie.image || '/default-movie.jpg';
