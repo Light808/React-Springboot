@@ -1,8 +1,11 @@
 import React from 'react';
 import { MapPin, Star, Phone, Clock } from 'lucide-react';
 import styles from './CinemaList.module.css';
+import LanguageSwitcher from "../../components/LanguageSwitcher";
+import { useTranslation } from "react-i18next";
 
 const CinemaList = ({ cinemas }) => {
+  const { t } = useTranslation();
   // Helper functions to get data with fallbacks
   const getCinemaName = (cinema) => {
     return cinema.name || cinema.cinemaName || 'Không có tên';
@@ -21,15 +24,15 @@ const CinemaList = ({ cinemas }) => {
   };
 
   const getCinemaAddress = (cinema) => {
-    return cinema.address || cinema.location || 'Không có địa chỉ';
+    return cinema.address || cinema.location || {t('Không có địa chỉ')};
   };
 
   const getCinemaPhone = (cinema) => {
-    return cinema.phone || cinema.phoneNumber || cinema.contact || 'Không có số điện thoại';
+    return cinema.phone || cinema.phoneNumber || cinema.contact || {t('Không có số điện thoại')};
   };
 
   const getCinemaHours = (cinema) => {
-    return cinema.hours || cinema.openingHours || cinema.schedule || 'Không có giờ mở cửa';
+    return cinema.hours || cinema.openingHours || cinema.schedule || {t('Không có giờ mở cửa')};
   };
 
   const getCinemaFeatures = (cinema) => {
@@ -46,11 +49,11 @@ const CinemaList = ({ cinemas }) => {
                 <img src={getCinemaLogo(cinema)} alt={getCinemaName(cinema)} />
               </div>
               <div className={`${styles['cinema-info']}`}>
-                <h3 className={`${styles['cinema-name']}`}>{getCinemaName(cinema)}</h3>
+                <h3 className={`${styles['cinema-name']}`}>{t('getCinemaName(cinema)')}</h3>
                 <div className={`${styles['cinema-rating']}`}>
                   <Star size={16} fill="#fbbf24" className={`${styles['rating-icon']}`}/> 
-                  <span>{getCinemaRating(cinema)}</span>
-                  <span className={`${styles['rating-count']}`}>({getReviewCount(cinema)} đánh giá)</span>
+                  <span>{t('getCinemaRating(cinema)')}</span>
+                  <span className={`${styles['rating-count']}`}>({getReviewCount(cinema)} {t('đánh giá')})</span>
                 </div>
               </div>
             </div>
@@ -58,12 +61,12 @@ const CinemaList = ({ cinemas }) => {
             <div className={`${styles['cinema-card-body']}`}>
               <div className={`${styles['cinema-detail']}`}>
                 <MapPin size={16} className={`${styles['detail-icon']}`} />
-                <span className={`${styles['detail-text']}`}>{getCinemaAddress(cinema)}</span>
+                <span className={`${styles['detail-text']}`}>{t('getCinemaAddress(cinema)')}</span>
               </div>
               
               <div className={`${styles['cinema-detail']}`}>
                 <Phone size={16} className={`${styles['detail-icon']}`} />
-                <span className={`${styles['detail-text']}`}>{getCinemaPhone(cinema)}</span>
+                <span className={`${styles['detail-text']}`}>{t('getCinemaPhone(cinema)')}</span>
               </div>
               
               <div className={`${styles['cinema-detail']}`}>
@@ -87,10 +90,10 @@ const CinemaList = ({ cinemas }) => {
             
             <div className={`${styles['cinema-card-footer']}`}>
               <button className={`${styles['view-schedule-btn']}`}>
-                Xem lịch chiếu
+                {t('Xem lịch chiếu')}
               </button>
               <button className={`${styles['book-ticket-btn']}`}>
-                Đặt vé
+                {t('Đặt vé')}
               </button>
             </div>
           </div>
