@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { Heart, Star, Play, ThumbsUp, Calendar, Clock, User, Share, X } from 'lucide-react';
@@ -11,13 +10,12 @@ import ReviewForm from '../../components/ReviewForm/ReviewForm';
 import ShowtimeSchedule from '../../components/ShowtimeSchedule/ShowtimeSchedule';
 import styles from './MovieDetailPage.module.css';
 import newsStyles from './NewsSection.module.css';
-import { useTranslation } from 'react-i18next';
 
 const MovieDetailPage = () => {
-  const { t } = useTranslation();
   const { movieId } = useParams();
   const location = useLocation();
   const [activeTab, setActiveTab] = useState('info');
+  // eslint-disable-next-line no-unused-vars
   const [selectedCity, setSelectedCity] = useState('Tp. Hồ Chí Minh');
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -34,15 +32,11 @@ const MovieDetailPage = () => {
   const [newsError, setNewsError] = useState(null);
   const [selectedNewsCategory, setSelectedNewsCategory] = useState('all');
   const [liked, setLiked] = useState(() => {
-
-    // check if the movie has been liked
+    // Check if the movie has been liked
     if (typeof window !== 'undefined' && movieId) {
       return localStorage.getItem(`liked_movie_${movieId}`) === 'true';
     }
     return false;
-  });
-  const [likeCount, setLikeCount] = useState(() => {
-    return movie && movie.likes ? movie.likes : 0;
   });
   const reviewFormRef = React.useRef(null);
 
@@ -62,7 +56,7 @@ const MovieDetailPage = () => {
     return `${Math.floor(diffInDays / 30)} tháng trước`;
   };
 
-  // fetch community reviews from API
+  // Fetch community reviews from API
   const fetchCommunityReviews = async () => {
     if (!movieId) return;
     
@@ -71,7 +65,7 @@ const MovieDetailPage = () => {
       setReviewsError(null);
       const reviews = await getReviewsByMovieId(movieId);
       
-      // transform reviews to match frontend format
+      // Transform reviews to match frontend format
       const transformedReviews = reviews.map(review => ({
         id: review.id,
         userName: review.userName,
@@ -92,7 +86,7 @@ const MovieDetailPage = () => {
     }
   };
 
-  // fetch news articles
+  // Fetch news articles
   const fetchNewsArticles = async (category = 'all') => {
     try {
       setNewsLoading(true);
@@ -100,7 +94,7 @@ const MovieDetailPage = () => {
       
       let news;
       if (category === 'all') {
-        news = await getAllNews(0, 20); 
+        news = await getAllNews(0, 20); // Get first 20 news articles
       } else {
         news = await getNewsByCategory(category);
       }
@@ -165,6 +159,7 @@ const MovieDetailPage = () => {
     fetchRelatedArticles();
     fetchCommunityReviews();
     fetchNewsArticles();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [movieId]);
 
   const tabs = [
@@ -197,11 +192,12 @@ const MovieDetailPage = () => {
     );
   }
 
-  // Helper functions để xử lý các trường API khác nhau 
+  // Helper functions để xử lý các trường API khác nhau
   const getImageUrl = (movie) => {
     console.log('Movie data:', movie);
     let imageUrl = movie.posterUrl || movie.poster || movie.imageUrl || movie.image || '/default-movie.jpg';
-
+    
+    // Xử lý CORS cho external URLs
     if (imageUrl.startsWith('http') && !imageUrl.includes('localhost')) {
       console.log('External image URL detected:', imageUrl);
     }
@@ -211,7 +207,7 @@ const MovieDetailPage = () => {
   };
 
   const getTitle = (movie) => {
-    return movie.title || movie.name || movie.movieName || t('noTitle');
+    return movie.title || movie.name || movie.movieName || 'Không có tiêu đề';
   };
 
   const getEnglishTitle = (movie) => {
@@ -263,6 +259,11 @@ const MovieDetailPage = () => {
     }
     return movie.director || 'Không có thông tin';
   };
+
+
+
+
+
   // Handle like review
   const handleLikeReview = async (reviewId) => {
     try {
@@ -283,28 +284,29 @@ const MovieDetailPage = () => {
     }
   };
 
-  // handle like movie
+  // Xử lý nút Thích
   const handleLikeMovie = () => {
     if (!liked) {
       setLiked(true);
-      setLikeCount((prev) => prev + 1);
       if (typeof window !== 'undefined' && movieId) {
         localStorage.setItem(`liked_movie_${movieId}`, 'true');
       }
-      // if has API, call API like here
+      // Nếu có API, gọi API like ở đây
     } else {
       setLiked(false);
-      setLikeCount((prev) => (prev > 0 ? prev - 1 : 0));
       if (typeof window !== 'undefined' && movieId) {
         localStorage.setItem(`liked_movie_${movieId}`, 'false');
       }
+      // Nếu có API, gọi API unlike ở đây
     }
   };
-  // handle rate movie
+  // Xử lý nút Đánh giá
   const handleRateMovie = () => {
+    // Cuộn xuống form đánh giá
     if (reviewFormRef.current) {
       reviewFormRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     } else {
+      // Nếu không tìm thấy ref, chuyển sang tab reviews
       setActiveTab('reviews');
       setTimeout(() => {
         if (reviewFormRef.current) {
@@ -313,7 +315,7 @@ const MovieDetailPage = () => {
       }, 300);
     }
   };
-  // handle buy ticket
+  // Xử lý nút Mua vé
   const handleBuyTicket = () => {
     setActiveTab('booking');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -333,7 +335,7 @@ const MovieDetailPage = () => {
         />
       </div>
       
-      {/* movie header section */}
+      {/* Movie Header Section */}
       <div className={`${styles['movie-header']}`}>
         <div className={`${styles['movie-header-content']}`}>
           <div className={`${styles['movie-info']}`}>
@@ -351,7 +353,6 @@ const MovieDetailPage = () => {
                 >
                   <Heart size={16} fill={liked ? 'red' : 'none'} color={liked ? 'red' : undefined} />
                   <span>{liked ? 'Đã thích' : 'Thích'}</span>
-                  <span style={{ marginLeft: 4, fontWeight: 500 }}>{likeCount > 0 ? likeCount : ''}</span>
                 </button>
                 <button 
                   className={`${styles['action-btn']} ${styles['rate-btn']}`}
@@ -447,7 +448,7 @@ const MovieDetailPage = () => {
         </div>
       </div>
 
-      {/* tab content */}
+      {/* Tab Content */}
       <div className={`${styles['tab-content']}`}>
         {activeTab === 'showtimes' && (
           <ShowtimeSchedule 
@@ -497,7 +498,7 @@ const MovieDetailPage = () => {
                 </div>
               </div>
 
-              {/* related articles */}
+              {/* Related articles */}
               <div className={`${styles['related-articles']}`}>
                 <h3>Bài viết liên quan</h3>
                 {articlesLoading ? (
@@ -524,18 +525,18 @@ const MovieDetailPage = () => {
                 )}
               </div>
 
-              {/* review form */}
+              {/* Review Form */}
               <ReviewForm 
                 ref={reviewFormRef}
                 movieId={movieId} 
                 onReviewAdded={fetchCommunityReviews}
               />
 
-              {/* community reviews */}
+              {/* Community Reviews */}
               <div className={`${styles['community-section']}`}>
                 <h3>Cộng đồng</h3>
                 
-                {/* loading state */}
+                {/* Loading State */}
                 {reviewsLoading && (
                   <div className={`${styles['loading-message']}`}>
                     <div className={`${styles['loading-spinner']}`}></div>
@@ -543,7 +544,7 @@ const MovieDetailPage = () => {
                   </div>
                 )}
 
-                {/* error state */}
+                {/* Error State */}
                 {reviewsError && (
                   <div className={`${styles['error-message']}`}>
                     <p>{reviewsError}</p>
@@ -553,7 +554,7 @@ const MovieDetailPage = () => {
                   </div>
                 )}
 
-                {/* reviews grid - display max 3 reviews */}
+                {/* Reviews Grid - Hiển thị tối đa 3 đánh giá */}
                 {!reviewsLoading && !reviewsError && (
                   <div className={`${styles['reviews-grid']}`}>
                     {communityReviews.length === 0 ? (
@@ -620,13 +621,13 @@ const MovieDetailPage = () => {
                   </div>
                 )}
                 
-                {/* view more reviews */}
+                {/* Xem thêm đánh giá  */}
                 {!reviewsLoading && !reviewsError && communityReviews.length > 3 && (
                   <button 
                     className={`${styles['view-more-reviews-btn']}`}
                     onClick={() => {
                       setActiveTab('reviews');
-                      // scroll to top when switch tab
+                      // Scroll to top khi chuyển tab
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
                   >

@@ -19,6 +19,7 @@ import AdminDashboard from './Admin/pages/Admin/AdminDashboard';
 import AdminRoute from './Admin/components/Admin/AdminRoute';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { getCurrentUser, logoutUser, isAuthenticated } from './services/userService';
+import DailySpinPage from './Client/pages/DailySpinPage';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -101,6 +102,7 @@ function App() {
             <Route path="/news/:id" element={<NewsDetailPage />} />
             <Route path="/membership" element={<MembershipPage />} />
             <Route path="/egift" element={<EGiftPage />} />
+            <Route path="/game" element={<DailySpinPage />} />
             
             {/* Protected routes - chỉ cho user đã đăng nhập */}
             <Route 

@@ -7,7 +7,7 @@
     "logout": "Đăng xuất",
     "language": "Ngôn ngữ",
     "schedule": "Lịch chiếu phim",
-    "bookMovie": "Đặt vé phim chiếu rạp",
+    "bookMovie": "Các rạp chiếu",
     "searchCinema": "Tìm rạp tại",
     "loadingCinemaList": "Đang tải danh sách rạp chiếu",
     "allCities": "Tất cả thành phố",
@@ -30,7 +30,9 @@
     "review": "Đánh giá",
     "Loadinghomepage": "Đang tải trang chủ...",
     "nowShowing": "Phim đang chiếu",
-    "Welcometocinema": "Chào mừng đến với rạp chiếu HAK Cinema"
+    "Welcometocinema": "Chào mừng đến với rạp chiếu HAK Cinema",
+    "Ticketbookingplatform": "Nền tảng đặt vé xem phim đầu Việt Nam",
+    "comingSoon": "Phim sắp chiếu"
   }
   
   

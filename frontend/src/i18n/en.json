@@ -19,11 +19,13 @@
     "helloAdmin": "Hello, Admin !",
     "Total": "Total",
     "Addnewfilm": "Add news film",
-    "bookMovie": "Book Movie",
+    "bookMovie": "Cinemas",
     "viewAllNotifications": "View All Notifications",
     "review": " Review",
     "Loadinghomepage": "Loading homepage...",
     "nowShowing": "Now Showing",
-    "Welcometocinema": "Welcome to HAK Cinema"
+    "Welcometocinema": "Welcome to HAK Cinema",
+    "Ticketbookingplatform": "Vietnam's first movie ticket booking platform",
+    "comingSoon": "Coming soon"
   }
   

@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Search, MapPin, ChevronDown, User, LogOut, Settings, Ticket, Building2, Shield, Bell } from 'lucide-react';
+import { Search, MapPin, ChevronDown, User, LogOut, Settings, Ticket, CheckCircle, Shield, Bell } from 'lucide-react';
 import { getAllCinemas as getCinemas } from '../../../services/cinemaService';
 import { logoutUser } from '../../../services/userService';
 import { searchMovies } from '../../../services/movieService';
@@ -512,14 +512,8 @@ const Header = ({ user, setUser, onLogout }) => {
     return (
       <header className="header adminHeader"> 
         <div className="header-container"> 
-          <div className="header-left">
-            <div className="logo">
-              <img src="/logo.png" alt="CGV HAK" />
-            </div>
-          </div>
-
-          <div className="header-right admin-header-right">
-          <LanguageSwitcher />
+          <div className="header-left"></div>
+          <div className="header-right admin-header-right">          
             {isAdminLoggedIn ? (
               <div className="admin-user-info">
                 <span className="admin-welcome">{t('helloAdmin')}</span>
@@ -534,8 +528,10 @@ const Header = ({ user, setUser, onLogout }) => {
                 {t('loginAdmin')}
               </button>
             )}
+            <LanguageSwitcher />
           </div>
         </div>
+        
       </header>
     );
   }
@@ -893,6 +889,10 @@ const Header = ({ user, setUser, onLogout }) => {
                     <Link to="/tickets" className="user-menu-item" onClick={() => setIsUserDropdownOpen(false)}>
                       <Ticket size={16} />
                       <span>{t('myTickets')}</span>
+                    </Link>
+                    <Link to="/game" className="user-menu-item" onClick={() => setIsUserDropdownOpen(false)}>
+                    <CheckCircle size={16} />
+                      <span>Check-in</span>
                     </Link>
                     <button className="user-menu-item" onClick={() => {
                       setIsUserDropdownOpen(false);
