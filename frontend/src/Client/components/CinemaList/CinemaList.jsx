@@ -1,12 +1,15 @@
 import React from 'react';
 import { MapPin, Star, Phone, Clock } from 'lucide-react';
 import styles from './CinemaList.module.css';
+import { useTranslation } from "react-i18next";
 
 const CinemaList = ({ cinemas }) => {
   // Helper functions to get data with fallbacks
   const getCinemaName = (cinema) => {
     return cinema.name || cinema.cinemaName || 'Không có tên';
   };
+  const { t } = useTranslation();
+  const { i18n } =useTranslation();
 
   const getCinemaLogo = (cinema) => {
     return cinema.logo || cinema.logoUrl || cinema.image || 'https://via.placeholder.com/60x60?text=Logo';
@@ -21,15 +24,15 @@ const CinemaList = ({ cinemas }) => {
   };
 
   const getCinemaAddress = (cinema) => {
-    return cinema.address || cinema.location || 'Không có địa chỉ';
+    return cinema.address || cinema.location || {t('Không có địa chỉ')};
   };
 
   const getCinemaPhone = (cinema) => {
-    return cinema.phone || cinema.phoneNumber || cinema.contact || 'Không có số điện thoại';
+    return cinema.phone || cinema.phoneNumber || cinema.contact || {t('Không có số điện thoại')};
   };
 
   const getCinemaHours = (cinema) => {
-    return cinema.hours || cinema.openingHours || cinema.schedule || 'Không có giờ mở cửa';
+    return cinema.hours || cinema.openingHours || cinema.schedule || {t('Không có giờ mở cửa')};
   };
 
   const getCinemaFeatures = (cinema) => {
@@ -87,10 +90,10 @@ const CinemaList = ({ cinemas }) => {
             
             <div className={`${styles['cinema-card-footer']}`}>
               <button className={`${styles['view-schedule-btn']}`}>
-                Xem lịch chiếu
+                {t('Xem lịch chiếu')}
               </button>
               <button className={`${styles['book-ticket-btn']}`}>
-                Đặt vé
+                {t('Đặt vé')}
               </button>
             </div>
           </div>
