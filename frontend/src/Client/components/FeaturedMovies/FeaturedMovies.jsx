@@ -1,8 +1,9 @@
 import React from 'react';
 import MovieCard from '../MovieCard/MovieCard';
 import styles from './FeaturedMovies.module.css';
+import { useTranslation } from "react-i18next";
 
-const FeaturedMovies = ({ movies, title = "Phim đang chiếu", subtitle = "Khám phá những bộ phim hay nhất" }) => {
+const FeaturedMovies = ({ movies, title = {t("Phim đang chiếu")}, subtitle = {t("Khám phá những bộ phim hay nhất")} }) => {
   if (!movies || movies.length === 0) {
     return (
       <section className={`${styles['featured-movies']}`}>
@@ -12,12 +13,14 @@ const FeaturedMovies = ({ movies, title = "Phim đang chiếu", subtitle = "Khá
             <p>{subtitle}</p>
           </div>
           <div className={`${styles['no-movies']}`}>
-            <p>Không có phim nào để hiển thị</p>
+            <p>{t('Không có phim nào để hiển thị')}</p>
           </div>
         </div>
       </section>
     );
   }
+  const { t } = useTranslation();
+  const { i18n } =useTranslation();
 
   return (
     <section className={`${styles['featured-movies']}`}>
