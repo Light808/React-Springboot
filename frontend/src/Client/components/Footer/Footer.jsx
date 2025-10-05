@@ -12,23 +12,23 @@ const Footer = () => {
           </div>
           
           <div className={`company-info`}>
-            <h3 className={`company-name`}>CÔNG TY TNHH HAK</h3>
+            <h3 className={`company-name`}> {t('CÔNG TY TNHH HAK')}</h3>
             
             <div className={`company-details`}>
-              <p><strong>SỐ ĐKKD:</strong> 0315367026</p>
-              <p><strong>Nơi cấp:</strong> Sở kế hoạch và đầu tư Tp. Hồ Chí Minh</p>
-              <p><strong>Đăng ký lần đầu ngày:</strong> 01/09/2025</p>
-              <p><strong>Địa chỉ:</strong> 146A Nguyễn Văn Quá, P.Đông Hưng Thuận, Q.12, Tp. Hồ Chí Minh</p>
+              <p><strong>{t('SỐ ĐKKD:')}</strong> 0315367026</p>
+              <p><strong>{t('Nơi cấp:')}</strong> Sở kế hoạch và đầu tư Tp. Hồ Chí Minh</p>
+              <p><strong>{t('Đăng ký lần đầu ngày:')}</strong> 01/09/2025</p>
+              <p><strong>{t('Địa chỉ:')}</strong> 146A Nguyễn Văn Quá, P.Đông Hưng Thuận, Q.12, Tp. Hồ Chí Minh</p>
             </div>
             
             <div className={`footer-links`}>
-              <Link to="/about">Về chúng tôi</Link>
+              <Link to="/about"> {t('Về chúng tôi')}</Link>
               <span> - </span>
-              <Link to="/privacy">Chính sách bảo mật</Link>
+              <Link to="/privacy"> {t('Chính sách bảo mật')}</Link>
               <span> - </span>
-              <Link to="/support">Hỗ trợ</Link>
+              <Link to="/support">{t('Hỗ trợ')}</Link>
               <span> - </span>
-              <Link to="/contact">Liên hệ</Link>
+              <Link to="/contact">{t('Liên hệ')}</Link>
               <span> - </span>
               <span className={`version`}>v8.1</span>
             </div>
@@ -37,7 +37,7 @@ const Footer = () => {
 
         {/* Right Section - Partners */}
         <div className={`partners-section`}>
-          <h3 className={`partners-title`}>ĐỐI TÁC</h3>
+          <h3 className={`partners-title`}>{t('ĐỐI TÁC')}</h3>
           
           <div className={`partners-grid`}>
             <div className={`partners-row`}>
