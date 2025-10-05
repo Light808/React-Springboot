@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-empty */
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -11,9 +13,13 @@ import LoginModal from '../LoginModal/LoginModal';
 import UserProfile from '../UserProfile/UserProfile';
 import UserSettingsModal from '../UserProfile/UserSettingsModal';
 import './Header.css';
+import LanguageSwitcher from "../../components/LanguageSwitcher";
+import { useTranslation } from 'react-i18next';
+
 
 const Header = ({ user, setUser, onLogout }) => {
   const location = useLocation();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [isCinemaDropdownOpen, setIsCinemaDropdownOpen] = useState(false);
@@ -41,13 +47,13 @@ const Header = ({ user, setUser, onLogout }) => {
     cinemas.forEach(c => { if (c.city) set.add(c.city); });
     return Array.from(set).sort();
   }, [cinemas]);
-  
+
   const dropdownRef = useRef(null);
   const userDropdownRef = useRef(null);
   const searchRef = useRef(null);
   const notificationRef = useRef(null);
 
-  // Kiểm tra xem có đang ở admin mode không
+  // Check if admin mode
   const isAdminMode = location.pathname.startsWith('/admin');
   const adminToken = localStorage.getItem('adminToken');
   const isAdminLoggedIn = !!adminToken;
@@ -130,7 +136,6 @@ const Header = ({ user, setUser, onLogout }) => {
       const data = await getCinemas();
       setCinemas(data);
       let savedCity = null;
-      // eslint-disable-next-line no-empty
       try { savedCity = localStorage.getItem('selectedCity'); } catch {}
       const hasSaved = savedCity !== null; 
       const initialCity = hasSaved ? savedCity : selectedCity;
@@ -139,7 +144,7 @@ const Header = ({ user, setUser, onLogout }) => {
       }
       filterCinemas(data, initialCity, cinemaSearchQuery);
     } catch (err) {
-      setError('Không thể tải danh sách rạp chiếu');
+      setError('cannot load cinema list');
       console.error('Error fetching cinemas:', err);
     } finally {
       setLoading(false);
@@ -183,7 +188,6 @@ const Header = ({ user, setUser, onLogout }) => {
   const handleCityChange = (newCity) => {
     setSelectedCity(newCity);
     filterCinemas(cinemas, newCity, cinemaSearchQuery);
-    // eslint-disable-next-line no-empty
     try { localStorage.setItem('selectedCity', newCity); } catch {}
   };
 
@@ -329,12 +333,10 @@ const Header = ({ user, setUser, onLogout }) => {
     }
   };
 
-  // Notification handlers
-  // eslint-disable-next-line no-unused-vars
+  // Notification handlers  
   const handleMarkAsRead = async (notificationId) => {
     console.log('handleMarkAsRead called with ID:', notificationId);
     try {
-      // eslint-disable-next-line no-unused-vars
       const result = await markNotificationAsRead(notificationId);
       setNotifications(prev => 
         prev.map(notif => 
@@ -434,7 +436,6 @@ const Header = ({ user, setUser, onLogout }) => {
   };
 
   // Handle admin logout
-  // eslint-disable-next-line no-unused-vars
   const handleAdminLogout = () => {
     localStorage.removeItem('adminToken');
     localStorage.removeItem('adminUser');
@@ -506,7 +507,7 @@ const Header = ({ user, setUser, onLogout }) => {
     console.log('Avatar updated from profile:', updatedUser.customAvatar ? 'Custom image' : 'Initials');
   };
 
-  // Nếu đang ở admin mode, hiển thị header đơn giản
+  // Display admin header
   if (isAdminMode) {
     return (
       <header className="header adminHeader"> 
@@ -518,18 +519,19 @@ const Header = ({ user, setUser, onLogout }) => {
           </div>
 
           <div className="header-right admin-header-right">
+          <LanguageSwitcher />
             {isAdminLoggedIn ? (
               <div className="admin-user-info">
-                <span className="admin-welcome">Xin chào, Admin!</span>
+                <span className="admin-welcome">{t('helloAdmin')}</span>
               </div>
             ) : (
               <button 
                 className="admin-login-btn"
                 onClick={() => setIsLoginModalOpen(true)}
-                title="Đăng nhập Admin"
+                title={t('loginAdmin')}
               >
                 <Shield size={16} />
-                Đăng nhập Admin
+                {t('loginAdmin')}
               </button>
             )}
           </div>
@@ -555,7 +557,7 @@ const Header = ({ user, setUser, onLogout }) => {
                 <Search size={18} className="search-icon" />
                 <input
                   type="text"
-                  placeholder="Tìm kiếm phim..."
+                  placeholder={t('searchMovies')}
                   value={searchQuery}
                   onChange={handleSearchInputChange}
                   className="search-input"
@@ -613,7 +615,7 @@ const Header = ({ user, setUser, onLogout }) => {
                   </div>
                 ) : (
                   <div className="search-no-results">
-                    <p>Không tìm thấy phim nào</p>
+                    <p>{t('noMoviesFound')}</p>
                   </div>
                 )}
               </div>
@@ -622,15 +624,15 @@ const Header = ({ user, setUser, onLogout }) => {
         </div>
 
         <nav className="header-nav">
-          <Link to="/" className="nav-link">Lịch chiếu phim</Link>
-          <Link to="/cinemas" className="nav-link">Hệ thống rạp</Link>
+          <Link to="/" className="nav-link">{t('schedule')}</Link>
+          <Link to="/cinemas" className="nav-link">{t('cinemas-system')}</Link>
           
           <div className="cinema-dropdown" ref={dropdownRef}>
             <button 
               className="nav-link cinema-dropdown-btn"
               onClick={() => setIsCinemaDropdownOpen(!isCinemaDropdownOpen)}
             >
-              Rạp chiếu
+              {t('cinemas')}
               <ChevronDown size={16} />
             </button>
             {isCinemaDropdownOpen && (
@@ -639,11 +641,11 @@ const Header = ({ user, setUser, onLogout }) => {
                 <div className="cinema-dropdown-content">
                 <div className="cinema-search-section">
                   <div className="cinema-search-header">
-                    <h3>Đặt vé phim chiếu rạp</h3>
+                    <h3>{t('bookMovie')}</h3>
                     <div className="cinema-search-bar">
                       <input 
                         type="text" 
-                        placeholder="Tìm rạp tại"
+                        placeholder={t('searchCinema')}
                         className="cinema-search-input"
                         value={cinemaSearchQuery}
                         onChange={(e) => handleCinemaSearch(e.target.value)}
@@ -655,7 +657,7 @@ const Header = ({ user, setUser, onLogout }) => {
                           onChange={(e) => handleCityChange(e.target.value)}
                           className="city-select"
                         >
-                          <option value="">Tất cả thành phố</option>
+                          <option value="">{t('allCities')}</option>
                           {cityOptions.length === 0 ? null : (
                             cityOptions.map(city => (
                               <option key={city} value={city}>{city}</option>
@@ -667,12 +669,12 @@ const Header = ({ user, setUser, onLogout }) => {
                   </div>                  
                   <div className="cinema-list">
                     {loading ? (
-                      <div className="loading-message">Đang tải danh sách rạp chiếu...</div>
+                      <div className="loading-message">{t('loadingCinemaList')}</div>
                     ) : error ? (
                       <div className="error-message">{error}</div>
                     ) : filteredCinemas.length === 0 ? (
                       <div className="no-cinemas-message">
-                        {cinemaSearchQuery ? 'Không tìm thấy rạp chiếu phù hợp' : 'Không có rạp chiếu nào trong thành phố này'}
+                        {cinemaSearchQuery ? t('noCinemasFound') : t('noCinemasInCity')}
                       </div>
                     ) : (
                       filteredCinemas.map(cinema => {
@@ -708,9 +710,9 @@ const Header = ({ user, setUser, onLogout }) => {
                             <div className="cinema-info">
                               <div className="cinema-name-row">
                                 <h4 className="cinema-name">
-                                  {cinema.name || cinema.cinemaName || 'Tên rạp không xác định'}
+                                  {cinema.name || cinema.cinemaName || t('cinemaNameNotFound')}
                                 </h4>
-                                <span className="status-badge">{cinema.status === 'ACTIVE' ? 'Bán vé' : (cinema.status || 'Bán vé')}</span>
+                                <span className="status-badge">{cinema.status === 'ACTIVE' ? t('sellTickets') : (cinema.status || t('sellTickets'))}</span>
                               </div>
                               <p className="cinema-address">{cinema.address}</p>
                             </div>
@@ -724,11 +726,12 @@ const Header = ({ user, setUser, onLogout }) => {
               </>
             )}
           </div>
-          <Link to="/news" className="nav-link">Tin tức</Link>
-          <Link to="/tickets" className="nav-link">Vé của tôi</Link>
+          <Link to="/news" className="nav-link">{t('news')}</Link>
+          <Link to="/tickets" className="nav-link">{t('myTickets')}</Link>
         </nav>
 
         <div className="header-right">
+
           {user ? (
             <>
               {/* Notification Dropdown */}
@@ -736,7 +739,7 @@ const Header = ({ user, setUser, onLogout }) => {
                 <button 
                   className="notification-btn"
                   onClick={() => setShowNotifications(!showNotifications)}
-                  title="Thông báo"
+                  title="{t('notifications')}" 
                 >
                   <Bell size={20} />
                   {unreadNotificationCount > 0 && (
@@ -747,7 +750,7 @@ const Header = ({ user, setUser, onLogout }) => {
                 {showNotifications && (
                   <div className="notification-dropdown-content">
                     <div className="notification-header">
-                      <h3>Thông báo</h3>
+                      <h3>{t('notifications')}</h3>
                       {(() => {
                         const hasUnread = notifications.length > 0 && notifications.some(notif => 
                           notif.isRead === false || notif.isRead === undefined || !notif.isRead
@@ -768,7 +771,7 @@ const Header = ({ user, setUser, onLogout }) => {
                             className="mark-all-read-btn"
                             onClick={handleMarkAllAsRead}
                           >
-                            Đánh dấu tất cả đã đọc
+                            {t('markAllAsRead')}
                           </button>
                         );
                       })()}
@@ -778,12 +781,12 @@ const Header = ({ user, setUser, onLogout }) => {
                       {notificationLoading ? (
                         <div className="notification-loading">
                           <div className="loading-spinner"></div>
-                          <p>Đang tải thông báo...</p>
+                          <p>{t('loadingNotifications')}</p>
                         </div>
                       ) : notifications.length === 0 ? (
                         <div className="no-notifications">
                           <Bell size={32} />
-                          <p>Không có thông báo nào</p>
+                          <p>{t('noNotifications')}</p>
                         </div>
                       ) : (
                         notifications.slice(0, 5).map(notification => (
@@ -811,7 +814,7 @@ const Header = ({ user, setUser, onLogout }) => {
                               <button 
                                 className="delete-btn"
                                 onClick={() => handleDeleteNotification(notification.id)}
-                                title="Xóa thông báo"
+                                title="" 
                               >
                                 ✕
                               </button>
@@ -826,11 +829,10 @@ const Header = ({ user, setUser, onLogout }) => {
                         <button 
                           className="view-all-btn"
                           onClick={() => {
-                            // Có thể mở modal đầy đủ hoặc chuyển đến trang thông báo
                             setShowNotifications(false);
                           }}
                         >
-                          Xem tất cả thông báo
+                          {t('viewAllNotifications')}
                         </button>
                       </div>
                     )}
@@ -886,23 +888,23 @@ const Header = ({ user, setUser, onLogout }) => {
                       setIsUserProfileOpen(true);
                     }}>
                       <User size={16} />
-                      <span>Thông tin cá nhân</span>
+                      <span>{t('personalInformation')}</span>
                     </button>
                     <Link to="/tickets" className="user-menu-item" onClick={() => setIsUserDropdownOpen(false)}>
                       <Ticket size={16} />
-                      <span>Vé của tôi</span>
+                      <span>{t('myTickets')}</span>
                     </Link>
                     <button className="user-menu-item" onClick={() => {
                       setIsUserDropdownOpen(false);
                       setIsUserSettingsOpen(true);
                     }}>
                       <Settings size={16} />
-                      <span>Cài đặt</span>
+                      <span>{t('settings')}</span>
                     </button>
                     <hr className="user-menu-divider" />
                     <button className="user-menu-item logout-btn" onClick={handleLogout}>
                       <LogOut size={16} />
-                      <span>Đăng xuất</span>
+                      <span>{t('logout')}</span>
                     </button>
                   </div>
                 </div>
@@ -913,14 +915,14 @@ const Header = ({ user, setUser, onLogout }) => {
             <button 
               className="user-icon-btn"
               onClick={() => setIsLoginModalOpen(true)}
-              title="Đăng nhập / Đăng ký"
+              title={t('login')}
             >
               <User size={20} />
-              <span>Đăng nhập</span>
+              <span>{t('login')}</span>
             </button>
           )}
+          <LanguageSwitcher />
         </div>
-
       </div>
 
       {/* Login Modal */}
@@ -929,7 +931,6 @@ const Header = ({ user, setUser, onLogout }) => {
         onClose={() => setIsLoginModalOpen(false)}
         onLogin={handleLoginSuccess}
       />
-
     </header>
 
     {/* User Profile Popup */}
@@ -947,7 +948,6 @@ const Header = ({ user, setUser, onLogout }) => {
         onClose={() => setIsUserSettingsOpen(false)}
       />
     )}
-
     </>
   );
 };

@@ -24,7 +24,6 @@ public class Admin {
     private String role; 
     private LocalDateTime createdAt;
     private LocalDateTime lastLoginAt;
-    private String avatar;
     private String notes;
     
     public Admin() {

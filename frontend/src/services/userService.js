@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { generateAIPersonAvatar } from './avatarService';
 
 const API_BASE_URL = 'http://localhost:8080/api';
@@ -14,12 +15,12 @@ export async function registerUser(userData) {
 
     if (!res.ok) {
       if (res.status === 409) {
-        throw new Error('Tên đăng nhập hoặc email đã tồn tại');
+        throw new Error('Username or email already exists');
       }
       if (res.status === 400) {
-        throw new Error('Thông tin không hợp lệ');
+        throw new Error('Invalid information');
       }
-      throw new Error(`Đăng ký thất bại: ${res.status}`);
+      throw new Error(`Registration failed: ${res.status}`);
     }
 
     const user = await res.json();
@@ -29,12 +30,12 @@ export async function registerUser(userData) {
     
     console.log('Generated default AI avatar for user:', user.username, 'URL:', avatarUrl);
     
-    // Lưu thông tin user vào localStorage
+    // save user info to localStorage
     localStorage.setItem('currentUser', JSON.stringify(user));
     return user;
   } catch (error) {
     console.error('Registration error:', error);
-    throw new Error(error.message || 'Đăng ký thất bại. Vui lòng thử lại.');
+    throw new Error(error.message || 'Registration failed. Please try again.');
   }
 }
 
@@ -54,9 +55,9 @@ export async function loginUser({ username, password }) {
 
     if (!res.ok) {
       if (res.status === 401) {
-        throw new Error('Tên đăng nhập hoặc mật khẩu không đúng');
+        throw new Error('Username or password is incorrect');
       }
-      throw new Error(`Đăng nhập thất bại: ${res.status}`);
+      throw new Error(`Login failed: ${res.status}`);
     }
 
     const user = await res.json();
@@ -68,7 +69,7 @@ export async function loginUser({ username, password }) {
       console.log('Generated default AI avatar for login user:', user.username, 'URL:', avatarUrl);
     }
     
-    // Lưu token và user vào localStorage
+    // save token and user to localStorage
     localStorage.setItem('authToken', 'user-token-' + user.id);
     localStorage.setItem('currentUser', JSON.stringify(user));
     
@@ -83,7 +84,7 @@ export async function loginUser({ username, password }) {
     return user;
   } catch (error) {
     console.error('Login error:', error);
-    throw new Error(error.message || 'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.');
+    throw new Error(error.message || 'Login failed. Please check your information.');
   }
 }
 
@@ -100,7 +101,7 @@ export async function logoutUser() {
   }
 }
 
-// Cập nhật thời gian đăng nhập cuối
+// update last login time
 export async function updateLastLogin(userId) {
   try {
     const res = await fetch(`${API_BASE_URL}/users/${userId}/update-login`, {
@@ -111,12 +112,12 @@ export async function updateLastLogin(userId) {
     });
 
     if (!res.ok) {
-      throw new Error(`Update last login failed: ${res.status}`);
+      throw new Error(`Update last login time failed: ${res.status}`);
     }
 
     return await res.json();
   } catch (error) {
-    console.error('Update last login error:', error);
+    console.error('Update last login time error:', error);
     throw error;
   }
 }
@@ -135,12 +136,12 @@ export async function getCurrentUser() {
   }
 }
 
-// Lấy thông tin user từ database
+// get user profile from database
 export async function getUserProfile() {
   try {
     const localUser = getCurrentUserSync();
     if (!localUser || !localUser.id) {
-      throw new Error('Không có quyền truy cập');
+      throw new Error('No access');
     }
     const res = await fetch(`${API_BASE_URL}/users/profile?userId=${localUser.id}`, {
       method: 'GET',
@@ -151,9 +152,9 @@ export async function getUserProfile() {
 
     if (!res.ok) {
       if (res.status === 404) {
-        throw new Error('Không tìm thấy thông tin người dùng');
+        throw new Error('User not found');
       }
-      console.warn('API failed, using localStorage data');
+      console.warn('API failed');
       return localUser;
     }
 
@@ -167,19 +168,19 @@ export async function getUserProfile() {
       console.warn('Using localStorage data as fallback');
       return localUser;
     }
-    throw new Error(error.message || 'Lấy thông tin thất bại. Vui lòng thử lại.');
+    throw new Error(error.message || 'Get user profile failed. Please try again.');
   }
 }
 
 export async function updateUserProfile(userData) {
   try {
-    // Lấy thông tin user hiện tại
+    // get current user info
     const currentUser = getCurrentUserSync();
     if (!currentUser) {
-      throw new Error('Không tìm thấy thông tin người dùng');
+        throw new Error('User not found');
     }
 
-    // Chỉ gửi các field cần cập nhật, không gửi password
+    // only send fields to update, do not send password
     const updateData = {
       username: userData.username || currentUser.username,
       fullName: userData.fullName || currentUser.fullName,
@@ -190,7 +191,7 @@ export async function updateUserProfile(userData) {
       avatar: userData.avatar || currentUser.avatar
     };
 
-    // Cập nhật localStorage trước
+    // update localStorage before
     const updatedUser = {
       ...currentUser,
       ...updateData,
@@ -210,7 +211,6 @@ export async function updateUserProfile(userData) {
 
       if (res.ok) {
         const serverUser = await res.json();
-        // Merge với thông tin local để giữ avatarUrl và customAvatar
         const finalUser = {
           ...serverUser,
           avatarUrl: currentUser.avatarUrl,
@@ -228,7 +228,7 @@ export async function updateUserProfile(userData) {
     }
   } catch (error) {
     console.error('Update profile error:', error);
-    throw new Error(error.message || 'Cập nhật thất bại. Vui lòng thử lại.');
+    throw new Error(error.message || 'Update profile failed. Please try again.');
   }
 }
 
@@ -236,10 +236,10 @@ export async function changePassword({ currentPassword, newPassword }) {
   try {
     const currentUser = getCurrentUserSync();
     if (!currentUser) {
-      throw new Error('Không tìm thấy thông tin người dùng');
+      throw new Error('User not found');
     }
 
-    // Gọi API để đổi mật khẩu
+    // call API to change password
     const res = await fetch(`${API_BASE_URL}/users/change-password/${currentUser.id}`, {
       method: 'POST',
       headers: {
@@ -253,9 +253,9 @@ export async function changePassword({ currentPassword, newPassword }) {
 
     if (!res.ok) {
       if (res.status === 401) {
-        throw new Error('Mật khẩu hiện tại không đúng');
+        throw new Error('Current password is incorrect');
       }
-      throw new Error(`Đổi mật khẩu thất bại: ${res.status}`);
+      throw new Error(`Change password failed: ${res.status}`);
     }
 
     const serverUser = await res.json();
@@ -269,7 +269,7 @@ export async function changePassword({ currentPassword, newPassword }) {
     return finalUser;
   } catch (error) {
     console.error('Change password error:', error);
-    throw new Error(error.message || 'Đổi mật khẩu thất bại. Vui lòng thử lại.');
+    throw new Error(error.message || 'Change password failed. Please try again.');
   }
 }
 
@@ -306,7 +306,7 @@ export async function checkUsername(username) {
   try {
     const res = await fetch(`${API_BASE_URL}/users/check-username?username=${encodeURIComponent(username)}`);
     if (!res.ok) {
-      throw new Error('Không thể kiểm tra tên đăng nhập');
+      throw new Error('Cannot check username');
     }
     return await res.json();
   } catch (error) {
@@ -315,12 +315,12 @@ export async function checkUsername(username) {
   }
 }
 
-// Helper function để kiểm tra email có tồn tại không
+// Helper function to check if email exists
 export async function checkEmail(email) {
   try {
     const res = await fetch(`${API_BASE_URL}/users/check-email?email=${encodeURIComponent(email)}`);
     if (!res.ok) {
-      throw new Error('Không thể kiểm tra email');
+      throw new Error('Cannot check email');
     }
     return await res.json();
   } catch (error) {
@@ -329,7 +329,7 @@ export async function checkEmail(email) {
   }
 }
 
-// Admin reset password cho user
+// Admin reset password for user
 export async function adminResetPassword(userId, newPassword) {
   try {
     const res = await fetch(`${API_BASE_URL}/users/admin/reset-password/${userId}`, {
@@ -344,17 +344,17 @@ export async function adminResetPassword(userId, newPassword) {
 
     if (!res.ok) {
       if (res.status === 404) {
-        throw new Error('Không tìm thấy người dùng');
+        throw new Error('User not found');
       }
       if (res.status === 400) {
-        throw new Error('Mật khẩu mới không hợp lệ');
+        throw new Error('New password is invalid');
       }
-      throw new Error(`Đặt lại mật khẩu thất bại: ${res.status}`);
+      throw new Error(`Reset password failed: ${res.status}`);
     }
 
     return await res.json();
   } catch (error) {
     console.error('Admin reset password error:', error);
-    throw new Error(error.message || 'Đặt lại mật khẩu thất bại. Vui lòng thử lại.');
+    throw new Error(error.message || 'Reset password failed. Please try again.');
   }
 }

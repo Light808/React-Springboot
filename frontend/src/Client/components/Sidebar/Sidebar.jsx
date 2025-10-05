@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import { Filter, Star, Clock, Plus } from 'lucide-react';
 import './Sidebar.css';

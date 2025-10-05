@@ -1,13 +1,12 @@
-// Service để generate avatar người AI (cartoon/stylized)
+/* eslint-disable no-case-declarations */
 const AVATAR_APIS = {
-    // API tạo ảnh người AI 
+    // API for DiceBear
     diceBearPersonas: 'https://api.dicebear.com/7.x/personas/svg',
     diceBearAvataaars: 'https://api.dicebear.com/7.x/avataaars/svg',
     diceBearMicah: 'https://api.dicebear.com/7.x/micah/svg',
     diceBearMiniavs: 'https://api.dicebear.com/7.x/miniavs/svg',
     diceBearOpenPeeps: 'https://api.dicebear.com/7.x/open-peeps/svg',
-  // Fallback UI Avatars
-  uiAvatars: 'https://ui-avatars.com/api'
+    uiAvatars: 'https://ui-avatars.com/api'
 };
 
 // DiceBear Micah
@@ -111,16 +110,16 @@ export const generateAvatarWithStyle = (username, style = 'personas') => {
 };
 
 export const AVATAR_STYLES = {
-  personas: 'Personas (Ảnh người AI đẹp nhất)',
-  avataaars: 'Avataaars (Ảnh người AI chi tiết)',
-  micah: 'Micah (Ảnh người AI đơn giản)',
-  miniavs: 'Miniavs (Ảnh người AI nhỏ gọn)',
-  openpeeps: 'Open Peeps (Ảnh người AI thân thiện)',
-  'ui-avatar': 'Avatar với tên',
-  pixelArt: 'Pixel Art',
-  bottts: 'Bottts',
-  identicon: 'Identicon',
-  initials: 'Initials'
+  personas: 'Personas (AI avatar)',
+  avataaars: 'Avataaars (AI avatar)',
+  micah: 'Micah (AI avatar)',
+  miniavs: 'Miniavs (AI avatar)',
+  openpeeps: 'Open Peeps (AI avatar)',
+  'ui-avatar': 'Avatar with name',
+  pixelArt: 'Pixel Art (AI avatar)',
+  bottts: 'Bottts (AI avatar)',
+  identicon: 'Identicon (AI avatar)',
+  initials: 'Initials (AI avatar)'
 };
 
 export const generateAvatarOptions = (username) => {

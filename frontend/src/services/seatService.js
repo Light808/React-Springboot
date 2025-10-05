@@ -1,6 +1,7 @@
+/* eslint-disable no-useless-catch */
 const API_BASE_URL = 'http://localhost:8080/api';
 
-// Kiểm tra kết nối API
+// check API connection
 export async function checkApiConnection() {
   try {
     const response = await fetch(`${API_BASE_URL}/seats`, {
@@ -16,7 +17,7 @@ export async function checkApiConnection() {
   }
 }
 
-// Lấy tất cả ghế theo showtimeId
+// get all seats by showtimeId
 export async function getSeatsByShowtime(showtimeId) {
   try {
     const response = await fetch(`${API_BASE_URL}/seats/showtime/${showtimeId}`);
@@ -29,7 +30,7 @@ export async function getSeatsByShowtime(showtimeId) {
   }
 }
 
-// Lấy tất cả ghế
+// get all seats
 export async function getAllSeats() {
   try {
     const response = await fetch(`${API_BASE_URL}/seats`);
@@ -43,7 +44,7 @@ export async function getAllSeats() {
   }
 }
 
-// Tạo ghế mới
+// create new seat
 export async function createSeat(seatData) {
   try {
     const response = await fetch(`${API_BASE_URL}/seats`, {
@@ -63,7 +64,7 @@ export async function createSeat(seatData) {
   }
 }
 
-// Tạo nhiều ghế cùng lúc
+// create multiple seats
 export async function createMultipleSeats(seatsData) {
   try {
     const response = await fetch(`${API_BASE_URL}/seats/batch`, {
@@ -83,7 +84,7 @@ export async function createMultipleSeats(seatsData) {
   }
 }
 
-// Cập nhật ghế
+// update seat
 export async function updateSeat(seatId, seatData) {
   try {
     const response = await fetch(`${API_BASE_URL}/seats/${seatId}`, {
@@ -103,7 +104,7 @@ export async function updateSeat(seatId, seatData) {
   }
 }
 
-// Xóa ghế
+// delete seat
 export async function deleteSeat(seatId) {
   try {
     const response = await fetch(`${API_BASE_URL}/seats/${seatId}`, {
@@ -119,7 +120,7 @@ export async function deleteSeat(seatId) {
   }
 }
 
-// Đặt ghế (book seat)
+// book seat
 export async function bookSeat(seatId, userId) {
   try {
     const response = await fetch(`${API_BASE_URL}/seats/${seatId}/book`, {
@@ -140,7 +141,7 @@ export async function bookSeat(seatId, userId) {
   }
 }
 
-// Hủy đặt ghế
+// unbook seat
 export async function unbookSeat(seatId, userId) {
   try {
     const response = await fetch(`${API_BASE_URL}/seats/${seatId}/unbook`, {

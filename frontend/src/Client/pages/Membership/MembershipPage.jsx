@@ -6,7 +6,7 @@ const MembershipPage = () => {
   const user = getCurrentUserSync();
   const [overview, setOverview] = React.useState({ name: user?.fullName || user?.username || 'Thành viên CGV', tier: user?.tier || 'Member', points: user?.rewardPoints ?? 0, promotions: [] });
   const [transactions, setTransactions] = React.useState([]);
-  const [news, setNews] = React.useState([]);
+  const [setNews] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
@@ -32,7 +32,7 @@ const MembershipPage = () => {
       <h1 style={{ margin: 0, fontSize: '1.5rem' }}>Thành viên CGV</h1>
       <p style={{ color: '#4b5563' }}>Tích điểm khi mua vé/combos, lên hạng để nhận ưu đãi độc quyền.</p>
 
-      {/* 1. Thông tin tài khoản thành viên */}
+      {/* info */}
       <section style={{ background: '#f8fafc', border: '1px solid #e5e7eb', borderRadius: 8, padding: '1rem', marginTop: '1rem' }}>
         <h2 style={{ marginTop: 0, fontSize: '1.125rem' }}>1. Thông tin tài khoản thành viên</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '0.75rem' }}>
@@ -72,7 +72,7 @@ const MembershipPage = () => {
         </div>
       </section>
 
-      {/* 2. Hệ thống hạng thẻ */}
+      {/* tier system */}
       <section style={{ border: '1px solid #e5e7eb', borderRadius: 8, padding: '1rem', marginTop: '1rem' }}>
         <h2 style={{ marginTop: 0, fontSize: '1.125rem' }}>2. Hệ thống hạng thẻ</h2>
         <p style={{ margin: '0 0 0.5rem 0', color: '#4b5563' }}>Mô tả và điều kiện đạt hạng trong năm:</p>
@@ -83,7 +83,7 @@ const MembershipPage = () => {
         </ul>
       </section>
 
-      {/* 3. Ưu đãi và khuyến mãi dành riêng cho thành viên */}
+      {/* benefits */}
       <section style={{ border: '1px solid #e5e7eb', borderRadius: 8, padding: '1rem', marginTop: '1rem' }}>
         <h2 style={{ marginTop: 0, fontSize: '1.125rem' }}>3. Ưu đãi và khuyến mãi dành riêng</h2>
         <ul style={{ margin: 0, paddingLeft: '1.25rem', color: '#374151', lineHeight: 1.8 }}>
@@ -94,7 +94,7 @@ const MembershipPage = () => {
         </ul>
       </section>
 
-      {/* 4. Chính sách tích & sử dụng điểm */}
+      {/* points */}
       <section style={{ border: '1px solid #e5e7eb', borderRadius: 8, padding: '1rem', marginTop: '1rem' }}>
         <h2 style={{ marginTop: 0, fontSize: '1.125rem' }}>4. Chính sách tích & sử dụng điểm</h2>
         <ul style={{ margin: 0, paddingLeft: '1.25rem', color: '#374151', lineHeight: 1.8 }}>
@@ -104,7 +104,7 @@ const MembershipPage = () => {
         </ul>
       </section>
 
-      {/* 5. Tin tức & sự kiện cho thành viên */}
+      {/* news */}
       <section style={{ border: '1px solid #e5e7eb', borderRadius: 8, padding: '1rem', marginTop: '1rem' }}>
         <h2 style={{ marginTop: 0, fontSize: '1.125rem' }}>5. Tin tức & sự kiện</h2>
         <ul style={{ margin: 0, paddingLeft: '1.25rem', color: '#374151', lineHeight: 1.8 }}>

@@ -1,7 +1,7 @@
 // Service gọi API cho Reviews
 const API_BASE_URL = 'http://localhost:8080/api';
 
-// Lấy tất cả reviews
+// get all reviews
 export const getReviews = async () => {
   try {
     const response = await fetch(`${API_BASE_URL}/reviews`);
@@ -15,7 +15,7 @@ export const getReviews = async () => {
   }
 };
 
-// Lấy review theo ID
+// get review by ID
 export const getReviewById = async (reviewId) => {
   try {
     const response = await fetch(`${API_BASE_URL}/reviews/${reviewId}`);
@@ -29,7 +29,7 @@ export const getReviewById = async (reviewId) => {
   }
 };
 
-// Lấy reviews theo movie ID
+// get reviews by movie ID
 export const getReviewsByMovieId = async (movieId) => {
   try {
     const response = await fetch(`${API_BASE_URL}/reviews/movie/${movieId}`);
@@ -43,7 +43,7 @@ export const getReviewsByMovieId = async (movieId) => {
   }
 };
 
-// Lấy reviews theo user ID
+// get reviews by user ID
 export const getReviewsByUserId = async (userId) => {
   try {
     const response = await fetch(`${API_BASE_URL}/reviews/user/${userId}`);
@@ -57,7 +57,7 @@ export const getReviewsByUserId = async (userId) => {
   }
 };
 
-// Lấy reviews theo movie ID và rating
+// get reviews by movie ID and rating
 export const getReviewsByMovieIdAndRating = async (movieId, rating) => {
   try {
     const response = await fetch(`${API_BASE_URL}/reviews/movie/${movieId}/rating/${rating}`);
@@ -71,7 +71,7 @@ export const getReviewsByMovieIdAndRating = async (movieId, rating) => {
   }
 };
 
-// Lấy số lượng reviews theo movie ID
+// get review count by movie ID
 export const getReviewCountByMovieId = async (movieId) => {
   try {
     const response = await fetch(`${API_BASE_URL}/reviews/movie/${movieId}/count`);
@@ -85,7 +85,7 @@ export const getReviewCountByMovieId = async (movieId) => {
   }
 };
 
-// Lấy số lượng reviews theo movie ID và rating
+// get review count by movie ID and rating
 export const getReviewCountByMovieIdAndRating = async (movieId, rating) => {
   try {
     const response = await fetch(`${API_BASE_URL}/reviews/movie/${movieId}/rating/${rating}/count`);
@@ -99,7 +99,7 @@ export const getReviewCountByMovieIdAndRating = async (movieId, rating) => {
   }
 };
 
-// Tạo review mới
+// create new review
 export const createReview = async (reviewData) => {
   try {
     const response = await fetch(`${API_BASE_URL}/reviews`, {
@@ -119,7 +119,7 @@ export const createReview = async (reviewData) => {
   }
 };
 
-// Cập nhật review
+// update review
 export const updateReview = async (reviewId, reviewData) => {
   try {
     const response = await fetch(`${API_BASE_URL}/reviews/${reviewId}`, {
@@ -139,7 +139,7 @@ export const updateReview = async (reviewId, reviewData) => {
   }
 };
 
-// Like review
+// like review
 export const likeReview = async (reviewId) => {
   try {
     const response = await fetch(`${API_BASE_URL}/reviews/${reviewId}/like`, {
@@ -158,7 +158,7 @@ export const likeReview = async (reviewId) => {
   }
 };
 
-// Dislike review
+// dislike review
 export const dislikeReview = async (reviewId) => {
   try {
     const response = await fetch(`${API_BASE_URL}/reviews/${reviewId}/dislike`, {
@@ -177,7 +177,7 @@ export const dislikeReview = async (reviewId) => {
   }
 };
 
-// Xóa review
+// delete review
 export const deleteReview = async (reviewId) => {
   try {
     const response = await fetch(`${API_BASE_URL}/reviews/${reviewId}`, {

@@ -59,7 +59,6 @@ const NewsDetailPage = () => {
         url: window.location.href
       });
     } else {
-      // Fallback: copy to clipboard
       navigator.clipboard.writeText(window.location.href);
       alert('Đã sao chép link vào clipboard');
     }

@@ -1,7 +1,8 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, User, Eye, Search, Filter, Clock, Tag } from 'lucide-react';
-import { getAllNews, getNewsByCategory, searchNews, getNewsCategories } from '../../../services/newsService';
+import { getAllNews, getNewsCategories } from '../../../services/newsService';
 import styles from './NewsPage.module.css';
 
 const NewsPage = () => {
@@ -51,13 +52,13 @@ const NewsPage = () => {
     if (!str) return '';
     
     return str
-      .normalize('NFD') // Decompose characters
-      .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
-      .replace(/đ/g, 'd').replace(/Đ/g, 'D') // Handle đ/Đ specifically
+      .normalize('NFD') //
+      .replace(/[\u0300-\u036f]/g, '') 
+      .replace(/đ/g, 'd').replace(/Đ/g, 'D') 
       .toLowerCase();
   };
 
-  // Function to check if text contains search query (case-insensitive, diacritic-insensitive)
+  // Function to check if text contains search querye
   const containsSearchQuery = (text, query) => {
     if (!text || !query) return false;
     
@@ -158,7 +159,6 @@ const NewsPage = () => {
   return (
     <div className={ `${styles['news-page']}`}>
       <div className={ `${styles['news-container']}`}>
-        {/* Header */}
         <div className={ `${styles['news-header']}`}>
           <h1>Tin Tức CGV HAK</h1>
           <p>Cập nhật những tin tức mới nhất về phim ảnh, rạp chiếu và ưu đãi</p>

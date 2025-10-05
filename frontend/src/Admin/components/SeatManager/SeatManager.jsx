@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Trash2, Edit, Save, X, RefreshCw } from 'lucide-react';
-import { createSeat, createMultipleSeats, updateSeat, deleteSeat,deleteSeatsByShowtime,getSeatsByShowtime,checkApiConnection } from '../../services/seatService';
+import { createSeat, createMultipleSeats, updateSeat, deleteSeat,deleteSeatsByShowtime,getSeatsByShowtime,checkApiConnection } from '../../../services/seatService';
 import './SeatManager.css';
 
 const SeatManager = ({ onSeatsChange, showtimeId }) => {
   const [seats, setSeats] = useState([]);
-  const [editingSeat, setEditingSeat] = useState(null);
-  const [showAddForm, setShowAddForm] = useState(false);
   const [newSeat, setNewSeat] = useState({ row: 'A', number: 1, booked: false });
   const [pendingSeats, setPendingSeats] = useState([]);
   const [saving, setSaving] = useState(false);
-  const [apiConnected, setApiConnected] = useState(true);
+  const [ApiConnected, setApiConnected] = useState(true);
 
   const rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 
@@ -21,7 +19,7 @@ const SeatManager = ({ onSeatsChange, showtimeId }) => {
       setApiConnected(isConnected);
       
       if (!isConnected) {
-        console.log('API not connected, skipping database load');
+        console.log('API not connected');
         return;
       }
       
@@ -41,6 +39,7 @@ const SeatManager = ({ onSeatsChange, showtimeId }) => {
     loadSeats();
   }, [showtimeId, onSeatsChange]);
 
+  // eslint-disable-next-line no-unused-vars
   const addSeat = () => {
     const seat = {
       seatNumber: `${newSeat.row}${newSeat.number}`,
@@ -248,6 +247,7 @@ const SeatManager = ({ onSeatsChange, showtimeId }) => {
     setPendingSeats(prev => prev.filter(s => s.seatNumber !== seatNumber));
   };
 
+  // eslint-disable-next-line no-unused-vars
   const refreshSeats = async () => {
     if (!showtimeId) return;
     

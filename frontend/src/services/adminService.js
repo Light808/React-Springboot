@@ -19,11 +19,11 @@ export const adminLogin = async (credentials) => {
       localStorage.setItem('adminUser', JSON.stringify(data.admin));
       return data.admin;
     } else {
-      throw new Error(data.message || 'Đăng nhập admin thất bại');
+      throw new Error(data.message || 'Login admin failed');
     }
   } catch (error) {
     console.error('Admin login error:', error);
-    throw new Error('Không thể kết nối đến server admin');
+    throw new Error('Cannot connect to admin server');
   }
 };
 
@@ -44,11 +44,11 @@ export const adminLogout = async (adminId) => {
       localStorage.removeItem('adminUser');
       return true;
     } else {
-      throw new Error(data.message || 'Đăng xuất thất bại');
+      throw new Error(data.message || 'Logout failed');
     }
   } catch (error) {
     console.error('Admin logout error:', error);
-    throw new Error('Không thể đăng xuất admin');
+    throw new Error('Cannot logout admin');
   }
 };
 
@@ -67,11 +67,11 @@ export const getAdminProfile = async (adminId) => {
     if (data.success) {
       return data.admin;
     } else {
-      throw new Error(data.message || 'Không thể lấy thông tin admin');
+      throw new Error(data.message || 'Cannot get admin profile');
     }
   } catch (error) {
     console.error('Get admin profile error:', error);
-    throw new Error('Không thể lấy thông tin admin');
+    throw new Error('Cannot connect to admin server');
   }
 };
 
@@ -86,7 +86,7 @@ export const getAdminStats = async () => {
     });
 
     if (!response.ok) {
-      console.warn('Admin stats API not available, using default stats');
+      console.warn('Admin stats API not available');
       return {
         totalTickets: 0,
         totalUsers: 0,
@@ -102,11 +102,10 @@ export const getAdminStats = async () => {
     if (data.success) {
       return data.stats;
     } else {
-      throw new Error(data.message || 'Không thể lấy thống kê');
+      throw new Error(data.message || 'Cannot get stats');
     }
   } catch (error) {
     console.error('Get admin stats error:', error);
-    // Trả về stats mặc định thay vì throw error
     return {
       totalTickets: 0,
       totalUsers: 0,
@@ -134,11 +133,11 @@ export const createAdmin = async (adminData) => {
     if (data.success) {
       return data.admin;
     } else {
-      throw new Error(data.message || 'Tạo admin thất bại');
+      throw new Error(data.message || 'Create admin failed');
     }
   } catch (error) {
     console.error('Create admin error:', error);
-    throw new Error('Không thể tạo admin mới');
+    throw new Error('Cannot connect to admin server');
   }
 };
 
@@ -157,11 +156,11 @@ export const getAllAdmins = async () => {
     if (data.success) {
       return data.admins;
     } else {
-      throw new Error(data.message || 'Không thể lấy danh sách admin');
+      throw new Error(data.message || 'Cannot get admin list');
     }
   } catch (error) {
     console.error('Get all admins error:', error);
-    throw new Error('Không thể lấy danh sách admin');
+    throw new Error('Cannot get admin list');
   }
 };
 
@@ -277,22 +276,20 @@ export const updateTicketStatus = async (ticketId, status) => {
     if (data.success) {
       return data.ticket;
     } else {
-      throw new Error(data.message || 'Cập nhật trạng thái vé thất bại');
+      throw new Error(data.message || 'update ticket status failed');
     }
   } catch (error) {
     console.error('Update ticket status error:', error);
-    throw new Error('Không thể kết nối đến server admin');
+    throw new Error('Cannot update ticket status');
   }
 };
-
-// User Management Functions
 
 // Get user by ID
 export const getUserById = async (userId) => {
   try {
     const adminToken = localStorage.getItem('adminToken');
     if (!adminToken) {
-      throw new Error('Không có token admin');
+      throw new Error('no admin token');
     }
 
     const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
@@ -308,11 +305,11 @@ export const getUserById = async (userId) => {
     if (data.success) {
       return data.user;
     } else {
-      throw new Error(data.message || 'Không thể lấy thông tin người dùng');
+      throw new Error(data.message || 'cannot get user information');
     }
   } catch (error) {
     console.error('Get user by ID error:', error);
-    throw new Error('Không thể kết nối đến server admin');
+    throw new Error('Cannot connect to admin server');
   }
 };
 
@@ -321,7 +318,7 @@ export const createUser = async (userData) => {
   try {
     const adminToken = localStorage.getItem('adminToken');
     if (!adminToken) {
-      throw new Error('Không có token admin');
+      throw new Error('No admin token');
     }
 
     const response = await fetch(`${API_BASE_URL}/users`, {
@@ -338,11 +335,11 @@ export const createUser = async (userData) => {
     if (data.success) {
       return data.user;
     } else {
-      throw new Error(data.message || 'Tạo người dùng thất bại');
+      throw new Error(data.message || 'Create user failed');
     }
   } catch (error) {
     console.error('Create user error:', error);
-    throw new Error('Không thể kết nối đến server admin');
+    throw new Error('Cannot connect to admin server');
   }
 };
 
@@ -351,7 +348,7 @@ export const updateUser = async (userId, userData) => {
   try {
     const adminToken = localStorage.getItem('adminToken');
     if (!adminToken) {
-      throw new Error('Không có token admin');
+      throw new Error('No admin token');
     }
 
     const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
@@ -368,11 +365,11 @@ export const updateUser = async (userId, userData) => {
     if (data.success) {
       return data.user;
     } else {
-      throw new Error(data.message || 'Cập nhật thông tin người dùng thất bại');
+      throw new Error(data.message || 'Update user information failed');
     }
   } catch (error) {
     console.error('Update user error:', error);
-    throw new Error('Không thể kết nối đến server admin');
+    throw new Error('Cannot connect to admin server');
   }
 };
 
@@ -381,7 +378,7 @@ export const deleteUser = async (userId) => {
   try {
     const adminToken = localStorage.getItem('adminToken');
     if (!adminToken) {
-      throw new Error('Không có token admin');
+      throw new Error('No admin token');
     }
 
     const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
@@ -397,11 +394,11 @@ export const deleteUser = async (userId) => {
     if (data.success) {
       return true;
     } else {
-      throw new Error(data.message || 'Xóa người dùng thất bại');
+      throw new Error(data.message || 'Delete user failed');
     }
   } catch (error) {
     console.error('Delete user error:', error);
-    throw new Error('Không thể kết nối đến server admin');
+    throw new Error('Cannot connect to admin server');
   }
 };
 
@@ -411,7 +408,7 @@ export const searchUsers = async (keyword) => {
   try {
     const adminToken = localStorage.getItem('adminToken');
     if (!adminToken) {
-      throw new Error('Không có token admin');
+      throw new Error('No admin token');
     }
 
     const response = await fetch(`${API_BASE_URL}/users/search?keyword=${encodeURIComponent(keyword)}`, {
@@ -427,10 +424,10 @@ export const searchUsers = async (keyword) => {
     if (data.success) {
       return data.users;
     } else {
-      throw new Error(data.message || 'Tìm kiếm người dùng thất bại');
+      throw new Error(data.message || 'Search users failed');
     }
   } catch (error) {
     console.error('Search users error:', error);
-    throw new Error('Không thể kết nối đến server admin');
+    throw new Error('Cannot connect to admin server');
   }
 };

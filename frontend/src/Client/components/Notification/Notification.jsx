@@ -13,7 +13,7 @@ const Notification = ({ userId, onClose }) => {
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('all'); // 'all' or 'unread'
+  const [activeTab, setActiveTab] = useState('all'); 
 
   useEffect(() => {
     if (userId) {

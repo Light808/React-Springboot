@@ -1,6 +1,7 @@
+/* eslint-disable no-unused-vars */
 const API_BASE_URL = 'http://localhost:8080/api';
 
-// Lấy tất cả vé của user
+// get all tickets by user
 export const getTicketsByUser = async (userId) => {
   try {
     const response = await fetch(`${API_BASE_URL}/tickets/user/${userId}`);
@@ -14,7 +15,7 @@ export const getTicketsByUser = async (userId) => {
   }
 };
 
-// Lấy vé theo ID
+// get ticket by ID
 export const getTicketById = async (ticketId) => {
   try {
     const response = await fetch(`${API_BASE_URL}/tickets/${ticketId}`);
@@ -28,7 +29,7 @@ export const getTicketById = async (ticketId) => {
   }
 };
 
-// Đặt vé mới
+// book new ticket
 export const bookTicket = async (ticketData) => {
   try {
     const response = await fetch(`${API_BASE_URL}/tickets/book`, {
@@ -53,12 +54,12 @@ export const bookTicket = async (ticketData) => {
     
     const result = await response.json();
     
-    // Lưu vé vào localStorage sau khi đặt vé thành công
+    // save ticket to localStorage after booking successfully
     try {
       const existingTickets = JSON.parse(localStorage.getItem('userTickets') || '[]');
       const newTicket = {
         ...ticketData,
-        id: result.id || result._id || Date.now().toString(), // Sử dụng ID từ BE hoặc tạo ID tạm
+        id: result.id || result._id || Date.now().toString(), // use ID from BE or create temporary ID
         ticketNumber: result.ticketNumber || ticketData.ticketNumber,
         qrCode: result.qrCode || ticketData.qrCode,
         status: result.status || ticketData.status,
@@ -71,7 +72,7 @@ export const bookTicket = async (ticketData) => {
       const updatedTickets = [...existingTickets, newTicket];
       localStorage.setItem('userTickets', JSON.stringify(updatedTickets));
       
-      // Dispatch custom event để các component khác có thể lắng nghe
+      // dispatch custom event to let other components listen
       window.dispatchEvent(new CustomEvent('userTicketsUpdated', {
         detail: {
           key: 'userTickets',
@@ -83,7 +84,7 @@ export const bookTicket = async (ticketData) => {
       console.log('Ticket saved to localStorage:', newTicket);
     } catch (localStorageError) {
       console.error('Error saving ticket to localStorage:', localStorageError);
-      // Không throw error vì đặt vé đã thành công
+      // do not throw error because booking is successful
     }
     
     return result;
@@ -93,7 +94,7 @@ export const bookTicket = async (ticketData) => {
   }
 };
 
-// Cập nhật vé
+// update ticket
 export const updateTicket = async (ticketId, ticketData) => {
   try {
     const response = await fetch(`${API_BASE_URL}/tickets/${ticketId}`, {
@@ -113,7 +114,7 @@ export const updateTicket = async (ticketId, ticketData) => {
   }
 };
 
-// Hủy vé
+// cancel ticket
 export const cancelTicket = async (ticketId) => {
   try {
     const response = await fetch(`${API_BASE_URL}/tickets/${ticketId}/cancel`, {
@@ -133,7 +134,7 @@ export const cancelTicket = async (ticketId) => {
 };
 
 
-// Tải vé dưới dạng PDF
+// download ticket as PDF
 export const downloadTicket = async (ticketId) => {
   try {
     const response = await fetch(`${API_BASE_URL}/tickets/${ticketId}/download`, {
@@ -149,7 +150,7 @@ export const downloadTicket = async (ticketId) => {
   }
 };
 
-// Xuất danh sách vé của user
+// export user tickets
 export const exportUserTickets = async (userId, format = 'pdf') => {
   try {
     const response = await fetch(`${API_BASE_URL}/tickets/user/${userId}/export?format=${format}`, {
@@ -165,7 +166,7 @@ export const exportUserTickets = async (userId, format = 'pdf') => {
   }
 };
 
-// Lấy thống kê vé của user
+// get user ticket stats
 export const getUserTicketStats = async (userId) => {
   try {
     const response = await fetch(`${API_BASE_URL}/tickets/user/${userId}/stats`, {
@@ -181,7 +182,7 @@ export const getUserTicketStats = async (userId) => {
   }
 };
 
-// Lấy vé theo trạng thái
+// get tickets by status
 export const getTicketsByStatus = async (status) => {
   try {
     const response = await fetch(`${API_BASE_URL}/tickets/status/${status}`, {
@@ -197,7 +198,7 @@ export const getTicketsByStatus = async (status) => {
   }
 };
 
-// Lấy vé theo showtime
+// get tickets by showtime
 export const getTicketsByShowtime = async (showtimeId) => {
   try {
     const response = await fetch(`${API_BASE_URL}/tickets/showtime/${showtimeId}`, {
@@ -213,7 +214,7 @@ export const getTicketsByShowtime = async (showtimeId) => {
   }
 };
 
-// Hủy vé với lý do
+// cancel ticket with reason
 export const cancelTicketWithReason = async (ticketId, reason) => {
   try {
     const response = await fetch(`${API_BASE_URL}/tickets/${ticketId}/cancel?reason=${encodeURIComponent(reason)}`, {
@@ -232,7 +233,7 @@ export const cancelTicketWithReason = async (ticketId, reason) => {
   }
 };
 
-// Đánh dấu vé đã sử dụng
+// mark ticket as used
 export const markTicketAsUsed = async (ticketId) => {
   try {
     const response = await fetch(`${API_BASE_URL}/tickets/${ticketId}/use`, {
@@ -267,7 +268,7 @@ export const getTicketDetails = async (ticketId) => {
 };
 
 
-// Lấy thông tin thanh toán của vé
+// get ticket payment info
 export const getTicketPaymentInfo = async (ticketId) => {
   try {
     const response = await fetch(`${API_BASE_URL}/tickets/${ticketId}/payment-info`, {
@@ -283,7 +284,7 @@ export const getTicketPaymentInfo = async (ticketId) => {
   }
 };
 
-// Hoàn tiền vé
+// refund ticket
 export const refundTicket = async (ticketId, refundAmount, refundReason) => {
   try {
     const response = await fetch(`${API_BASE_URL}/tickets/${ticketId}/refund?refundAmount=${refundAmount}&refundReason=${encodeURIComponent(refundReason)}`, {
@@ -302,7 +303,7 @@ export const refundTicket = async (ticketId, refundAmount, refundReason) => {
   }
 };
 
-// Lấy danh sách vé đã hoàn tiền
+// get refunded tickets
 export const getRefundedTickets = async () => {
   try {
     const response = await fetch(`${API_BASE_URL}/tickets/refunded`, {
@@ -318,7 +319,7 @@ export const getRefundedTickets = async () => {
   }
 };
 
-// Lấy thống kê hoàn tiền của user
+// get user refund stats
 export const getUserRefundStats = async (userId) => {
   try {
     const response = await fetch(`${API_BASE_URL}/tickets/user/${userId}/refund-stats`, {
@@ -334,7 +335,7 @@ export const getUserRefundStats = async (userId) => {
   }
 };
 
-// Cập nhật phương thức thanh toán
+// update payment method
 export const updatePaymentMethod = async (ticketId, paymentMethod) => {
   try {
     const response = await fetch(`${API_BASE_URL}/tickets/${ticketId}/payment-method?paymentMethod=${encodeURIComponent(paymentMethod)}`, {
@@ -353,7 +354,7 @@ export const updatePaymentMethod = async (ticketId, paymentMethod) => {
   }
 };
 
-// Lấy vé theo phương thức thanh toán
+// get tickets by payment method
 export const getTicketsByPaymentMethod = async (paymentMethod) => {
   try {
     const response = await fetch(`${API_BASE_URL}/tickets/payment-method/${encodeURIComponent(paymentMethod)}`, {
@@ -369,7 +370,7 @@ export const getTicketsByPaymentMethod = async (paymentMethod) => {
   }
 };
 
-// Lấy vé theo địa chỉ rạp
+// get tickets by cinema address
 export const getTicketsByCinemaAddress = async (address) => {
   try {
     const response = await fetch(`${API_BASE_URL}/tickets/cinema-address/${encodeURIComponent(address)}`, {
@@ -385,7 +386,7 @@ export const getTicketsByCinemaAddress = async (address) => {
   }
 };
 
-// Utility function để tải file
+// utility function to download file
 export const downloadFile = (blob, filename) => {
   const url = window.URL.createObjectURL(blob);
   const link = document.createElement('a');
@@ -397,7 +398,7 @@ export const downloadFile = (blob, filename) => {
   window.URL.revokeObjectURL(url);
 };
 
-// Duyệt vé (admin)
+// approve ticket (admin)
 export async function approveTicket(ticketId) {
   try {
     const response = await fetch(`${API_BASE_URL}/tickets/${ticketId}/approve`, {

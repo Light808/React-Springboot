@@ -1,38 +1,37 @@
-// Service gọi API cho Movie
 export async function getMovies() {
   try {
     const res = await fetch('http://localhost:8080/api/movies');
-    if (!res.ok) throw new Error('Không thể lấy danh sách phim');
+    if (!res.ok) throw new Error('Cannot get movie list');
     return await res.json();
   } catch (error) {
     console.error('Error fetching movies:', error);
-    throw new Error('Không thể kết nối đến server');
+    throw new Error('Cannot connect to server');
   }
 }
 
 export async function getMovieById(id) {
   try {
     const res = await fetch(`http://localhost:8080/api/movies/${id}`);
-    if (!res.ok) throw new Error('Không thể lấy thông tin phim');
+    if (!res.ok) throw new Error('Cannot get movie information');
     return await res.json();
   } catch (error) {
     console.error('Error fetching movie:', error);
-    throw new Error('Không thể kết nối đến server');
+    throw new Error('Cannot connect to server');
   }
 }
 
-// Function to remove Vietnamese diacritics for search
+// function to remove Vietnamese diacritics for search
 function removeVietnameseDiacritics(str) {
   if (!str) return '';
   
   return str
-    .normalize('NFD') // Decompose characters
-    .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
-    .replace(/đ/g, 'd').replace(/Đ/g, 'D') // Handle đ/Đ specifically
+    .normalize('NFD') 
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd').replace(/Đ/g, 'D') 
     .toLowerCase();
 }
 
-// Function to check if text contains search query (case-insensitive, diacritic-insensitive)
+// Function to check if text contains search query 
 function containsSearchQuery(text, query) {
   if (!text || !query) return false;
   
@@ -62,7 +61,7 @@ export async function searchMovies(query) {
     console.log('Search API response status:', res.status);
     
     if (res.status === 400) {
-      console.warn('Server returned 400, likely query validation failed, using fallback');
+      console.warn('Server returned 400');
       throw new Error('Query validation failed');
     }
     
@@ -101,11 +100,11 @@ export async function searchMovies(query) {
 export async function getAllMovies() {
   try {
     const res = await fetch('http://localhost:8080/api/movies');
-    if (!res.ok) throw new Error('Không thể lấy danh sách phim');
+    if (!res.ok) throw new Error('Cannot get movie list');
     return await res.json();
   } catch (error) {
     console.error('Error fetching all movies:', error);
-    throw new Error('Không thể kết nối đến server');
+    throw new Error('Cannot connect to server');
   }
 }
 
@@ -121,7 +120,7 @@ export async function createMovie(movieData) {
     
     if (!res.ok) {
       const errorData = await res.json().catch(() => ({}));
-      throw new Error(errorData.message || 'Không thể tạo phim');
+      throw new Error(errorData.message || 'Cannot create movie');
     }
     
     return await res.json();
@@ -143,7 +142,7 @@ export async function updateMovie(movieId, movieData) {
     
     if (!res.ok) {
       const errorData = await res.json().catch(() => ({}));
-      throw new Error(errorData.message || 'Không thể cập nhật phim');
+      throw new Error(errorData.message || 'Cannot update movie');
     }
     
     return await res.json();
@@ -164,7 +163,7 @@ export async function deleteMovie(movieId) {
     
     if (!res.ok) {
       const errorData = await res.json().catch(() => ({}));
-      throw new Error(errorData.message || 'Không thể xóa phim');
+      throw new Error(errorData.message || 'Cannot delete movie');
     }
     
     return true;
@@ -174,7 +173,7 @@ export async function deleteMovie(movieId) {
   }
 }
 
-// Lấy danh sách phim theo rạp chiếu
+// get movies by cinema
 export async function getMoviesByCinema(cinemaId) {
   try {
     const res = await fetch(`http://localhost:8080/api/movies/cinema/${cinemaId}`);
@@ -189,7 +188,7 @@ export async function getMoviesByCinema(cinemaId) {
   }
 }
 
-// Thêm phim vào rạp chiếu
+// add movie to cinema
 export async function addMovieToCinema(movieId, cinemaId) {
   try {
     const res = await fetch(`http://localhost:8080/api/movies/${movieId}/cinemas/${cinemaId}`, {
@@ -201,7 +200,7 @@ export async function addMovieToCinema(movieId, cinemaId) {
     
     if (!res.ok) {
       const errorData = await res.json().catch(() => ({}));
-      throw new Error(errorData.message || 'Không thể thêm phim vào rạp chiếu');
+      throw new Error(errorData.message || 'Cannot add movie to cinema');
     }
     
     return await res.json();
@@ -211,7 +210,7 @@ export async function addMovieToCinema(movieId, cinemaId) {
   }
 }
 
-// Xóa phim khỏi rạp chiếu
+// remove movie from cinema
 export async function removeMovieFromCinema(movieId, cinemaId) {
   try {
     const res = await fetch(`http://localhost:8080/api/movies/${movieId}/cinemas/${cinemaId}`, {
@@ -223,7 +222,7 @@ export async function removeMovieFromCinema(movieId, cinemaId) {
     
     if (!res.ok) {
       const errorData = await res.json().catch(() => ({}));
-      throw new Error(errorData.message || 'Không thể xóa phim khỏi rạp chiếu');
+      throw new Error(errorData.message || 'Cannot remove movie from cinema');
     }
     
     return await res.json();

@@ -57,7 +57,7 @@ const CinemasPage = () => {
       .toLowerCase();
   };
 
-  // Function to check if text contains search query (case-insensitive, diacritic-insensitive)
+  // Function to check if text contains search query 
   const containsSearchQuery = (text, query) => {
     if (!text || !query) return false;
     

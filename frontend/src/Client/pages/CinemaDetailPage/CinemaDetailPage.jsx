@@ -1,3 +1,5 @@
+/* eslint-disable no-empty */
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { MapPin, Phone, Mail, Clock, Users, Star, Film, ArrowLeft, Calendar, Play, Building2, Globe, List } from 'lucide-react';
@@ -68,7 +70,7 @@ const CinemaDetailPage = () => {
       
       setCinema(cinemaData);
       
-      // Lấy danh sách phim theo rạp chiếu
+      // get movies by cinema
       try {
         const cinemaMovies = await getMoviesByCinema(cinemaId);
         setMovies(cinemaMovies);

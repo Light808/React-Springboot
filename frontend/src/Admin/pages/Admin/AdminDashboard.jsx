@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -27,6 +28,7 @@ import SeatManagement from '../../components/SeatManagement/SeatManagement';
 import MovieManagement from '../../components/MovieManagement/MovieManagement';
 import CinemaManagement from '../../components/CinemaManagement/CinemaManagement';
 import styles from './AdminDashboard.module.css';
+import { useTranslation } from 'react-i18next';
 
 // Register Chart.js components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend);
@@ -46,7 +48,7 @@ const AdminDashboard = () => {
     weeklyUserGrowth: {},
     popularMovies: {}
   });
-  
+  const { t } = useTranslation(); 
   const navigate = useNavigate();
 
   // Chart data from API
@@ -184,7 +186,7 @@ const AdminDashboard = () => {
                   <Ticket size={24} />
                 </div>
                 <div className={styles.statInfo}>
-                  <h3>Tổng vé</h3>
+                  <h3>{t('Total')}</h3>
                   <p className={styles.statNumber}>{stats.totalTickets}</p>
                   <div className={styles.statTrend}>
                     <TrendingUp size={16} />

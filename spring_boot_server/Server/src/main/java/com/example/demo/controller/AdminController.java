@@ -63,7 +63,7 @@ public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String
             return ResponseEntity.badRequest().body(createErrorResponse("Admin key là bắt buộc"));
         }
         
-        // Kiểm tra Admin key
+        // Admin key
         String validAdminKey = "Tyra2508"; 
         if (!validAdminKey.equals(adminKey)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -556,7 +556,6 @@ public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String
         adminResponse.put("role", admin.getRole());
         adminResponse.put("createdAt", admin.getCreatedAt());
         adminResponse.put("lastLoginAt", admin.getLastLoginAt());
-        adminResponse.put("avatar", admin.getAvatar());
         adminResponse.put("notes", admin.getNotes());
         return adminResponse;
     }

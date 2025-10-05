@@ -1,6 +1,6 @@
 const API_BASE_URL = 'http://localhost:8080/api';
 
-// Lấy tất cả thông báo của user
+// get all notifications by user
 export async function getNotificationsByUser(userId) {
   try {
     const response = await fetch(`${API_BASE_URL}/notifications/user/${userId}`);
@@ -14,7 +14,7 @@ export async function getNotificationsByUser(userId) {
   }
 }
 
-// Lấy thông báo chưa đọc của user
+// get unread notifications by user
 export async function getUnreadNotificationsByUser(userId) {
   try {
     const response = await fetch(`${API_BASE_URL}/notifications/user/${userId}/unread`);
@@ -28,7 +28,7 @@ export async function getUnreadNotificationsByUser(userId) {
   }
 }
 
-// Lấy số lượng thông báo chưa đọc
+// get unread notification count
 export async function getUnreadNotificationCount(userId) {
   try {
     const response = await fetch(`${API_BASE_URL}/notifications/user/${userId}/count`);
@@ -42,7 +42,7 @@ export async function getUnreadNotificationCount(userId) {
   }
 }
 
-// Tạo thông báo mới
+// create new notification
 export async function createNotification(notificationData) {
   try {
     const response = await fetch(`${API_BASE_URL}/notifications`, {
@@ -62,7 +62,7 @@ export async function createNotification(notificationData) {
   }
 }
 
-// Đánh dấu thông báo là đã đọc
+// mark notification as read
 export async function markNotificationAsRead(notificationId) {
   try {
     const response = await fetch(`${API_BASE_URL}/notifications/${notificationId}/read`, {
@@ -78,7 +78,7 @@ export async function markNotificationAsRead(notificationId) {
   }
 }
 
-// Đánh dấu tất cả thông báo là đã đọc
+// mark all notifications as read
 export async function markAllNotificationsAsRead(userId) {
   try {
     const response = await fetch(`${API_BASE_URL}/notifications/user/${userId}/read-all`, {
@@ -94,7 +94,7 @@ export async function markAllNotificationsAsRead(userId) {
   }
 }
 
-// Xóa thông báo
+// delete notification
 export async function deleteNotification(notificationId) {
   try {
     const response = await fetch(`${API_BASE_URL}/notifications/${notificationId}`, {
@@ -110,7 +110,7 @@ export async function deleteNotification(notificationId) {
   }
 }
 
-// Xóa tất cả thông báo của user
+// delete all notifications by user
 export async function deleteAllNotificationsByUser(userId) {
   try {
     const response = await fetch(`${API_BASE_URL}/notifications/user/${userId}`, {
@@ -126,7 +126,7 @@ export async function deleteAllNotificationsByUser(userId) {
   }
 }
 
-// Helper functions để tạo thông báo
+// helper functions to create notification
 export function createBookingSuccessNotification(userId, movieTitle, seatNumbers, showTime) {
   return {
     userId: userId,

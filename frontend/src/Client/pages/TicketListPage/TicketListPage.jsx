@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, Clock, MapPin, Ticket, User, Phone, Mail, Download, Eye, Trash2, Filter, Search, FileText, BarChart3, AlertCircle, CheckCircle, XCircle } from 'lucide-react';
-import { getTicketsByUser, downloadTicket, exportUserTickets, getUserTicketStats, cancelTicketWithReason, downloadFile, getTicketDetails, getTicketPaymentInfo, refundTicket, getUserRefundStats } from '../../../services/ticketService';
+import { Calendar, Clock, MapPin, Ticket, Eye, Trash2, Filter, Search, BarChart3, CheckCircle, XCircle } from 'lucide-react';
+import { getTicketsByUser, downloadTicket, exportUserTickets, getUserTicketStats, cancelTicketWithReason, downloadFile, getTicketDetails, refundTicket, getUserRefundStats } from '../../../services/ticketService';
 import { getMovieById } from '../../../services/movieService';
 import styles from './TicketListPage.module.css';         
 
@@ -19,11 +19,11 @@ const TicketListPage = ({ userId }) => {
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [cancelReason, setCancelReason] = useState('');
   const [actionLoading, setActionLoading] = useState({});
-  const [showStats, setShowStats] = useState(false);
+  const [showStats] = useState(false);
   const [showRefundModal, setShowRefundModal] = useState(false);
   const [refundAmount, setRefundAmount] = useState('');
   const [refundReason, setRefundReason] = useState('');
-  const [refundStats, setRefundStats] = useState(null);
+  const [ setRefundStats] = useState(null);
 
   useEffect(() => {
     const fetchTickets = async () => {
@@ -87,6 +87,7 @@ const TicketListPage = ({ userId }) => {
         } catch (refundStatsError) {
           console.error('Error fetching refund stats:', refundStatsError);
         }
+      // eslint-disable-next-line no-unused-vars
       } catch (err) {
         setError('Không thể tải danh sách vé. Vui lòng thử lại sau.');
       } finally {
@@ -180,6 +181,7 @@ const TicketListPage = ({ userId }) => {
     return <span className={`${styles['status-badge']} ${config.class}`}>{config.text}</span>;
   };
 
+  // eslint-disable-next-line no-unused-vars
   const handleDownloadTicket = async (ticketId) => {
     try {
       setActionLoading(prev => ({ ...prev, [ticketId]: true }));
@@ -226,12 +228,7 @@ const TicketListPage = ({ userId }) => {
                 <p><strong>Trạng thái thanh toán:</strong> ${ticket.paymentStatus || 'N/A'}</p>
                 <p><strong>Thời gian đặt vé:</strong> ${ticket.bookingTime ? formatDate(ticket.bookingTime) : 'N/A'}</p>
                 
-                
-                ${ticket.cancelledAt ? `
-                  <h4>Thông tin hủy vé</h4>
-                  <p><strong>Thời gian hủy:</strong> ${formatDate(ticket.cancelledAt)}</p>
-                  <p><strong>Lý do hủy:</strong> ${ticket.cancellationReason || 'N/A'}</p>
-                ` : ''}
+          
                 
                 ${ticket.usedAt ? `
                   <h4>Thông tin sử dụng</h4>
@@ -330,6 +327,7 @@ const TicketListPage = ({ userId }) => {
     }
   };
 
+  // eslint-disable-next-line no-unused-vars
   const handleExportTickets = async (format = 'pdf') => {
     try {
       setActionLoading(prev => ({ ...prev, export: true }));
@@ -583,15 +581,6 @@ const TicketListPage = ({ userId }) => {
                   >
                     <Eye size={16} />
                     {actionLoading[ticket.id] ? '...' : 'Xem'}
-                  </button>
-                  <button
-                    onClick={() => handleDownloadTicket(ticket.id)}
-                    className={`${styles['action-btn']} ${styles['download-btn']}`}
-                    title="Tải vé"
-                    disabled={actionLoading[ticket.id]}
-                  >
-                    <Download size={16} />
-                    {actionLoading[ticket.id] ? '...' : 'Tải'}
                   </button>
                   {(ticket.status === 'confirmed' || ticket.status === 'pending') && (
                     <button

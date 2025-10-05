@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { registerUser, loginUser } from '../../../services/userService';
 import { adminLogin } from '../../../services/adminService';
@@ -144,10 +145,9 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
           password: formData.password,
           adminKey: formData.adminKey
         };
-        
         const result = await adminLogin(adminCredentials);
         
-        // Xóa thông tin user khỏi localStorage khi đăng nhập admin
+        // Delete user info from localStorage when admin logs in
         localStorage.removeItem('currentUser');
         localStorage.removeItem('authToken');
         

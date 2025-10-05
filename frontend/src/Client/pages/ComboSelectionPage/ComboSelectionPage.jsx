@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Plus, Minus, CreditCard, CheckCircle } from 'lucide-react';

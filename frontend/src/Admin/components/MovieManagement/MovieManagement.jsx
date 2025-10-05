@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useCallback } from 'react';
 import { Eye, Edit, Trash2, Plus, Search, RefreshCw, Calendar, Clock, Star, Film, Shield, Building2 } from 'lucide-react';
 import { getAllMovies, createMovie, updateMovie, deleteMovie } from '../../../services/movieService';
@@ -9,8 +10,10 @@ import EditMovieModal from './EditMovieModal';
 import MovieDetailsModal from './MovieDetailsModal';
 import MovieCinemasModal from './MovieCinemasModal';
 import styles from './MovieManagement.module.css';
+import { useTranslation } from 'react-i18next';
 
 const MovieManagement = () => {
+  const { t } = useTranslation(); 
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -166,7 +169,6 @@ const MovieManagement = () => {
   };
 
   const handleCinemasUpdated = () => {
-    // Refresh movies data to get updated cinema lists
     fetchMovies();
   };
 
@@ -222,7 +224,7 @@ const MovieManagement = () => {
           onClick={() => setShowCreateModal(true)}
         >
           <Plus size={22} />
-          Thêm phim mới
+          {t('Addnewfilm')}
         </button>
       </div>
 

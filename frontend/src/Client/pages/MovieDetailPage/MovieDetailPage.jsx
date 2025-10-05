@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { Heart, Star, Play, ThumbsUp, Calendar, Clock, User, Share, X } from 'lucide-react';
@@ -30,6 +31,18 @@ const MovieDetailPage = () => {
   const [newsLoading, setNewsLoading] = useState(false);
   const [newsError, setNewsError] = useState(null);
   const [selectedNewsCategory, setSelectedNewsCategory] = useState('all');
+  const [liked, setLiked] = useState(() => {
+
+    // check if the movie has been liked
+    if (typeof window !== 'undefined' && movieId) {
+      return localStorage.getItem(`liked_movie_${movieId}`) === 'true';
+    }
+    return false;
+  });
+  const [likeCount, setLikeCount] = useState(() => {
+    return movie && movie.likes ? movie.likes : 0;
+  });
+  const reviewFormRef = React.useRef(null);
 
   // Format time ago for reviews
   const formatTimeAgo = (dateString) => {
@@ -47,7 +60,7 @@ const MovieDetailPage = () => {
     return `${Math.floor(diffInDays / 30)} tháng trước`;
   };
 
-  // Fetch community reviews from API
+  // fetch community reviews from API
   const fetchCommunityReviews = async () => {
     if (!movieId) return;
     
@@ -56,7 +69,7 @@ const MovieDetailPage = () => {
       setReviewsError(null);
       const reviews = await getReviewsByMovieId(movieId);
       
-      // Transform reviews to match frontend format
+      // transform reviews to match frontend format
       const transformedReviews = reviews.map(review => ({
         id: review.id,
         userName: review.userName,
@@ -77,7 +90,7 @@ const MovieDetailPage = () => {
     }
   };
 
-  // Fetch news articles
+  // fetch news articles
   const fetchNewsArticles = async (category = 'all') => {
     try {
       setNewsLoading(true);
@@ -85,7 +98,7 @@ const MovieDetailPage = () => {
       
       let news;
       if (category === 'all') {
-        news = await getAllNews(0, 20); // Get first 20 news articles
+        news = await getAllNews(0, 20); 
       } else {
         news = await getNewsByCategory(category);
       }
@@ -249,11 +262,6 @@ const MovieDetailPage = () => {
     }
     return movie.director || 'Không có thông tin';
   };
-
-
-
-
-
   // Handle like review
   const handleLikeReview = async (reviewId) => {
     try {
@@ -274,6 +282,44 @@ const MovieDetailPage = () => {
     }
   };
 
+  // handle like movie
+  const handleLikeMovie = () => {
+    if (!liked) {
+      setLiked(true);
+      setLikeCount((prev) => prev + 1);
+      if (typeof window !== 'undefined' && movieId) {
+        localStorage.setItem(`liked_movie_${movieId}`, 'true');
+      }
+      // if has API, call API like here
+    } else {
+      setLiked(false);
+      setLikeCount((prev) => (prev > 0 ? prev - 1 : 0));
+      if (typeof window !== 'undefined' && movieId) {
+        localStorage.setItem(`liked_movie_${movieId}`, 'false');
+      }
+    }
+  };
+  // handle rate movie
+  const handleRateMovie = () => {
+    // Cuộn xuống form đánh giá
+    if (reviewFormRef.current) {
+      reviewFormRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      // if not found ref, switch to reviews tab
+      setActiveTab('reviews');
+      setTimeout(() => {
+        if (reviewFormRef.current) {
+          reviewFormRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 300);
+    }
+  };
+  // handle buy ticket
+  const handleBuyTicket = () => {
+    setActiveTab('booking');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div className={`${styles['movie-detail-page']}`}>
       <div className={`${styles['movie-background']}`}>
@@ -288,7 +334,7 @@ const MovieDetailPage = () => {
         />
       </div>
       
-      {/* Movie Header Section */}
+      {/* movie header section */}
       <div className={`${styles['movie-header']}`}>
         <div className={`${styles['movie-header-content']}`}>
           <div className={`${styles['movie-info']}`}>
@@ -299,11 +345,19 @@ const MovieDetailPage = () => {
               )}
               
               <div className={`${styles['action-buttons']}`}>
-                <button className={`${styles['action-btn']} ${styles['like-btn']}`}>
-                  <Heart size={16} />
-                  <span>Thích</span>
+                <button 
+                  className={`${styles['action-btn']} ${styles['like-btn']} ${liked ? styles['liked'] : ''}`}
+                  onClick={handleLikeMovie}
+                  title={liked ? 'Đã thích' : 'Thích'}
+                >
+                  <Heart size={16} fill={liked ? 'red' : 'none'} color={liked ? 'red' : undefined} />
+                  <span>{liked ? 'Đã thích' : 'Thích'}</span>
+                  <span style={{ marginLeft: 4, fontWeight: 500 }}>{likeCount > 0 ? likeCount : ''}</span>
                 </button>
-                <button className={`${styles['action-btn']} ${styles['rate-btn']}`}>
+                <button 
+                  className={`${styles['action-btn']} ${styles['rate-btn']}`}
+                  onClick={handleRateMovie}
+                >
                   <Star size={16} />
                   <span>Đánh giá</span>
                 </button>
@@ -319,7 +373,10 @@ const MovieDetailPage = () => {
                   <span>Trailer</span>
                 </button>
                 )}
-                <button className={`${styles['action-btn']} ${styles['buy-ticket-btn']}`}>
+                <button 
+                  className={`${styles['action-btn']} ${styles['buy-ticket-btn']}`}
+                  onClick={handleBuyTicket}
+                >
                   <span>Mua vé</span>
                 </button>
               </div>
@@ -391,7 +448,7 @@ const MovieDetailPage = () => {
         </div>
       </div>
 
-      {/* Tab Content */}
+      {/* tab content */}
       <div className={`${styles['tab-content']}`}>
         {activeTab === 'showtimes' && (
           <ShowtimeSchedule 
@@ -441,7 +498,7 @@ const MovieDetailPage = () => {
                 </div>
               </div>
 
-              {/* Related articles */}
+              {/* related articles */}
               <div className={`${styles['related-articles']}`}>
                 <h3>Bài viết liên quan</h3>
                 {articlesLoading ? (
@@ -468,17 +525,18 @@ const MovieDetailPage = () => {
                 )}
               </div>
 
-              {/* Review Form */}
+              {/* review form */}
               <ReviewForm 
+                ref={reviewFormRef}
                 movieId={movieId} 
                 onReviewAdded={fetchCommunityReviews}
               />
 
-              {/* Community Reviews */}
+              {/* community reviews */}
               <div className={`${styles['community-section']}`}>
                 <h3>Cộng đồng</h3>
                 
-                {/* Loading State */}
+                {/* loading state */}
                 {reviewsLoading && (
                   <div className={`${styles['loading-message']}`}>
                     <div className={`${styles['loading-spinner']}`}></div>
@@ -486,7 +544,7 @@ const MovieDetailPage = () => {
                   </div>
                 )}
 
-                {/* Error State */}
+                {/* error state */}
                 {reviewsError && (
                   <div className={`${styles['error-message']}`}>
                     <p>{reviewsError}</p>
@@ -496,7 +554,7 @@ const MovieDetailPage = () => {
                   </div>
                 )}
 
-                {/* Reviews Grid - Hiển thị tối đa 3 đánh giá */}
+                {/* reviews grid - display max 3 reviews */}
                 {!reviewsLoading && !reviewsError && (
                   <div className={`${styles['reviews-grid']}`}>
                     {communityReviews.length === 0 ? (
@@ -563,13 +621,13 @@ const MovieDetailPage = () => {
                   </div>
                 )}
                 
-                {/* Xem thêm đánh giá  */}
+                {/* view more reviews */}
                 {!reviewsLoading && !reviewsError && communityReviews.length > 3 && (
                   <button 
                     className={`${styles['view-more-reviews-btn']}`}
                     onClick={() => {
                       setActiveTab('reviews');
-                      // Scroll to top khi chuyển tab
+                      // scroll to top when switch tab
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
                   >

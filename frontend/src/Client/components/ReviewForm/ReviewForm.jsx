@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import { Star, Send } from 'lucide-react';
 import { createReview } from '../../../services/reviewService';

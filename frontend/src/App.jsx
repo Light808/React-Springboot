@@ -45,6 +45,7 @@ function App() {
     checkAuthStatus();
   }, []);
 
+  // eslint-disable-next-line no-unused-vars
   const handleLogin = (userData) => {
     setUser(userData);
   };

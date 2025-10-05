@@ -1,0 +1,23 @@
+{
+    "home": "Home",
+    "movies": "Movies",
+    "cinemas": "Cinemas",
+    "membership": "Membership",
+    "login": "Login",
+    "logout": "Logout",
+    "language": "Language",
+    "schedule": "Schedule",
+    "cinemas-system": "Cinemas System",
+    "noCinemasFound": "No Cinemas Found",
+    "noCinemasInCity": "No Cinemas in This City",
+    "cinemaNameNotFound": "Cinema Name Not Found",
+    "sellTickets": "Sell Tickets",
+    "news": "News",
+    "myTickets": "My Tickets",
+    "markAllAsRead": "Đánh dấu tất cả đã đọc",
+    "searchMovies": "Search Movie...",
+    "helloAdmin": "Hello, Admin !",
+    "Total": "Total",
+    "Addnewfilm": "Add news film"
+  }
+  

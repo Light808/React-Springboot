@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 import { getCurrentUserSync } from './userService';
 import { getTicketsByUser } from './ticketService';
 
@@ -7,13 +8,13 @@ export async function getMemberOverview() {
   const user = getCurrentUserSync();
   if (!user) throw new Error('Chưa đăng nhập');
 
-  // Thử gọi API nếu có
+  // try to call API if there is
   try {
     const res = await fetch(`${API_BASE_URL}/members/${user.id}/overview`);
     if (res.ok) return await res.json();
   } catch {}
 
-  // Fallback từ localStorage + vé
+  // fallback from localStorage + tickets
   let points = Number(user.rewardPoints || 0);
   try {
     const tickets = await getTicketsByUser(user.id);
@@ -32,12 +33,10 @@ export async function getMemberOverview() {
 export async function getMemberTransactions() {
   const user = getCurrentUserSync();
   if (!user) throw new Error('Chưa đăng nhập');
-  // Thử API
   try {
     const res = await fetch(`${API_BASE_URL}/members/${user.id}/transactions`);
     if (res.ok) return await res.json();
   } catch {}
-  // Fallback từ vé local
   try {
     const tickets = await getTicketsByUser(user.id);
     return (tickets || []).map(t => ({ type: 'Mua vé', amount: t.price || 0, time: t.bookingTime || t.createdAt }));

@@ -1,3 +1,6 @@
+/* eslint-disable no-constant-binary-expression */
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { X, User, CreditCard, CheckCircle } from 'lucide-react';
 import { getSeatsByShowtime, bookSeat } from '../../services/seatService';

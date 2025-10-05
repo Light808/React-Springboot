@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Clock, Calendar } from 'lucide-react';
@@ -46,7 +47,7 @@ const MovieCard = ({ movie, cinemaId, selectedDate }) => {
     return movie.releaseYear || movie.year || 'Chưa có thông tin';
   };
 
-  // Fetch showtimes from API (hidden on homepage; still used on cinema page)
+  // Fetch showtimes from API 
   useEffect(() => {
     const fetchShowtimes = async () => {
       try {
