@@ -2,13 +2,16 @@ import React, { useState } from 'react';
 import { Calendar } from 'lucide-react';
 import './DateSelector.css';
 import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "../../components/LanguageSwitcher";
+
 
 const DateSelector = ({ selectedDate, onDateChange }) => {
+  const { t } = useTranslation();
   const generateDates = () => {
     const dates = [];
     const today = new Date();
-    const { t } = useTranslation();
-    const { i18n } =useTranslation();
+    
+  
 
     for (let i = 0; i < 7; i++) {
       const date = new Date(today);
@@ -41,14 +44,15 @@ const DateSelector = ({ selectedDate, onDateChange }) => {
 
   return (
     <div className="date-selector">     
-      <div className="date-list">  
+      <div className="date-list">
+      <LanguageSwitcher />  
         {dates.map((dateObj, index) => (
           <button
              key={index}
              className={`date-item ${currentDate === dateObj.fullDate ? 'active' : ''}`}
              onClick={() => handleDateClick(dateObj)}
            >
-             <div className="date-month-day">{dateObj.day}/{dateObj.month}</div>
+             <div className="date-month-day">{t('dateObj.day')}/{t('dateObj.month')}</div>
              <div className="date-day">{dateObj.dayName}</div>  
           </button>
         ))}

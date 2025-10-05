@@ -1,14 +1,16 @@
 import React from 'react';
 import { Play } from 'lucide-react';
 import styles from './HeroSection.module.css';
+import { useTranslation } from 'react-i18next';
 
 const HeroSection = () => {
+  const { t } = useTranslation();
   return (
     <section className={styles['hero-section']}>
       <div className={`${styles['hero-background']}`}>
         <div className={`${styles['hero-content']}`}>
           <div className={`${styles['hero-text']}`}>
-            <h1 className={`${styles['hero-title']}`}>Chào mừng đến với HAK cinema</h1>
+            <h1 className={`${styles['hero-title']}`}>{t('Welcometocinema')}</h1>
             <p className={`${styles['hero-subtitle']}`}>Nền tảng đặt vé xem phim hàng đầu Việt Nam</p>
             <div className={`${styles['hero-actions']}`}>
               <button className={`${styles['hero-btn']} ${styles['primary']}`}>

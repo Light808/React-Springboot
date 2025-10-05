@@ -11,8 +11,10 @@ import ReviewForm from '../../components/ReviewForm/ReviewForm';
 import ShowtimeSchedule from '../../components/ShowtimeSchedule/ShowtimeSchedule';
 import styles from './MovieDetailPage.module.css';
 import newsStyles from './NewsSection.module.css';
+import { useTranslation } from 'react-i18next';
 
 const MovieDetailPage = () => {
+  const { t } = useTranslation();
   const { movieId } = useParams();
   const location = useLocation();
   const [activeTab, setActiveTab] = useState('info');
@@ -199,8 +201,7 @@ const MovieDetailPage = () => {
   const getImageUrl = (movie) => {
     console.log('Movie data:', movie);
     let imageUrl = movie.posterUrl || movie.poster || movie.imageUrl || movie.image || '/default-movie.jpg';
-    
-    // Xử lý CORS cho external URLs
+
     if (imageUrl.startsWith('http') && !imageUrl.includes('localhost')) {
       console.log('External image URL detected:', imageUrl);
     }
@@ -210,7 +211,7 @@ const MovieDetailPage = () => {
   };
 
   const getTitle = (movie) => {
-    return movie.title || movie.name || movie.movieName || 'Không có tiêu đề';
+    return movie.title || movie.name || movie.movieName || t('noTitle');
   };
 
   const getEnglishTitle = (movie) => {
@@ -301,11 +302,9 @@ const MovieDetailPage = () => {
   };
   // handle rate movie
   const handleRateMovie = () => {
-    // Cuộn xuống form đánh giá
     if (reviewFormRef.current) {
       reviewFormRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     } else {
-      // if not found ref, switch to reviews tab
       setActiveTab('reviews');
       setTimeout(() => {
         if (reviewFormRef.current) {

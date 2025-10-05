@@ -89,7 +89,7 @@
 }
 
 .header-container {
-  max-width: 1320px;
+  max-width: 1650px;
   margin: 0 auto;
   padding: 0 2rem;
   height: 100%;
@@ -1425,7 +1425,7 @@
 
 /* Admin Link Styling */
 .admin-link {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background:#667eea;
   color: white !important;
   font-weight: 600;
   border-radius: 6px;

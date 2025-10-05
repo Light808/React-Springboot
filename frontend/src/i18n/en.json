@@ -14,10 +14,16 @@
     "sellTickets": "Sell Tickets",
     "news": "News",
     "myTickets": "My Tickets",
-    "markAllAsRead": "Đánh dấu tất cả đã đọc",
+    "markAllAsRead": "Mark all read",
     "searchMovies": "Search Movie...",
     "helloAdmin": "Hello, Admin !",
     "Total": "Total",
-    "Addnewfilm": "Add news film"
+    "Addnewfilm": "Add news film",
+    "bookMovie": "Book Movie",
+    "viewAllNotifications": "View All Notifications",
+    "review": " Review",
+    "Loadinghomepage": "Loading homepage...",
+    "nowShowing": "Now Showing",
+    "Welcometocinema": "Welcome to HAK Cinema"
   }
   

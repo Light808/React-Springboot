@@ -4,8 +4,10 @@ import HeroSection from '../../components/HeroSection/HeroSection';
 import FeaturedMovies from '../../components/FeaturedMovies/FeaturedMovies';
 import { getMovies } from '../../../services/movieService';
 import './Homepage.css';
+import { useTranslation } from 'react-i18next';
 
 const Homepage = () => {
+  const { t } = useTranslation();
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -40,8 +42,8 @@ const Homepage = () => {
   );
 
   const tabs = [
-    { key: 'nowShowing', label: 'Phim đang chiếu', movies: nowShowingMovies },
-    { key: 'comingSoon', label: 'Phim sắp chiếu', movies: comingSoonMovies },
+    { key: 'nowShowing', label: t('nowShowing'), movies: nowShowingMovies },
+    { key: 'comingSoon', label: t('comingSoon'), movies: comingSoonMovies },
   ];
 
   if (loading) {
@@ -49,7 +51,7 @@ const Homepage = () => {
       <div className="homepage">  
         <div className="loading-container"> 
           <div className="loading-spinner"></div>
-          <p>Đang tải trang chủ...</p>
+          <p>{t('Loadinghomepage')}</p>
         </div>
       </div>
     );
