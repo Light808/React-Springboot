@@ -5,8 +5,11 @@ import { adminLogin } from '../../../services/adminService';
 import { Eye, EyeOff, X, AlertCircle, CheckCircle, Shield } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import './LoginModal.css'; 
+import { useTranslation } from "react-i18next";
 
 const LoginModal = ({ isOpen, onClose, onLogin }) => {
+  const { t } = useTranslation();
+
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -86,42 +89,42 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
 
     if (isRegister) {
       if (!formData.fullName.trim()) {
-        newErrors.fullName = 'Họ tên là bắt buộc';
+        newErrors.fullName = t('Họ tên là bắt buộc');
       } else if (formData.fullName.trim().length < 2) {
-        newErrors.fullName = 'Họ tên phải có ít nhất 2 ký tự';
+        newErrors.fullName = t('Họ tên phải có ít nhất 2 ký tự');
       }
 
       if (!formData.email.trim()) {
-        newErrors.email = 'Email là bắt buộc';
+        newErrors.email = t('Email là bắt buộc');
       } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-        newErrors.email = 'Email không hợp lệ';
+        newErrors.email = t('Email không hợp lệ');
       }
 
       if (!formData.phone.trim()) {
-        newErrors.phone = 'Số điện thoại là bắt buộc';
+        newErrors.phone = t('Số điện thoại là bắt buộc');
       } else if (!/^[0-9]{10,11}$/.test(formData.phone.replace(/\s/g, ''))) {
-        newErrors.phone = 'Số điện thoại không hợp lệ';
+        newErrors.phone = t('Số điện thoại không hợp lệ');
       }
     }
 
     if (!formData.username.trim()) {
-      newErrors.username = 'Tên đăng nhập là bắt buộc';
+      newErrors.username = t('Tên đăng nhập là bắt buộc');
     } else if (formData.username.trim().length < 3) {
-      newErrors.username = 'Tên đăng nhập phải có ít nhất 3 ký tự';
+      newErrors.username = t('Tên đăng nhập phải có ít nhất 3 ký tự');
     }
 
     if (!formData.password) {
-      newErrors.password = 'Mật khẩu là bắt buộc';
+      newErrors.password = t('Mật khẩu là bắt buộc');
     } else if (formData.password.length < 6) {
-      newErrors.password = 'Mật khẩu phải có ít nhất 6 ký tự';
+      newErrors.password = t('Mật khẩu phải có ít nhất 6 ký tự');
     }
 
     if (isRegister && formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Mật khẩu xác nhận không khớp';
+      newErrors.confirmPassword = t('Mật khẩu xác nhận không khớp');
     }
 
     if (isAdmin && !formData.adminKey.trim()) {
-      newErrors.adminKey = 'Admin key là bắt buộc';
+      newErrors.adminKey = t('Admin key là bắt buộc');
     }
 
     setErrors(newErrors);
@@ -263,7 +266,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
     <div className="login-modal-overlay" onClick={onClose}>
       <div className="login-modal" onClick={(e) => e.stopPropagation()}>
         <div className="login-modal-header">
-          <h2>{isAdmin ? 'Admin Panel' : 'Tài khoản'}</h2>
+          <h2>{isAdmin ? 'Admin Panel' : {t('Tài khoản')}}</h2>
           <button className="close-btn" onClick={onClose}>
             <X size={20} />
           </button>
@@ -283,14 +286,14 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
 
         <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">
-            <label className="form-label">Tài khoản</label>
+            <label className="form-label">{t('Tài khoản')}</label>
             <input
               type="text"
               name="username"
               value={formData.username}
               onChange={handleInputChange}
               className={`form-input ${errors.username ? 'error' : ''}`}
-              placeholder="Nhập tên đăng nhập"
+              placeholder={t('Nhập tên đăng nhập')}
             />
             {errors.username && (
               <span className="error-message">{errors.username}</span>
@@ -298,7 +301,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Mật khẩu</label>
+            <label className="form-label">{t('Mật khẩu')}</label>
             <div className="password-input">
               <input
                 type={showPassword ? 'text' : 'password'}
@@ -306,7 +309,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
                 value={formData.password}
                 onChange={handleInputChange}
                 className={`form-input ${errors.password ? 'error' : ''}`}
-                placeholder="Nhập mật khẩu"
+                placeholder={t('Nhập mật khẩu')}
               />
               <button
                 type="button"
@@ -324,14 +327,14 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
           {isRegister && !isAdmin ? (
             <>
               <div className="form-group">
-                <label className="form-label">Họ và tên</label>
+                <label className="form-label">{t('Họ và tên')}</label>
                 <input
                   type="text"
                   name="fullName"
                   value={formData.fullName}
                   onChange={handleInputChange}
                   className={`form-input ${errors.fullName ? 'error' : ''}`}
-                  placeholder="Nhập họ và tên đầy đủ"
+                  placeholder={t('Nhập họ và tên đầy đủ')}
                 />
                 {errors.fullName && (
                   <span className="error-message">{errors.fullName}</span>
@@ -354,7 +357,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Số điện thoại</label>
+                <label className="form-label">{t('Số điện thoại')}</label>
                 <input
                   type="tel"
                   name="phone"
@@ -369,7 +372,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Xác nhận mật khẩu</label>
+                <label className="form-label">{t('Xác nhận mật khẩu')}</label>
                 <div className="password-input">
                   <input
                     type={showConfirmPassword ? 'text' : 'password'}
@@ -377,7 +380,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
                     className={`form-input ${errors.confirmPassword ? 'error' : ''}`}
-                    placeholder="Nhập lại mật khẩu"
+                    placeholder={t('Nhập lại mật khẩu')}
                   />
                   <button
                     type="button"
@@ -404,7 +407,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
                   value={formData.adminKey}
                   onChange={handleInputChange}
                   className={`form-input ${errors.adminKey ? 'error' : ''}`}
-                  placeholder="Nhập admin key để đăng nhập"
+                  placeholder={t('Nhập admin key để đăng nhập')}
                 />
                 <button
                   type="button"
@@ -422,7 +425,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
 
           {!isRegister && !isAdmin && (
             <div className="forgot-password">
-              <a href="#" className="forgot-link">Quên mật khẩu?</a>
+              <a href="#" className="forgot-link">{t('Quên mật khẩu')}?</a>
             </div>
           )}
 
@@ -441,7 +444,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
             {isLoading ? (
               <div className="loading-spinner"></div>
             ) : (
-              isRegister ? 'Đăng ký' : 'Đăng nhập'
+              isRegister ? {t('Đăng ký')} : {t('Đăng nhập')}
             )}
           </button>
         </form>
@@ -454,8 +457,8 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
               onClick={toggleMode}
             >
               {isRegister 
-                ? 'Đã có tài khoản? Đăng nhập ngay'
-                : 'Chưa có tài khoản? Đăng ký ngay!'
+                ? {t('Đã có tài khoản? Đăng nhập ngay')}
+                : {t('Chưa có tài khoản? Đăng ký ngay!')}
               }
             </button>
           </div>
@@ -464,9 +467,9 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
         {isAdmin && (
           <div className="admin-info">
             <p className="admin-credentials">
-              <strong>Thông tin đăng nhập admin:</strong><br />
-              Bạn cần có tài khoản admin và admin key để đăng nhập.<br />
-              Tài khoản admin được cấp bởi quản trị viên hệ thống.
+              <strong>{t('Thông tin đăng nhập admin')}:</strong><br />
+              {t('Bạn cần có tài khoản admin và admin key để đăng nhập')}.<br />
+              {t('Tài khoản admin được cấp bởi quản trị viên hệ thống')}.
             </p>
           </div>
         )}
