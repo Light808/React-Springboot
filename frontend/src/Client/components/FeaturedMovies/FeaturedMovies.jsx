@@ -1,12 +1,11 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import MovieCard from '../MovieCard/MovieCard';
 import styles from './FeaturedMovies.module.css';
 import { useTranslation } from "react-i18next";
 
-const FeaturedMovies = ({ movies, title = t('Phim đang chiếu'), subtitle = t('Khám phá những bộ phim hay nhất') }) => {
+const FeaturedMovies = ({ movies, title = "Phim đang chiếu", subtitle = "Khám phá những bộ phim hay nhất" }) => {
   const { t } = useTranslation();
-  const { i18n } =useTranslation();
-
   if (!movies || movies.length === 0) {
     return (
       <section className={`${styles['featured-movies']}`}>
