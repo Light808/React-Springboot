@@ -1,7 +1,6 @@
 import React from 'react';
 import { MapPin, Star, Phone, Clock } from 'lucide-react';
 import styles from './CinemaList.module.css';
-import LanguageSwitcher from "../../components/LanguageSwitcher";
 import { useTranslation } from "react-i18next";
 
 const CinemaList = ({ cinemas }) => {
