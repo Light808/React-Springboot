@@ -892,7 +892,7 @@ const Header = ({ user, setUser, onLogout }) => {
                     </Link>
                     <Link to="/game" className="user-menu-item" onClick={() => setIsUserDropdownOpen(false)}>
                     <CheckCircle size={16} />
-                      <span>Check-in</span>
+                      <span>{t('checkIn')}</span>
                     </Link>
                     <button className="user-menu-item" onClick={() => {
                       setIsUserDropdownOpen(false);

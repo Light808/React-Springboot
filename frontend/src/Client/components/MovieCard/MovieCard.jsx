@@ -4,8 +4,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Clock, Calendar } from 'lucide-react';
 import { getShowtimesByMovie, getShowtimesByCinemaAndMovie, getShowtimesByDateAndCinema } from '../../../services/showtimeService';
 import './MovieCard.css';
+import { useTranslation } from 'react-i18next';
 
 const MovieCard = ({ movie, cinemaId, selectedDate }) => {
+  const { t } = useTranslation();
   const [showtimes, setShowtimes] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -185,7 +187,7 @@ const MovieCard = ({ movie, cinemaId, selectedDate }) => {
         <div className="movie-meta">
           <div className="meta-item">
             <Clock size={16} />
-            <span>{getDuration(movie)} phút</span>
+            <span>{getDuration(movie)} {t('minutes')}</span>
           </div>
           <div className="meta-item">
             <Calendar size={16} />

@@ -7,10 +7,12 @@ import { getAllCinemas } from '../../../services/cinemaService';
 import { getMoviesByCinema } from '../../../services/movieService';
 import MovieCard from '../../components/MovieCard/MovieCard';
 import './CinemaDetailPage.css';
+import { useTranslation } from 'react-i18next';
 
 const CinemaDetailPage = () => {
   const { cinemaId } = useParams();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [cinema, setCinema] = useState(null);
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -49,19 +51,19 @@ const CinemaDetailPage = () => {
       const foundCinema = allCinemas.find(c => c.id === cinemaId);
       
       if (!foundCinema) {
-        setError('Không tìm thấy rạp chiếu');
+        setError(t('CinemaNotFound'));
         return;
       }
 
       const cinemaData = {
         id: foundCinema.id,
-        name: foundCinema.name || 'Tên rạp không xác định',
-        address: foundCinema.address || 'Địa chỉ chưa cập nhật',
-        city: foundCinema.city || 'Thành phố chưa cập nhật',
+        name: foundCinema.name || t('CinemaNameNotFound'),
+        address: foundCinema.address || t('CinemaAddressNotFound'),
+        city: foundCinema.city || t('CinemaCityNotFound'),
         phone: foundCinema.phone || null,
         email: foundCinema.email || null,
         imageUrl: foundCinema.imageUrl || null,
-        status: foundCinema.status || 'bán vé',
+        status: foundCinema.status || t('CinemaStatusNotFound'),
         description: foundCinema.description || null,
         totalSeats: foundCinema.totalSeats || 0,
         totalRooms: foundCinema.totalRooms || 0,
@@ -81,14 +83,14 @@ const CinemaDetailPage = () => {
       
     } catch (err) {
       console.error('Error fetching cinema data:', err);
-      setError('Không thể tải thông tin rạp chiếu');
+      setError(t('CinemaNotFound'));
     } finally {
       setLoading(false);
     }
   };
 
   const formatDate = (dateString) => {
-    if (!dateString) return 'Chưa cập nhật';
+    if (!dateString) return t('CinemaDateNotFound');
     try {
       const date = new Date(dateString);
       return date.toLocaleDateString('vi-VN', {
@@ -97,7 +99,7 @@ const CinemaDetailPage = () => {
         day: 'numeric'
       });
     } catch (error) {
-      return 'Chưa cập nhật';
+      return t('CinemaDateNotFound');
     }
   };
 
@@ -130,7 +132,7 @@ const CinemaDetailPage = () => {
     return (
       <div className="cinema-detail-loading">
         <div className="loading-spinner"></div>
-        <p>Đang tải thông tin rạp chiếu...</p>
+        <p>{t('LoadingCinemaData')}</p>
       </div>
     );
   }
@@ -139,11 +141,11 @@ const CinemaDetailPage = () => {
     return (
       <div className="cinema-detail-error">
         <div className="error-content">
-          <h2>Không thể tải thông tin rạp chiếu</h2>
+          <h2>{t('LoadingCinemaDataFailed')}</h2>
           <p>{error}</p>
           <button onClick={() => navigate('/')} className="back-button">
             <ArrowLeft size={20} />
-            Về trang chủ
+            {t('BackToHome')}
           </button>
         </div>
       </div>
@@ -154,11 +156,11 @@ const CinemaDetailPage = () => {
     return (
       <div className="cinema-detail-error">
         <div className="error-content">
-          <h2>Không tìm thấy rạp chiếu</h2>
-          <p>Rạp chiếu bạn tìm kiếm không tồn tại hoặc đã bị xóa.</p>
+          <h2>{t('CinemaNotFound')}</h2>
+          <p>{t('CinemaNotFoundDescription')}</p>
           <button onClick={() => navigate('/')} className="back-button">
             <ArrowLeft size={20} />
-            Về trang chủ
+            {t('BackToHome')}
           </button>
         </div>
       </div>
@@ -171,9 +173,9 @@ const CinemaDetailPage = () => {
       <div className="cinema-detail-header">
         <button onClick={() => navigate(-1)} className="back-button">
           <ArrowLeft size={20} />
-          Quay lại
+          {t('Back')}
         </button>
-        <h1>Thông tin rạp chiếu</h1>
+        <h1>{t('CinemaInfo')}</h1>
       </div>
 
       {/* Cinema Info */}
@@ -212,7 +214,7 @@ const CinemaDetailPage = () => {
                   rel="noopener noreferrer"
                   style={{ marginLeft: "5px", textDecoration: "none", color: "inherit" }}
                 >
-                  Bản đồ
+                  {t('Map')}
                 </a>
               </div>
 
@@ -222,7 +224,7 @@ const CinemaDetailPage = () => {
                 </div>
                 <div className="cinema-link">
                   <List size={16} />
-                  <span>CGV Cinemas</span>
+                  <span>{t('CinemaNameNotFound')}</span>
                 </div>
               </div>
             </div>
@@ -233,7 +235,7 @@ const CinemaDetailPage = () => {
               <p>{cinema.description}</p>
             ) : (
               <div className="no-description">
-                <p>Chưa có mô tả cho rạp chiếu này.</p>
+                <p>{t('CinemaDescriptionNotFound')}</p>
               </div>
             )}
           </div>
@@ -243,8 +245,8 @@ const CinemaDetailPage = () => {
       {/* Movies Section */}
       <div className="movies-section">
         <div className="section-header">
-          <h2>Phim đang chiếu</h2>
-          <span className="movie-count">{movies.length} phim</span>
+          <h2>{t('MoviesPlaying')}</h2>
+          <span className="movie-count">{movies.length} {t('Movies')}</span>
         </div>
 
         {/* 7-Day Date Selector */}
@@ -300,8 +302,8 @@ const CinemaDetailPage = () => {
         {movies.length === 0 ? (
           <div className="no-movies">
             <Film size={64} />
-            <h3>Chưa có phim nào</h3>
-            <p>Rạp chiếu này chưa có phim nào được thêm vào.</p>
+            <h3>{t('NoMoviesToDisplay')}</h3>
+            <p>{t('CinemaNoMovies')}</p>  
           </div>
         ) : (
           <div className="movies-grid">

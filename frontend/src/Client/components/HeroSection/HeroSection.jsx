@@ -15,7 +15,7 @@ const HeroSection = () => {
             <div className={`${styles['hero-actions']}`}>
               <button className={`${styles['hero-btn']} ${styles['primary']}`}>
                 <Play size={20} />
-                Khám phá ngay
+                {t('Discovernow')}
               </button>
             </div>
           </div>

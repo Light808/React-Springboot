@@ -14,7 +14,6 @@ export const adminLogin = async (credentials) => {
     const data = await response.json();
 
     if (data.success) {
-      // Store admin token and user info
       localStorage.setItem('adminToken', data.token);
       localStorage.setItem('adminUser', JSON.stringify(data.admin));
       return data.admin;

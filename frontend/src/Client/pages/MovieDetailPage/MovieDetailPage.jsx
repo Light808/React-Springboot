@@ -15,8 +15,6 @@ const MovieDetailPage = () => {
   const { movieId } = useParams();
   const location = useLocation();
   const [activeTab, setActiveTab] = useState('info');
-  // eslint-disable-next-line no-unused-vars
-  const [selectedCity, setSelectedCity] = useState('Tp. Hồ Chí Minh');
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -39,6 +37,25 @@ const MovieDetailPage = () => {
     return false;
   });
   const reviewFormRef = React.useRef(null);
+  const reviewsSectionRef = React.useRef(null);
+  const bookingSectionRef = React.useRef(null);
+  const [pendingScroll, setPendingScroll] = useState(null);
+
+  // Scroll to section
+  useEffect(() => {
+    if (pendingScroll === 'reviews' && activeTab === 'reviews') {
+      if (reviewsSectionRef.current) {
+        reviewsSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      setPendingScroll(null);
+    }
+    if (pendingScroll === 'booking' && activeTab === 'booking') {
+      if (bookingSectionRef.current) {
+        bookingSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      setPendingScroll(null);
+    }
+  }, [activeTab, pendingScroll]);
 
   // Format time ago for reviews
   const formatTimeAgo = (dateString) => {
@@ -260,10 +277,6 @@ const MovieDetailPage = () => {
     return movie.director || 'Không có thông tin';
   };
 
-
-
-
-
   // Handle like review
   const handleLikeReview = async (reviewId) => {
     try {
@@ -302,23 +315,14 @@ const MovieDetailPage = () => {
   };
   // Xử lý nút Đánh giá
   const handleRateMovie = () => {
-    // Cuộn xuống form đánh giá
-    if (reviewFormRef.current) {
-      reviewFormRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    } else {
-      // Nếu không tìm thấy ref, chuyển sang tab reviews
-      setActiveTab('reviews');
-      setTimeout(() => {
-        if (reviewFormRef.current) {
-          reviewFormRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-      }, 300);
-    }
+    // Chuyển sang tab reviews và cuộn đến phần đánh giá
+    setActiveTab('reviews');
+    setPendingScroll('reviews');
   };
   // Xử lý nút Mua vé
   const handleBuyTicket = () => {
     setActiveTab('booking');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setPendingScroll('booking');
   };
 
   return (
@@ -543,7 +547,7 @@ const MovieDetailPage = () => {
                     <p>Đang tải đánh giá từ cộng đồng...</p>
                   </div>
                 )}
-
+                
                 {/* Error State */}
                 {reviewsError && (
                   <div className={`${styles['error-message']}`}>
@@ -553,7 +557,7 @@ const MovieDetailPage = () => {
                     </button>
                   </div>
                 )}
-
+                
                 {/* Reviews Grid - Hiển thị tối đa 3 đánh giá */}
                 {!reviewsLoading && !reviewsError && (
                   <div className={`${styles['reviews-grid']}`}>
@@ -640,7 +644,7 @@ const MovieDetailPage = () => {
         )}
 
         {activeTab === 'reviews' && (
-          <div className={`${styles['reviews-section']}`}>
+          <div className={`${styles['reviews-section']}`} ref={reviewsSectionRef}>
             <h2>Đánh giá từ cộng đồng</h2>
             
             {/* Review Form */}
@@ -863,10 +867,12 @@ const MovieDetailPage = () => {
         )}
 
         {activeTab === 'booking' && (
-          <ShowtimeSchedule 
-            movieId={movieId} 
-            movieTitle={getTitle(movie)} 
-          />
+          <div ref={bookingSectionRef}>
+            <ShowtimeSchedule 
+              movieId={movieId} 
+              movieTitle={getTitle(movie)} 
+            />
+          </div>
         )}
       </div>
 
