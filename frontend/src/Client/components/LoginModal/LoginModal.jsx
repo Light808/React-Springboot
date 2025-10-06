@@ -266,7 +266,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
     <div className="login-modal-overlay" onClick={onClose}>
       <div className="login-modal" onClick={(e) => e.stopPropagation()}>
         <div className="login-modal-header">
-          <h2>{isAdmin ? 'Admin Panel' : {t('Tài khoản')}}</h2>
+          <h2>{isAdmin ? 'Admin Panel' : t('Tài khoản')}</h2>
           <button className="close-btn" onClick={onClose}>
             <X size={20} />
           </button>
