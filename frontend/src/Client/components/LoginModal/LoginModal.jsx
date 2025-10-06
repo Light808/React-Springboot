@@ -457,8 +457,8 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
               onClick={toggleMode}
             >
               {isRegister 
-                ? {t('Đã có tài khoản? Đăng nhập ngay')}
-                : {t('Chưa có tài khoản? Đăng ký ngay!')}
+                ? t('Đã có tài khoản? Đăng nhập ngay')
+                : t('Chưa có tài khoản? Đăng ký ngay!')
               }
             </button>
           </div>
