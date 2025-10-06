@@ -444,7 +444,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
             {isLoading ? (
               <div className="loading-spinner"></div>
             ) : (
-              isRegister ? {t('Đăng ký')} : {t('Đăng nhập')}
+              isRegister ? t('Đăng ký') : t('Đăng nhập')
             )}
           </button>
         </form>
