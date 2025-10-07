@@ -17,7 +17,7 @@ const DateSelector = ({ selectedDate, onDateChange }) => {
       const date = new Date(today);
       date.setDate(today.getDate() + i);
       
-      const dayNames = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
+      const dayNames = [t('CN'), t('T2'), t('T3'), t('T4'), t('T5'), t('T6'), t('T7')];
       const dayName = dayNames[date.getDay()];
       
       dates.push({
