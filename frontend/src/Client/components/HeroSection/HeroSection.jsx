@@ -10,12 +10,12 @@ const HeroSection = () => {
       <div className={`${styles['hero-background']}`}>
         <div className={`${styles['hero-content']}`}>
           <div className={`${styles['hero-text']}`}>
-            <h1 className={`${styles['hero-title']}`}>{t('Welcome to cinema')}</h1>
-            <p className={`${styles['hero-subtitle']}`}>{t('Vietnam\'s leading movie ticket booking platform')}</p>
+            <h1 className={`${styles['hero-title']}`}>{t('Welcometocinema')}</h1>
+            <p className={`${styles['hero-subtitle']}`}>{t('Ticketbookingplatform')}</p>
             <div className={`${styles['hero-actions']}`}>
               <button className={`${styles['hero-btn']} ${styles['primary']}`}>
                 <Play size={20} />
-                {t('Explore Now')}
+                {t('Discovernow')}
               </button>
             </div>
           </div>

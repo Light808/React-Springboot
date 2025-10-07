@@ -66,11 +66,11 @@ const MovieDetailPage = () => {
     const diffInMs = now - reviewDate;
     const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
     
-    if (diffInDays === 0) return 'Hôm nay';
-    if (diffInDays === 1) return '1 ngày trước';
-    if (diffInDays < 7) return `${diffInDays} ngày trước`;
-    if (diffInDays < 30) return `${Math.floor(diffInDays / 7)} tuần trước`;
-    return `${Math.floor(diffInDays / 30)} tháng trước`;
+    if (diffInDays === 0) return 'Today';
+    if (diffInDays === 1) return '1 day ago';
+    if (diffInDays < 7) return `${diffInDays} days ago`;
+    if (diffInDays < 30) return `${Math.floor(diffInDays / 7)} week ago`;
+    return `${Math.floor(diffInDays / 30)} month ago`;
   };
 
   // Fetch community reviews from API
@@ -81,8 +81,7 @@ const MovieDetailPage = () => {
       setReviewsLoading(true);
       setReviewsError(null);
       const reviews = await getReviewsByMovieId(movieId);
-      
-      // Transform reviews to match frontend format
+     
       const transformedReviews = reviews.map(review => ({
         id: review.id,
         userName: review.userName,
@@ -111,7 +110,7 @@ const MovieDetailPage = () => {
       
       let news;
       if (category === 'all') {
-        news = await getAllNews(0, 20); // Get first 20 news articles
+        news = await getAllNews(0, 20); 
       } else {
         news = await getNewsByCategory(category);
       }

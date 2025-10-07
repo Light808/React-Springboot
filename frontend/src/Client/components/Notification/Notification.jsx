@@ -8,8 +8,10 @@ import {
   getUnreadNotificationCount 
 } from '../../../services/notificationService';
 import styles from './Notification.module.css';
+import { useTranslation } from 'react-i18next';
 
 const Notification = ({ userId, onClose }) => {
+  const { t } = useTranslation();
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -79,7 +81,7 @@ const Notification = ({ userId, onClose }) => {
     try {
       await deleteNotification(notificationId);
       setNotifications(prev => prev.filter(notif => notif.id !== notificationId));
-      // Cập nhật unread count nếu cần
+      // Update unread count if needed
       const deletedNotif = notifications.find(notif => notif.id === notificationId);
       if (deletedNotif && !deletedNotif.isRead) {
         setUnreadCount(prev => Math.max(0, prev - 1));
@@ -107,10 +109,10 @@ const Notification = ({ userId, onClose }) => {
     const now = new Date();
     const diffInMinutes = Math.floor((now - date) / (1000 * 60));
     
-    if (diffInMinutes < 1) return 'Vừa xong';
-    if (diffInMinutes < 60) return `${diffInMinutes} phút trước`;
-    if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)} giờ trước`;
-    if (diffInMinutes < 10080) return `${Math.floor(diffInMinutes / 1440)} ngày trước`;
+    if (diffInMinutes < 1) return t('Now');
+    if (diffInMinutes < 60) return `${diffInMinutes} ${t('minutes ago')}`;
+    if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)} ${t('hours ago')}`;
+    if (diffInMinutes < 10080) return `${Math.floor(diffInMinutes / 1440)} ${t('days ago')}`;
     
     return date.toLocaleDateString('vi-VN', {
       day: '2-digit',
@@ -131,7 +133,7 @@ const Notification = ({ userId, onClose }) => {
         <div className={styles['notification-modal']}>
           <div className={styles['notification-loading']}>
             <div className={styles['loading-spinner']}></div>
-            <p>Đang tải thông báo...</p>
+            <p>{t('Loadingnotifications')}</p>
           </div>
         </div>
       </div>
@@ -144,7 +146,7 @@ const Notification = ({ userId, onClose }) => {
         <div className={styles['notification-header']}>
           <div className={styles['notification-title']}>
             <Bell size={20} />
-            <h3>Thông báo</h3>
+            <h3>{t('Notifications')}</h3>
             {unreadCount > 0 && (
               <span className={styles['unread-badge']}>{unreadCount}</span>
             )}
@@ -162,13 +164,13 @@ const Notification = ({ userId, onClose }) => {
             className={`${styles['tab-btn']} ${activeTab === 'all' ? styles['tab-active'] : ''}`}
             onClick={() => setActiveTab('all')}
           >
-            Tất cả ({notifications.length})
+            {t('All')} ({notifications.length})
           </button>
           <button 
             className={`${styles['tab-btn']} ${activeTab === 'unread' ? styles['tab-active'] : ''}`}
             onClick={() => setActiveTab('unread')}
           >
-            Chưa đọc ({unreadCount})
+            {t('Unread')} ({unreadCount})
           </button>
         </div>
 
@@ -179,7 +181,7 @@ const Notification = ({ userId, onClose }) => {
               onClick={handleMarkAllAsRead}
             >
               <Check size={16} />
-              Đánh dấu tất cả đã đọc
+              {t('Mark all as read')}
             </button>
           )}
         </div>
@@ -188,7 +190,7 @@ const Notification = ({ userId, onClose }) => {
           {filteredNotifications.length === 0 ? (
             <div className={styles['no-notifications']}>
               <Bell size={48} />
-              <p>Không có thông báo nào</p>
+              <p>{t('No notifications')}</p>
             </div>
           ) : (
             filteredNotifications.map(notification => (
@@ -220,7 +222,7 @@ const Notification = ({ userId, onClose }) => {
                     <button 
                       className={styles['mark-read-btn']}
                       onClick={() => handleMarkAsRead(notification.id)}
-                      title="Đánh dấu đã đọc"
+                      title={t('Mark as read')}
                     >
                       <Check size={14} />
                     </button>
@@ -228,7 +230,7 @@ const Notification = ({ userId, onClose }) => {
                   <button 
                     className={styles['delete-btn']}
                     onClick={() => handleDeleteNotification(notification.id)}
-                    title="Xóa thông báo"
+                    title={t('Delete notification')}
                   >
                     <Trash2 size={14} />
                   </button>

@@ -20,6 +20,7 @@ import AdminRoute from './Admin/components/Admin/AdminRoute';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { getCurrentUser, logoutUser, isAuthenticated } from './services/userService';
 import DailySpinPage from './Client/pages/DailySpinPage';
+import ChatBox from './Client/components/ChatBox/ChatBox';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -130,6 +131,7 @@ function App() {
           </Routes>
         </main>
         {!window.location.pathname.startsWith('/admin') && <Footer />}
+        {!window.location.pathname.startsWith('/admin') && <ChatBox />}
       </div>
     </Router>
   );

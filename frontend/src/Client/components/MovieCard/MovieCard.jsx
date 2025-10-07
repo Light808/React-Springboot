@@ -177,10 +177,10 @@ const MovieCard = ({ movie, cinemaId, selectedDate }) => {
       <div className="movie-card-content">
         <h3 className="movie-title">{getTitle(movie)}</h3> 
         {getEnglishTitle(movie) && (
-          <p className="movie-english-title">{t('getEnglishTitle(movie))}</p>
+          <p className="movie-english-title">{getEnglishTitle(movie)}</p>
         )}
         <div className="movie-rating-format">
-        <span className="rating-badge">{t('getAgeRating(movie))}</span>
+        <span className="rating-badge">{getAgeRating(movie)}</span>
         </div>
   
         

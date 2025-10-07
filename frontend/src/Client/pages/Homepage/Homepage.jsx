@@ -23,7 +23,7 @@ const Homepage = () => {
         setError(null);
       } catch (err) {
         console.error('Error fetching movies:', err);
-        setError('Không thể tải danh sách phim');
+        setError('Cannot load movie list');
       } finally {
         setLoading(false);
       }
@@ -62,7 +62,7 @@ const Homepage = () => {
       <div className="homepage">
         <div className="error-container">
           <p>{error}</p>
-          <button onClick={() => window.location.reload()}>Reload Server</button>
+          <button onClick={() => window.location.reload()}>{t('Reload Server')}</button>
         </div>
       </div>
     );

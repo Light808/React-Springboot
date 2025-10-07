@@ -3,8 +3,10 @@ import { registerUser, loginUser } from '../../services/userService';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, User, Lock, Mail, Phone, UserCheck, LogIn, AlertCircle, CheckCircle } from 'lucide-react';
 import styles from './LoginPage.module.css';
+import { useTranslation } from 'react-i18next';
 
 const LoginPage = ({ onLogin }) => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -42,38 +44,38 @@ const LoginPage = ({ onLogin }) => {
 
     if (isRegister) {
       if (!formData.fullName.trim()) {
-        newErrors.fullName = 'Họ tên là bắt buộc';
+        newErrors.fullName = 'Full name is required';
       } else if (formData.fullName.trim().length < 2) {
-        newErrors.fullName = 'Họ tên phải có ít nhất 2 ký tự';
+        newErrors.fullName = 'Full name must be at least 2 characters';
       }
 
       if (!formData.email.trim()) {
-        newErrors.email = 'Email là bắt buộc';
+        newErrors.email = 'Email is required';
       } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-        newErrors.email = 'Email không hợp lệ';
+        newErrors.email = 'Invalid email';
       }
 
       if (!formData.phone.trim()) {
-        newErrors.phone = 'Số điện thoại là bắt buộc';
+        newErrors.phone = 'Phone number is required';
       } else if (!/^[0-9]{10,11}$/.test(formData.phone.replace(/\s/g, ''))) {
-        newErrors.phone = 'Số điện thoại không hợp lệ';
+        newErrors.phone = 'Invalid phone number';
       }
     }
 
     if (!formData.username.trim()) {
-      newErrors.username = 'Tên đăng nhập là bắt buộc';
+      newErrors.username = 'Username is required';
     } else if (formData.username.trim().length < 3) {
-      newErrors.username = 'Tên đăng nhập phải có ít nhất 3 ký tự';
+      newErrors.username = 'Login name must be at least 3 characters';
     }
 
     if (!formData.password) {
-      newErrors.password = 'Mật khẩu là bắt buộc';
+      newErrors.password = 'Password is required';
     } else if (formData.password.length < 6) {
-      newErrors.password = 'Mật khẩu phải có ít nhất 6 ký tự';
+      newErrors.password = 'Password must be at least 6 characters';
     }
 
     if (isRegister && formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Mật khẩu xác nhận không khớp';
+      newErrors.confirmPassword = 'Confirmation password does not match';
     }
 
     setErrors(newErrors);
@@ -102,7 +104,7 @@ const LoginPage = ({ onLogin }) => {
         
         setMessage({
           type: 'success',
-          text: 'Đăng ký thành công! Vui lòng đăng nhập.'
+          text: 'Registration successful! Please log in.'
         });
         
         // Reset form after successful registration
@@ -133,14 +135,14 @@ const LoginPage = ({ onLogin }) => {
         } else {
           setMessage({
             type: 'error',
-            text: 'Sai tài khoản hoặc mật khẩu'
+            text: 'Wrong account or password'
           });
         }
       }
     } catch (error) {
       setMessage({
         type: 'error',
-        text: error.message || (isRegister ? 'Đăng ký thất bại! Vui lòng thử lại.' : 'Đăng nhập thất bại! Vui lòng thử lại.')
+        text: error.message || (isRegister ? 'Registration failed! Please try again.' : 'Login failed! Please try again.')
       });
     } finally {
       setIsLoading(false);
@@ -170,12 +172,12 @@ const LoginPage = ({ onLogin }) => {
               {isRegister ? <UserCheck size={32} /> : <LogIn size={32} />}
             </div>
             <h1 className={`${styles['auth-title']}`}>
-              {isRegister ? 'Tạo tài khoản mới' : 'Đăng nhập'}
+              {isRegister ? t('createAccount') : t('login')}
             </h1>
             <p className={`${styles['auth-subtitle']}`}>
               {isRegister 
-                ? 'Tham gia cùng chúng tôi để trải nghiệm dịch vụ tốt nhất'
-                : 'Chào mừng bạn quay trở lại!'
+                ? 'joinUs'
+                : 'welcomeBack!'
               }
             </p>
           </div>
@@ -187,7 +189,7 @@ const LoginPage = ({ onLogin }) => {
               <div className={`${styles['form-group']}`}>
                 <label className={`${styles['form-label']}`}>
                   <User size={16} />
-                  Họ và tên
+                  {t('FullName')}
                 </label>
                 <input
                   type="text"
@@ -195,7 +197,7 @@ const LoginPage = ({ onLogin }) => {
                   value={formData.fullName}
                   onChange={handleInputChange}
                   className={`${styles['form-input']} ${errors.fullName ? styles['error'] : ''}`}
-                  placeholder="Nhập họ và tên đầy đủ"
+                  placeholder={t('enterFullName')}
                 />
                 {errors.fullName && (
                   <span className={`${styles['error-message']}`}>{errors.fullName}</span>
@@ -223,7 +225,7 @@ const LoginPage = ({ onLogin }) => {
               <div className={`${styles['form-group']}`}>
                 <label className={`${styles['form-label']}`}>
                   <Phone size={16} />
-                  Số điện thoại
+                  {t('phone')}
                 </label>
                 <input
                   type="tel"
@@ -243,7 +245,7 @@ const LoginPage = ({ onLogin }) => {
           <div className={`${styles['form-group']}`}>
             <label className={`${styles['form-label']}`}>
               <User size={16} />
-              Tên đăng nhập
+              {t('Username')}
             </label>
             <input
               type="text"
@@ -251,7 +253,7 @@ const LoginPage = ({ onLogin }) => {
               value={formData.username}
               onChange={handleInputChange}
               className={`${styles['form-input']} ${errors.username ? styles['error'] : ''}`}
-              placeholder="Nhập tên đăng nhập"
+              placeholder={t('EnterUsername')}
             />
             {errors.username && (
               <span className={`${styles['error-message']}`}>{errors.username}</span>
@@ -261,7 +263,7 @@ const LoginPage = ({ onLogin }) => {
           <div className={`${styles['form-group']}`}>
             <label className={`${styles['form-label']}`}>
               <Lock size={16} />
-              Mật khẩu
+              {t('Password')}
             </label>
             <div className={`${styles['password-input']}`}>
               <input
@@ -270,7 +272,7 @@ const LoginPage = ({ onLogin }) => {
                 value={formData.password}
                 onChange={handleInputChange}
                 className={`${styles['form-input']} ${errors.password ? styles['error'] : ''}`}
-                placeholder="Nhập mật khẩu" 
+                placeholder={t('EnterPassword')} 
               />
               <button
                 type="button"

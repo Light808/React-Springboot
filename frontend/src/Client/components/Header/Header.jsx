@@ -13,7 +13,7 @@ import LoginModal from '../LoginModal/LoginModal';
 import UserProfile from '../UserProfile/UserProfile';
 import UserSettingsModal from '../UserProfile/UserSettingsModal';
 import './Header.css';
-import LanguageSwitcher from "../../components/LanguageSwitcher";
+import LanguageSwitcher from "../LanguageSwitcher/LanguageSwitcher";
 import { useTranslation } from 'react-i18next';
 
 

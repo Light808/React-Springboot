@@ -34,7 +34,6 @@ const ComboSelectionPage = () => {
       setSelectedSeats(location.state.selectedSeats || []);
       setUser(location.state.user);
     } else {
-      // Try to load from URL params (for SeatSelectionModal)
       try {
         const showtimeParam = searchParams.get('showtime');
         const movieParam = searchParams.get('movie');
@@ -61,7 +60,7 @@ const ComboSelectionPage = () => {
         setCombos(combosData);
       } catch (error) {
         console.error('Error fetching combos:', error);
-        setError('Không thể tải danh sách combo. Vui lòng thử lại.');
+        setError('Cannot load combo list. Please try again.');
         setCombos([]);
       } finally {
         setLoading(false);
@@ -105,7 +104,7 @@ const ComboSelectionPage = () => {
   };
 
   const formatPrice = (price) => {
-    return new Intl.NumberFormat('vi-VN', {
+    return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'VND'
     }).format(price);
@@ -115,7 +114,7 @@ const ComboSelectionPage = () => {
     if (!timeString) return '';
     try {
       const date = new Date(timeString);
-      return date.toLocaleTimeString('vi-VN', {
+      return date.toLocaleTimeString('en-US', {
         hour: '2-digit',
         minute: '2-digit',
         hour12: false
@@ -129,7 +128,7 @@ const ComboSelectionPage = () => {
     if (!dateString) return '';
     try {
       const date = new Date(dateString);
-      return date.toLocaleDateString('vi-VN', {
+      return date.toLocaleDateString('en-US', {
         weekday: 'long',
         year: 'numeric',
         month: 'long',
@@ -170,7 +169,7 @@ const ComboSelectionPage = () => {
       setBooking(true);
       setMessage('');
       
-      // Tạo dữ liệu vé với combo
+      // Create ticket data with combo
       const seatNumbers = selectedSeats?.map(seat => seat.seatNumber).join(', ') || '';
       const seatIds = selectedSeats?.map(seat => seat.id).join(', ') || '';
       const totalPrice = getTotalPrice();
@@ -284,18 +283,18 @@ const ComboSelectionPage = () => {
           {loading ? (
             <div className="loading-container">
               <div className="loading-spinner"></div>
-              <p>{t('Đang tải danh sách combo...')}</p>
+              <p>{t('Loadingcombolist...')}</p>
             </div>
           ) : error ? (
             <div className="error-message">
               <p>{error}</p>
               <button onClick={() => window.location.reload()} className="retry-btn">
-                {t('Thử lại')}
+                {t('Tryagain')}
               </button>
             </div>
           ) : combos.length === 0 ? (
             <div className="no-combos-message">
-              <p>Hiện tại chưa có combo nào. Vui lòng thử lại sau.</p>
+              <p>{t('Currently there is no combo. Please try again later.')}</p>
             </div>
           ) : (
             <div className="combo-grid">
@@ -337,31 +336,31 @@ const ComboSelectionPage = () => {
         </div>
 
         <div className="order-summary">
-          <h2>Tóm tắt đơn hàng</h2>
+          <h2>{t('OrderSummary')}</h2>
           
           <div className="summary-section">
-            <h3>Thông tin vé</h3>
+            <h3>{t('TicketInformation')}</h3>
             <div className="summary-item">
-              <span>Phim:</span>
+              <span>{t('Movie')}:</span>
               <span>{movie?.title || movie?.name}</span>
             </div>
             <div className="summary-item">
-              <span>Suất chiếu:</span>
+              <span>{t('Showtime')}:</span>
               <span>{formatDate(showtime?.startTime)} - {formatTime(showtime?.startTime)}</span>
             </div>
             <div className="summary-item">
-              <span>Ghế:</span>
+              <span>{t('Seat')}:</span>
               <span>{selectedSeats?.map(s => s.seatNumber).join(', ')}</span>
             </div>
             <div className="summary-item">
-              <span>Giá vé:</span>
+              <span>{t('TicketPrice')}:</span>
               <span>{formatPrice(getTicketPrice())}</span>
             </div>
           </div>
 
           {Object.keys(selectedCombos).length > 0 && (
             <div className="summary-section">
-              <h3>Combo đã chọn</h3>
+              <h3>{t('SelectedCombo')}</h3>
               {Object.entries(selectedCombos).map(([comboId, quantity]) => {
                 const combo = combos.find(c => c.id === comboId);
                 if (!combo) return null;
@@ -377,13 +376,13 @@ const ComboSelectionPage = () => {
 
           <div className="summary-section total">
             <div className="summary-item">
-              <span>Tổng cộng:</span>
+              <span>{t('Total')}:</span>
               <span>{formatPrice(getTotalPrice())}</span>
             </div>
           </div>
 
           <div className="payment-methods">
-            <h3>Phương thức thanh toán</h3>
+            <h3>{t('PaymentMethod')}</h3>
             <div className="payment-options">
               <label className="payment-option">
                 <input 
@@ -398,8 +397,8 @@ const ComboSelectionPage = () => {
                     <img src="https://play-lh.googleusercontent.com/22cJzF0otG-EmmQgILMRTWFPnx0wTCSDY9aFaAmOhHs30oNHxi63KcGwUwmbR76Msko" alt="VietQR" className="payment-icon-img" />
                   </div>
                   <div className="payment-details">
-                    <span className="payment-title">VietQR</span>
-                    <span className="payment-desc">Quét mã QR để thanh toán</span>
+                    <span className="payment-title">{t('VietQR')}</span>
+                    <span className="payment-desc">{t('ScanQRtoPay')}</span>
                   </div>
                 </div>
               </label>
@@ -416,8 +415,8 @@ const ComboSelectionPage = () => {
                     <img src="https://play-lh.googleusercontent.com/uCtnppeJ9ENYdJaSL5av-ZL1ZM1f3b35u9k8EOEjK3ZdyG509_2osbXGH5qzXVmoFv0" alt="MoMo" className="payment-icon-img" />
                   </div>
                   <div className="payment-details">
-                    <span className="payment-title">Ví MoMo</span>
-                    <span className="payment-desc">Thanh toán qua ứng dụng MoMo</span>
+                    <span className="payment-title">{t('MoMo')}</span>
+                    <span className="payment-desc">{t('PayviaMoMo')}</span>
                   </div>
                 </div>
               </label>
@@ -434,8 +433,8 @@ const ComboSelectionPage = () => {
                     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTlp4qW2M8xPofmuZHwEfGi9mNMWUG0zs53A&s" alt="ZaloPay" className="payment-icon-img" />
                   </div>
                   <div className="payment-details">
-                    <span className="payment-title">ZaloPay</span>
-                    <span className="payment-desc">Thanh toán qua ZaloPay</span>
+                    <span className="payment-title">{t('ZaloPay')}</span>
+                    <span className="payment-desc">{t('PayviaZaloPay')}</span>
                   </div>
                 </div>
               </label>
@@ -450,17 +449,17 @@ const ComboSelectionPage = () => {
             {booking ? (
               <>
                 <div className="loading-spinner-small"></div>
-                Đang xử lý...
+                {t('Processing...')}
               </>
             ) : (
               <>
-                Xác nhận đặt vé
+                {t('ConfirmBooking')}
               </>
             )}
           </button>
 
           {message && (
-            <div className={`message ${message.includes('thành công') ? 'success' : 'error'}`}>
+            <div className={`message ${message.includes(t('Success')) ? 'success' : 'error'}`}>
               {message}
             </div>
           )}

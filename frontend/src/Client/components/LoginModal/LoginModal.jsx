@@ -457,8 +457,8 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
               onClick={toggleMode}
             >
               {isRegister 
-                ? t('Already have an account? Login now')
-                : t('Don't have an account? Sign up now!')
+                ? t("Already have an account? Login now")
+                : t("Don't have an account? Sign up now!")
               }
             </button>
           </div>
@@ -469,7 +469,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
             <p className="admin-credentials">
               <strong>{t('Admin login information')}:</strong><br />
               {t('You need an admin account and admin key to log in')}.<br />
-              {t('Admin accounts are issued by the system administrator'}.
+              {t('Admin accounts are issued by the system administrator')}.
             </p>
           </div>
         )}

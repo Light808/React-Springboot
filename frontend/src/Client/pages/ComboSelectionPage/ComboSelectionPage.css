@@ -399,7 +399,7 @@
 
 .message.success {
   background: #d1fae5;
-  color: #065f46;
+  color: #065f46 !important;
   border: 1px solid #a7f3d0;
 }
 
