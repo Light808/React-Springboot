@@ -18,11 +18,11 @@ const MovieCard = ({ movie, cinemaId, selectedDate }) => {
   };
 
   const getTitle = (movie) => {
-    return movie.title || movie.name || movie.movieName || 'Unknown Title';
+    return movie.title || movie.name || movie.movieName || t('Unknown Title');
   };
 
   const getGenre = (movie) => {
-    return movie.genre || movie.genres || movie.category || 'Unknown Genre';
+    return movie.genre || movie.genres || movie.category || t('Unknown Genre');
   };
 
   const getDuration = (movie) => {
@@ -30,7 +30,7 @@ const MovieCard = ({ movie, cinemaId, selectedDate }) => {
   };
 
   const getFormat = (movie) => {
-    return movie.format || '2D Phụ Đề Việt - Anh';
+    return movie.format || t('2D Vietnamese-English subtitle');
   };
 
   const getAgeRating = (movie) => {
@@ -46,7 +46,7 @@ const MovieCard = ({ movie, cinemaId, selectedDate }) => {
       const date = new Date(movie.releaseDate);
       return date.toLocaleDateString('vi-VN');
     }
-    return movie.releaseYear || movie.year || 'Chưa có thông tin';
+    return movie.releaseYear || movie.year || 'No information available';
   };
 
   // Fetch showtimes from API 
@@ -177,10 +177,10 @@ const MovieCard = ({ movie, cinemaId, selectedDate }) => {
       <div className="movie-card-content">
         <h3 className="movie-title">{getTitle(movie)}</h3> 
         {getEnglishTitle(movie) && (
-          <p className="movie-english-title">{getEnglishTitle(movie)}</p>
+          <p className="movie-english-title">{t('getEnglishTitle(movie))}</p>
         )}
         <div className="movie-rating-format">
-        <span className="rating-badge">{getAgeRating(movie)}</span>
+        <span className="rating-badge">{t('getAgeRating(movie))}</span>
         </div>
   
         
@@ -205,12 +205,12 @@ const MovieCard = ({ movie, cinemaId, selectedDate }) => {
         {cinemaId ? (
           <div className="showtimes-section">
             {loading ? (
-              <div className="showtimes-loading">Đang tải...</div> 
+              <div className="showtimes-loading">{t('Loading...')}</div> 
             ) : showtimes.length > 0 ? (
               <div className="showtimes-by-format">
                 {(() => {
                   const groupedShowtimes = showtimes.reduce((groups, showtime) => {
-                    const format = showtime.format || '2D - Phụ đề Việt';
+                    const format = showtime.format || t('2D - Vietnamese subtitle');
                     if (!groups[format]) {
                       groups[format] = [];
                     }
@@ -241,7 +241,7 @@ const MovieCard = ({ movie, cinemaId, selectedDate }) => {
                 })()}
               </div>
             ) : (
-              <div className="no-showtimes">Chưa có lịch chiếu</div>
+              <div className="no-showtimes">{t('No screening schedule yet')}</div>
             )}
           </div>
         ) : null}
