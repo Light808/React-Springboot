@@ -3,7 +3,7 @@ import MovieCard from '../MovieCard/MovieCard';
 import styles from './FeaturedMovies.module.css';
 import { useTranslation } from 'react-i18next';
 
-const FeaturedMovies = ({ movies, title = 'Phim đang chiếu', subtitle = 'Khám phá những bộ phim hay nhất' }) => {
+const FeaturedMovies = ({ movies, title = 'Phim đang chiếu', subtitle = 'Explore top-rated movies' }) => {
   const { t } = useTranslation();
   if (!movies || movies.length === 0) {
     return (
