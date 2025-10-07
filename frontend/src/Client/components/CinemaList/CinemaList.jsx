@@ -8,7 +8,7 @@ const CinemaList = ({ cinemas }) => {
   const { t } = useTranslation();
   // Helper functions to get data with fallbacks
   const getCinemaName = (cinema) => {
-    return cinema.name || cinema.cinemaName || 'Không có tên';
+    return cinema.name || cinema.cinemaName || 'No name';
   };
 
   const getCinemaLogo = (cinema) => {
@@ -24,15 +24,15 @@ const CinemaList = ({ cinemas }) => {
   };
 
   const getCinemaAddress = (cinema) => {
-    return cinema.address || cinema.location || 'Không có địa chỉ';
+    return cinema.address || cinema.location || 'No address';
   };
 
   const getCinemaPhone = (cinema) => {
-    return cinema.phone || cinema.phoneNumber || cinema.contact || 'Không có số điện thoại';
+    return cinema.phone || cinema.phoneNumber || cinema.contact || 'No phone number';
   };
 
   const getCinemaHours = (cinema) => {
-    return cinema.hours || cinema.openingHours || cinema.schedule || 'Không có giờ mở cửa';
+    return cinema.hours || cinema.openingHours || cinema.schedule || 'No opening hours';
   };
 
   const getCinemaFeatures = (cinema) => {
