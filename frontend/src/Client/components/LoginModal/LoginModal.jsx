@@ -89,42 +89,42 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
 
     if (isRegister) {
       if (!formData.fullName.trim()) {
-        newErrors.fullName = t('Họ tên là bắt buộc');
+        newErrors.fullName = t('Full name is required');
       } else if (formData.fullName.trim().length < 2) {
-        newErrors.fullName = t('Họ tên phải có ít nhất 2 ký tự');
+        newErrors.fullName = t('Full name must at least have 2 characters long');
       }
 
       if (!formData.email.trim()) {
-        newErrors.email = t('Email là bắt buộc');
+        newErrors.email = t('Email is required');
       } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-        newErrors.email = t('Email không hợp lệ');
+        newErrors.email = t('Email is not valid');
       }
 
       if (!formData.phone.trim()) {
-        newErrors.phone = t('Số điện thoại là bắt buộc');
+        newErrors.phone = t('Phone number is required');
       } else if (!/^[0-9]{10,11}$/.test(formData.phone.replace(/\s/g, ''))) {
-        newErrors.phone = t('Số điện thoại không hợp lệ');
+        newErrors.phone = t('Phone number is not valid');
       }
     }
 
     if (!formData.username.trim()) {
-      newErrors.username = t('Tên đăng nhập là bắt buộc');
+      newErrors.username = t('Username is required');
     } else if (formData.username.trim().length < 3) {
-      newErrors.username = t('Tên đăng nhập phải có ít nhất 3 ký tự');
+      newErrors.username = t('Username must be at least 3 characters long');
     }
 
     if (!formData.password) {
-      newErrors.password = t('Mật khẩu là bắt buộc');
+      newErrors.password = t('Password is required');
     } else if (formData.password.length < 6) {
-      newErrors.password = t('Mật khẩu phải có ít nhất 6 ký tự');
+      newErrors.password = t('Password must be at least 6 characters long');
     }
 
     if (isRegister && formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = t('Mật khẩu xác nhận không khớp');
+      newErrors.confirmPassword = t('Confirm password does not match');
     }
 
     if (isAdmin && !formData.adminKey.trim()) {
-      newErrors.adminKey = t('Admin key là bắt buộc');
+      newErrors.adminKey = t('Admin key is required');
     }
 
     setErrors(newErrors);
@@ -156,7 +156,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
         
         setMessage({
           type: 'success',
-          text: 'Đăng nhập admin thành công!'
+          text: 'Admin login successful!'
         });
 
         setTimeout(() => {
@@ -174,7 +174,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
         
         setMessage({
           type: 'success',
-          text: 'Đăng ký thành công! Vui lòng đăng nhập.'
+          text: 'Sign up successful! Please login to your account.'
         });
         
         setFormData({
@@ -203,7 +203,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
         if (user && user.id) {
         setMessage({
           type: 'success',
-          text: 'Đăng nhập thành công!'
+          text: 'Login successful!'
         });
         
         if (onLogin) onLogin(user);
@@ -215,14 +215,14 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
         } else {
           setMessage({
             type: 'error',
-            text: 'Sai tài khoản hoặc mật khẩu'
+            text: 'Wrong username or password'
           });
         }
       }
     } catch (error) {
       setMessage({
         type: 'error',
-        text: error.message || (isRegister ? 'Đăng ký thất bại! Vui lòng thử lại.' : 'Đăng nhập thất bại! Vui lòng thử lại.')
+        text: error.message || (isRegister ? 'Sign up failed! Please try again.' : 'Login failed! Please try again.')
       });
     } finally {
       setIsLoading(false);
@@ -266,7 +266,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
     <div className="login-modal-overlay" onClick={onClose}>
       <div className="login-modal" onClick={(e) => e.stopPropagation()}>
         <div className="login-modal-header">
-          <h2>{isAdmin ? 'Admin Panel' : t('Tài khoản')}</h2>
+          <h2>{isAdmin ? 'Admin Panel' : t('Account')}</h2>
           <button className="close-btn" onClick={onClose}>
             <X size={20} />
           </button>
@@ -286,14 +286,14 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
 
         <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">
-            <label className="form-label">{t('Tài khoản')}</label>
+            <label className="form-label">{t('Account')}</label>
             <input
               type="text"
               name="username"
               value={formData.username}
               onChange={handleInputChange}
               className={`form-input ${errors.username ? 'error' : ''}`}
-              placeholder={t('Nhập tên đăng nhập')}
+              placeholder={t('Enter username')}
             />
             {errors.username && (
               <span className="error-message">{errors.username}</span>
@@ -301,7 +301,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
           </div>
 
           <div className="form-group">
-            <label className="form-label">{t('Mật khẩu')}</label>
+            <label className="form-label">{t('Password')}</label>
             <div className="password-input">
               <input
                 type={showPassword ? 'text' : 'password'}
@@ -309,7 +309,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
                 value={formData.password}
                 onChange={handleInputChange}
                 className={`form-input ${errors.password ? 'error' : ''}`}
-                placeholder={t('Nhập mật khẩu')}
+                placeholder={t('Enter password')}
               />
               <button
                 type="button"
@@ -327,14 +327,14 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
           {isRegister && !isAdmin ? (
             <>
               <div className="form-group">
-                <label className="form-label">{t('Họ và tên')}</label>
+                <label className="form-label">{t('Full name')}</label>
                 <input
                   type="text"
                   name="fullName"
                   value={formData.fullName}
                   onChange={handleInputChange}
                   className={`form-input ${errors.fullName ? 'error' : ''}`}
-                  placeholder={t('Nhập họ và tên đầy đủ')}
+                  placeholder={t('Enter your full name')}
                 />
                 {errors.fullName && (
                   <span className="error-message">{errors.fullName}</span>
@@ -357,7 +357,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
               </div>
 
               <div className="form-group">
-                <label className="form-label">{t('Số điện thoại')}</label>
+                <label className="form-label">{t('Phone number')}</label>
                 <input
                   type="tel"
                   name="phone"
@@ -372,7 +372,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
               </div>
 
               <div className="form-group">
-                <label className="form-label">{t('Xác nhận mật khẩu')}</label>
+                <label className="form-label">{t('Confirm password')}</label>
                 <div className="password-input">
                   <input
                     type={showConfirmPassword ? 'text' : 'password'}
@@ -380,7 +380,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
                     className={`form-input ${errors.confirmPassword ? 'error' : ''}`}
-                    placeholder={t('Nhập lại mật khẩu')}
+                    placeholder={t('Re-enter your password')}
                   />
                   <button
                     type="button"
@@ -407,7 +407,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
                   value={formData.adminKey}
                   onChange={handleInputChange}
                   className={`form-input ${errors.adminKey ? 'error' : ''}`}
-                  placeholder={t('Nhập admin key để đăng nhập')}
+                  placeholder={t('Enter admin key to login')}
                 />
                 <button
                   type="button"
@@ -425,7 +425,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
 
           {!isRegister && !isAdmin && (
             <div className="forgot-password">
-              <a href="#" className="forgot-link">{t('Quên mật khẩu')}?</a>
+              <a href="#" className="forgot-link">{t('Forgot password')}?</a>
             </div>
           )}
 
@@ -444,7 +444,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
             {isLoading ? (
               <div className="loading-spinner"></div>
             ) : (
-              isRegister ? t('Đăng ký') : t('Đăng nhập')
+              isRegister ? t('Sign up') : t('Login')
             )}
           </button>
         </form>
@@ -457,8 +457,8 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
               onClick={toggleMode}
             >
               {isRegister 
-                ? t('Đã có tài khoản? Đăng nhập ngay')
-                : t('Chưa có tài khoản? Đăng ký ngay!')
+                ? t('Already have an account? Login now')
+                : t('Don't have an account? Sign up now!')
               }
             </button>
           </div>
@@ -467,9 +467,9 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
         {isAdmin && (
           <div className="admin-info">
             <p className="admin-credentials">
-              <strong>{t('Thông tin đăng nhập admin')}:</strong><br />
-              {t('Bạn cần có tài khoản admin và admin key để đăng nhập')}.<br />
-              {t('Tài khoản admin được cấp bởi quản trị viên hệ thống')}.
+              <strong>{t('Admin login information')}:</strong><br />
+              {t('You need an admin account and admin key to log in')}.<br />
+              {t('Admin accounts are issued by the system administrator'}.
             </p>
           </div>
         )}
