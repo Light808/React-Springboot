@@ -6,8 +6,10 @@ import { bookTicket } from '../../../services/ticketService';
 import { getAllCombos } from '../../../services/comboService';
 import { createNotification, createBookingSuccessNotification } from '../../../services/notificationService';
 import './ComboSelectionPage.css';
+import { useTranslation } from 'react-i18next';
 
 const ComboSelectionPage = () => {
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -140,27 +142,27 @@ const ComboSelectionPage = () => {
 
   const handleBooking = async () => {
     if (!user) {
-      setMessage('Vui lòng đăng nhập để đặt vé');
+      setMessage(t('PleaseLoginToBook'));
       return;
     }
 
     if (!selectedPaymentMethod) {
-      setMessage('Vui lòng chọn phương thức thanh toán');
+      setMessage(t('PleaseChooseMethodPay'));
       return;
     }
 
     if (!showtime?.id) {
-      setMessage('Thông tin suất chiếu không hợp lệ');
+      setMessage(t('NotValidShowtime'));  
       return;
     }
 
     if (!movie?.id) {
-      setMessage('Thông tin phim không hợp lệ');
+      setMessage(t('NotValidMovie'));
       return;
     }
 
     if (!selectedSeats || selectedSeats.length === 0) {
-      setMessage('Vui lòng chọn ghế ngồi');
+      setMessage(t('PleaseChooseSeat'));
       return;
     }
 
@@ -191,10 +193,10 @@ const ComboSelectionPage = () => {
         seatId: seatIds || '', 
         seatNumber: seatNumbers || '', 
         movieId: movie?.id || '',
-        movieTitle: movie?.title || movie?.name || 'Tên phim không xác định',
+        movieTitle: movie?.title || movie?.name || 'Not defined movie',
         moviePoster: movie?.posterUrl || movie?.poster || movie?.imageUrl || movie?.image || '/default-movie.jpg',
         movieThumbnail: movie?.thumbnailUrl || movie?.thumbnail || movie?.posterUrl || movie?.poster || '/default-movie.jpg',
-        cinemaName: showtime?.cinemaName || 'Rạp chiếu phim',
+        cinemaName: showtime?.cinemaName || 'Movie Theater',
         cinemaAddress: showtime?.cinemaAddress || showtime?.address || '',
         showDate: showDate || new Date().toISOString().split('T')[0],
         showTime: showTime || new Date().toISOString(),
@@ -206,10 +208,8 @@ const ComboSelectionPage = () => {
         notes: Object.keys(selectedCombos).length > 0 ? `Combo: ${Object.entries(selectedCombos).map(([comboId, quantity]) => {
           const combo = combos.find(c => c.id === comboId);
           return combo ? `${combo.name} x${quantity}` : '';
-        }).filter(Boolean).join(', ')}` : 'Không có combo'
+        }).filter(Boolean).join(', ')}` : 'No Combo'
       };
-
-      console.log('Sending ticket data:', ticketData);
 
       // Validate required fields
       if (!ticketData.userId) {
@@ -230,7 +230,7 @@ const ComboSelectionPage = () => {
       try {
         const notificationData = createBookingSuccessNotification(
           user.id,
-          movie?.title || movie?.name || 'Tên phim không xác định',
+          movie?.title || movie?.name || 'Not defined movie',
           seatNumbers,
           showTime
         );
@@ -240,7 +240,7 @@ const ComboSelectionPage = () => {
         console.error('Error creating notification:', notificationError);
       }
       
-      setMessage('Đặt vé thành công!');
+      setMessage('Booking Ticket Successfully!');
       
       setTimeout(() => {
         navigate('/tickets');
@@ -248,7 +248,7 @@ const ComboSelectionPage = () => {
       
     } catch (error) {
       console.error('Error booking tickets:', error);
-      setMessage('Đặt vé thất bại. Vui lòng thử lại.');
+      setMessage('Booking Ticket failed. Please try again.');
     } finally {
       setBooking(false);
     }
@@ -257,10 +257,10 @@ const ComboSelectionPage = () => {
   if (!showtime || !movie || !selectedSeats) {
     return (
       <div className="error-container">
-        <h2>Không tìm thấy thông tin đặt vé</h2>
-        <p>Vui lòng quay lại trang trước và thử lại.</p>
+        <h2>{t('NoBookingInformation')}</h2>
+        <p>{t('BackAndTryAgain')}.</p>
         <button onClick={() => navigate('/')} className="btn-primary">
-          Về trang chủ
+          {t('BackToHompage')}
         </button>
       </div>
     );
@@ -274,9 +274,9 @@ const ComboSelectionPage = () => {
           onClick={() => navigate(-1)}
         >
           <ArrowLeft size={20} />
-          Quay lại
+          {t('Back')}
         </button>
-        <h1>Chọn Combo Bắp Nước</h1>
+        <h1>{t('ChooseCombo')}</h1>
       </div>
 
       <div className="combo-content">
@@ -284,13 +284,13 @@ const ComboSelectionPage = () => {
           {loading ? (
             <div className="loading-container">
               <div className="loading-spinner"></div>
-              <p>Đang tải danh sách combo...</p>
+              <p>{t('Đang tải danh sách combo...')}</p>
             </div>
           ) : error ? (
             <div className="error-message">
               <p>{error}</p>
               <button onClick={() => window.location.reload()} className="retry-btn">
-                Thử lại
+                {t('Thử lại')}
               </button>
             </div>
           ) : combos.length === 0 ? (

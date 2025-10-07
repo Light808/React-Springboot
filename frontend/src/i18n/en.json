@@ -57,6 +57,15 @@
     "LoadingCinemaDataFailed": "Loading Cinema Data Failed",
     "allDistricts": "All Districts",
     "AllCities": "All Cities",
-    "FindYourFavoriteCinema": "Find Your Favorite Cinema"
+    "FindYourFavoriteCinema": "Find Your Favorite Cinema",
+    "PleaseLoginToBook": "Please Login To Book",
+    "PleaseChooseMethodPay": "Please Choose Method Pay",
+    "NotValidShowtime": "Not Valid Showtime",
+    "NotValidMovie": "Not Valid Movie",
+    "PleaseChooseSeat": "Please Choose Seat",
+    "NoBookingInformation": "No Booking Information",
+    "BackAndTryAgain": "Back And Try Again",
+    "BackToHompage": "Back To Hompage",
+    "ChooseCombo": "Choose Combo"
   }
   

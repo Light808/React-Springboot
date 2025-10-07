@@ -57,7 +57,16 @@
     "TryAgain": "Thử lại",
     "allDistricts": "Tất cả quận",
     "AllCities": "Tất cả thành phố",
-    "FindYourFavoriteCinema": "Tìm rạp phim yêu thích của bạn"
+    "FindYourFavoriteCinema": "Tìm rạp phim yêu thích của bạn",
+    "PleaseLoginToBook": "Đăng nhập để đặt vé",
+    "PleaseChooseMethodPay": "Chọn phương thức thanh toán",
+    "NotValidShowtime": "Suất chiếu không hợp lệ",
+    "NotValidMovie": "Phim không hợp lệ",
+    "PleaseChooseSeat": "Vui lòng chọn ghế",
+    "NoBookingInformation": "Không tìm thấy thông tin đặt vé",
+    "BackAndTryAgain": "Trở về trang trước và thử lại",
+    "BackToHompage": "Trở về trang chủ",
+    "ChooseCombo": "Chọn Combo"
   }
   
   
