@@ -31,8 +31,8 @@ function getRoutePrompts(pathname) {
   }
   if (pathname.startsWith('/cinemas')) {
     return [
-      'Gợi ý rạp gần tôi',
-      'Rạp nào đang có khuyến mãi?'
+      'Suggestions for cinemas near me',
+      'Are there any movie theaters with discounts?'
     ];
   }
   if (pathname.startsWith('/combo-selection')) {
