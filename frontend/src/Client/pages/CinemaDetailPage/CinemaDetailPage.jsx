@@ -46,7 +46,7 @@ const CinemaDetailPage = () => {
       setLoading(true);
       setError(null);
       
-      // Lấy danh sách tất cả rạp và tìm rạp theo ID
+      // Get a list of all theaters and search for theaters by ID
       const allCinemas = await getAllCinemas();
       const foundCinema = allCinemas.find(c => c.id === cinemaId);
       

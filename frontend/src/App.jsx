@@ -17,6 +17,7 @@ import MembershipPage from './Client/pages/Membership/MembershipPage';
 import EGiftPage from './Client/pages/EGift/EGiftPage';
 import AdminDashboard from './Admin/pages/Admin/AdminDashboard';
 import AdminRoute from './Admin/components/Admin/AdminRoute';
+import AdminChatWidget from './Admin/components/AdminChatWidget/AdminChatWidget';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { getCurrentUser, logoutUser, isAuthenticated } from './services/userService';
 import DailySpinPage from './Client/pages/DailySpinPage';
@@ -132,6 +133,7 @@ function App() {
         </main>
         {!window.location.pathname.startsWith('/admin') && <Footer />}
         {!window.location.pathname.startsWith('/admin') && <ChatBox />}
+        {window.location.pathname.startsWith('/admin') && <AdminChatWidget />}
       </div>
     </Router>
   );

@@ -17,20 +17,20 @@ const Footer = () => {
             <h3 className={`company-name`}>CÔNG TY TNHH HAK</h3>
             
             <div className={`company-details`}>
-              <p><strong>{t('Business Registration No:')}</strong> 0315367026 </p>
+              <p><strong>{t('Business Registration No')}: </strong> 0932082976 </p>
               <p><strong>{t('Issued by:')}</strong> Department of Planning and Investment of Ho Chi Minh City </p>
               <p><strong>{t('First registration date:')}</strong> 01/09/2025</p>
               <p><strong>{t('Address:')}</strong> 146A Nguyen Van Qua Street, Dong Hung Thuan Ward, District 12, Ho Chi Minh City</p>
             </div>
             
             <div className={`footer-links`}>
-              <Link to="/about"> {t('About us')}</Link>
+              <Link to="/about"> About us</Link>
               <span> - </span>
-              <Link to="/privacy"> {t('Privacy')}</Link>
+              <Link to="/privacy"> Privacy</Link>
               <span> - </span>
-              <Link to="/support">{t('Support')}</Link>
+              <Link to="/support"> Support</Link>
               <span> - </span>
-              <Link to="/contact">{t('Contact')}</Link>
+              <Link to="/contact">Contact</Link>
               <span> - </span>
               <span className={`version`}>v8.1</span>
             </div>

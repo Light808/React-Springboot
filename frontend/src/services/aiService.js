@@ -1,13 +1,80 @@
 /* eslint-disable no-empty */
 const API_BASE_URL = 'http://localhost:8080/api';
 
+// ---- Storage keys ----
+const STORAGE_KEYS = {
+  MOCK_FLAG: 'ai_mock_enabled',
+  CHAT_MESSAGES: 'admin_chat_messages',
+  USER_SESSION: 'user_session'
+};
+
 // ---- Mock config helpers ----
-const MOCK_FLAG_KEY = 'ai_mock_enabled';
 export function setAIMockEnabled(enabled) {
-  try { localStorage.setItem(MOCK_FLAG_KEY, enabled ? 'true' : 'false'); } catch {}
+  try { localStorage.setItem(STORAGE_KEYS.MOCK_FLAG, enabled ? 'true' : 'false'); } catch {}
 }
 export function getAIMockEnabled() {
-  try { return localStorage.getItem(MOCK_FLAG_KEY) === 'true'; } catch { return false; }
+  try { return localStorage.getItem(STORAGE_KEYS.MOCK_FLAG) === 'true'; } catch { return false; }
+}
+
+// ---- Chat message management ----
+export function saveChatMessage(userMessage, aiResponse, username = null) {
+  try {
+    const messages = getChatMessages();
+    const newMessage = {
+      id: Date.now().toString(),
+      username: username || 'Khách',
+      userMessage,
+      aiResponse,
+      timestamp: new Date().toISOString(),
+      status: 'pending', // pending, replied
+      isRead: false,
+      adminReply: null,
+      repliedAt: null
+    };
+    
+    messages.push(newMessage);
+    localStorage.setItem(STORAGE_KEYS.CHAT_MESSAGES, JSON.stringify(messages));
+    return newMessage;
+  } catch (error) {
+    console.error('Error saving chat message:', error);
+    return null;
+  }
+}
+
+export function getChatMessages() {
+  try {
+    const messages = localStorage.getItem(STORAGE_KEYS.CHAT_MESSAGES);
+    return messages ? JSON.parse(messages) : [];
+  } catch (error) {
+    console.error('Error loading chat messages:', error);
+    return [];
+  }
+}
+
+export function updateChatMessage(messageId, updates) {
+  try {
+    const messages = getChatMessages();
+    const updatedMessages = messages.map(msg => 
+      msg.id === messageId ? { ...msg, ...updates } : msg
+    );
+    localStorage.setItem(STORAGE_KEYS.CHAT_MESSAGES, JSON.stringify(updatedMessages));
+    return true;
+  } catch (error) {
+    console.error('Error updating chat message:', error);
+    return false;
+  }
+}
+
+export function deleteChatMessage(messageId) {
+  try {
+    const messages = getChatMessages();
+    const filteredMessages = messages.filter(msg => msg.id !== messageId);
+    localStorage.setItem(STORAGE_KEYS.CHAT_MESSAGES, JSON.stringify(filteredMessages));
+    return true;
+  } catch (error) {
+    console.error('Error deleting chat message:', error);
+    return false;
+  }
 }
 
 const MOCK_DATA = {
@@ -63,20 +130,45 @@ function mockAI(messages) {
 }
 
 export async function chatAI(messages) {
+  const userMessage = pickLastUserMessage(messages);
+  let aiResponse;
+  
   if (getAIMockEnabled()) {
-    return mockAI(messages);
+    aiResponse = mockAI(messages);
+  } else {
+    try {
+      const res = await fetch(`${API_BASE_URL}/ai/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages })
+      });
+      if (!res.ok) throw new Error(`AI chat failed: ${res.status}`);
+      const data = await res.json();
+      aiResponse = data?.reply || 'Sorry, I could not generate a response.';
+    } catch (error) {
+      console.warn('AI API not available, using mock response:', error.message);
+      aiResponse = mockAI(messages);
+    }
   }
+  
+  // Save the conversation for admin review
+  if (userMessage && aiResponse) {
+    const username = getCurrentUsername();
+    saveChatMessage(userMessage, aiResponse, username);
+  }
+  
+  return aiResponse;
+}
+
+function getCurrentUsername() {
   try {
-    const res = await fetch(`${API_BASE_URL}/ai/chat`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages })
-    });
-    if (!res.ok) throw new Error(`AI chat failed: ${res.status}`);
-    const data = await res.json();
-    return data?.reply || 'Sorry, I could not generate a response.';
+    const userSession = localStorage.getItem(STORAGE_KEYS.USER_SESSION);
+    if (userSession) {
+      const user = JSON.parse(userSession);
+      return user.username || user.name || null;
+    }
   } catch (error) {
-    console.warn('AI API not available, using mock response:', error.message);
-    return mockAI(messages);
+    console.error('Error getting username:', error);
   }
+  return null;
 }

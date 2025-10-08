@@ -10,8 +10,11 @@ import ReviewForm from '../../components/ReviewForm/ReviewForm';
 import ShowtimeSchedule from '../../components/ShowtimeSchedule/ShowtimeSchedule';
 import styles from './MovieDetailPage.module.css';
 import newsStyles from './NewsSection.module.css';
+import { useTranslation } from 'react-i18next';
+
 
 const MovieDetailPage = () => {
+  const { t } = useTranslation();
   const { movieId } = useParams();
   const location = useLocation();
   const [activeTab, setActiveTab] = useState('info');
@@ -118,7 +121,7 @@ const MovieDetailPage = () => {
       setNewsArticles(news);
     } catch (error) {
       console.error('Error fetching news articles:', error);
-      setNewsError('Không thể tải tin tức');
+      setNewsError('Cannot reload news');
     } finally {
       setNewsLoading(false);
     }
@@ -309,7 +312,6 @@ const MovieDetailPage = () => {
       if (typeof window !== 'undefined' && movieId) {
         localStorage.setItem(`liked_movie_${movieId}`, 'false');
       }
-      // Nếu có API, gọi API unlike ở đây
     }
   };
   // Xử lý nút Đánh giá
@@ -355,7 +357,7 @@ const MovieDetailPage = () => {
                   title={liked ? 'Đã thích' : 'Thích'}
                 >
                   <Heart size={16} fill={liked ? 'red' : 'none'} color={liked ? 'red' : undefined} />
-                  <span>{liked ? 'Đã thích' : 'Thích'}</span>
+                  <span>{liked ? t('liked') : t('like')}</span>
                 </button>
                 <button 
                   className={`${styles['action-btn']} ${styles['rate-btn']}`}
