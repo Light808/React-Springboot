@@ -10,8 +10,11 @@ import {
   getRedeemHistory
 } from '../../services/rewardService';
 import { getCurrentUserSync } from '../../services/userService';
+import { useTranslation } from 'react-i18next';
+
 
 const DailySpinPage = () => {
+   const { t } = useTranslation();
   const navigate = useNavigate();
   const user = getCurrentUserSync();
   const userId = user?.id;
@@ -67,7 +70,7 @@ const DailySpinPage = () => {
 
   return (
     <div style={{ maxWidth: 1000, margin: '0 auto', padding: '24px' }}>
-      <h1 style={{ marginBottom: 8 }}>Điểm danh nhận xu</h1>
+      <h1 style={{ marginBottom: 8 }}>{t('Coin')}</h1>
       <p style={{ marginTop: 0, color: '#666' }}>Điểm danh mỗi ngày để nhận xu và đổi phần thưởng.</p>
 
       {message && (

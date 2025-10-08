@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { MessageCircle, Send, X } from 'lucide-react';
-import { chatAI } from '../../../services/aiService';
+import { chatAI, getClientId, getChatMessages, markReplyDelivered } from '../../../services/aiService';
 import './ChatBox.css';
 
 const BASE_PROMPTS = [
@@ -60,11 +60,48 @@ const ChatBox = () => {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const listRef = useRef(null);
+  const clientIdRef = useRef(null);
+  // keep track of admin replies appended to chat (no separate state needed)
 
   useEffect(() => {
     const routePrompts = getRoutePrompts(location.pathname);
     setPrompts([...routePrompts, ...BASE_PROMPTS]);
   }, [location.pathname]);
+
+  // init client id and start polling for admin replies
+  useEffect(() => {
+    clientIdRef.current = getClientId();
+    const poll = () => {
+      try {
+        const all = getChatMessages();
+        const mine = all.filter(m => m.clientId === clientIdRef.current && m.adminReply && m.id);
+        // Only pick those not delivered yet
+        const delivered = new Set(getDeliveredReplyIdsSafe());
+        const newOnes = mine.filter(m => !delivered.has(m.id));
+        if (newOnes.length > 0) {
+          const notices = newOnes.map(m => ({ id: m.id, text: m.adminReply }));
+          // append to chat as assistant messages
+          setMessages(prev => [...prev, ...notices.map(n => ({ role: 'assistant', content: `Admin: ${n.text}` }))]);
+          notices.forEach(n => markReplyDelivered(n.id));
+          scrollToBottom();
+        }
+      } catch {
+        // ignore polling errors
+      }
+    };
+    const interval = setInterval(poll, 3000);
+    poll();
+    return () => clearInterval(interval);
+  }, []);
+
+  function getDeliveredReplyIdsSafe() {
+    try {
+      const raw = localStorage.getItem('delivered_reply_ids');
+      return raw ? JSON.parse(raw) : [];
+    } catch {
+      return [];
+    }
+  }
 
   const scrollToBottom = () => {
     requestAnimationFrame(() => {
@@ -132,7 +169,7 @@ const ChatBox = () => {
       {open && (
         <div className="chatbox-container">
           <div className="chatbox-header">
-            <span>AI Assistant</span>
+            <span>Chat Assistant</span>
             <button className="chatbox-close" onClick={handleToggle}>
               <X size={16} />
             </button>

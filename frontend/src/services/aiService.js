@@ -5,7 +5,9 @@ const API_BASE_URL = 'http://localhost:8080/api';
 const STORAGE_KEYS = {
   MOCK_FLAG: 'ai_mock_enabled',
   CHAT_MESSAGES: 'admin_chat_messages',
-  USER_SESSION: 'user_session'
+  USER_SESSION: 'user_session',
+  CLIENT_ID: 'chat_client_id',
+  DELIVERED_REPLY_IDS: 'delivered_reply_ids'
 };
 
 // ---- Mock config helpers ----
@@ -14,6 +16,20 @@ export function setAIMockEnabled(enabled) {
 }
 export function getAIMockEnabled() {
   try { return localStorage.getItem(STORAGE_KEYS.MOCK_FLAG) === 'true'; } catch { return false; }
+}
+
+// ---- Client identity ----
+export function getClientId() {
+  try {
+    let id = localStorage.getItem(STORAGE_KEYS.CLIENT_ID);
+    if (!id) {
+      id = crypto?.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      localStorage.setItem(STORAGE_KEYS.CLIENT_ID, id);
+    }
+    return id;
+  } catch {
+    return 'anonymous-client';
+  }
 }
 
 // ---- Chat message management ----
@@ -29,7 +45,8 @@ export function saveChatMessage(userMessage, aiResponse, username = null) {
       status: 'pending', // pending, replied
       isRead: false,
       adminReply: null,
-      repliedAt: null
+      repliedAt: null,
+      clientId: getClientId()
     };
     
     messages.push(newMessage);
@@ -75,6 +92,26 @@ export function deleteChatMessage(messageId) {
     console.error('Error deleting chat message:', error);
     return false;
   }
+}
+
+// ---- Delivery tracking for client to avoid duplicate admin replies ----
+export function getDeliveredReplyIds() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEYS.DELIVERED_REPLY_IDS);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+export function markReplyDelivered(replyMessageId) {
+  try {
+    const ids = getDeliveredReplyIds();
+    if (!ids.includes(replyMessageId)) {
+      ids.push(replyMessageId);
+      localStorage.setItem(STORAGE_KEYS.DELIVERED_REPLY_IDS, JSON.stringify(ids));
+    }
+  } catch {}
 }
 
 const MOCK_DATA = {
