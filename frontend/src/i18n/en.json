@@ -175,7 +175,7 @@
   "Business Registration No": "Business Registration No",
   "Issued by:": "",
   "First registration date:": "",
-  "Address:": "",
+  "Address:": "Address",
   "About us": "",
   "Privacy": "",
   "Support": "",
@@ -191,7 +191,14 @@
   "Thursday": "",
   "Friday": "",
   "Saturday": "",
-  "dateObj.day": "",
-  "dateObj.month": "",
-  "Please choose an online payment method": ""
+  "Please choose an online payment method": "",
+  "Issued by": "",
+  "First registration date": "",
+  "Address": "",
+  "CGVMember": "CGV Member",
+  "Confirmed": "Confirmed",
+  "Pending": "Pending",
+  "Cancelled": "Cancelled",
+  "Used": "Used",
+  "Expired": "Expired"
 }

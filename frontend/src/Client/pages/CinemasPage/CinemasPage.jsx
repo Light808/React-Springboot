@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { Search, MapPin, Filter, Phone, Clock, Star } from 'lucide-react';
 import { getAllCinemas as getCinemas } from '../../../services/cinemaService';
@@ -215,10 +216,6 @@ const CinemasPage = () => {
                     <Clock size={14} />
                     <span>{cinema.openingHours || '08:00 - 23:00'}</span>
                   </div>
-                </div>
-                <div className={styles['card-actions']}>
-                  <button className={styles['btn-outline']}>{t('ViewShowtimes') || 'Xem lịch chiếu'}</button>
-                  <button className={styles['btn-primary']}>{t('BookNow') || 'Đặt vé'}</button>
                 </div>
               </div>
             ))}

@@ -181,12 +181,15 @@ export async function chatAI(messages) {
       });
       if (!res.ok) throw new Error(`AI chat failed: ${res.status}`);
       const data = await res.json();
-      aiResponse = data?.reply || 'Sorry, I could not generate a response.';
+      aiResponse = data?.reply || 'Cannot genrate response, sorry.';
     } catch (error) {
-      console.warn('AI API not available:', error.message);
+      console.warn('API not available:', error.message);
       aiResponse = mockAI(messages);
     }
   }
+  
+  // delay typing
+  await new Promise((resolve) => setTimeout(resolve, 1200));
   
   // Save the conversation for admin review
   if (userMessage && aiResponse) {

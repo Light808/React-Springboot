@@ -98,7 +98,7 @@
   "Issued by:": "",
   "Department of Planning and Investment of Ho Chi Minh City": "",
   "First registration date:": "",
-  "Address:": "",
+  "Address:": "Địa chỉ",
   "146A Nguyen Van Qua Street, Dong Hung Thuan Ward, District 12, Ho Chi Minh City": "",
   "About us": "",
   "Privacy": "",
@@ -194,7 +194,14 @@
   "Thursday": "",
   "Friday": "",
   "Saturday": "",
-  "dateObj.day": "",
-  "dateObj.month": "",
-  "Please choose an online payment method": ""
+  "Please choose an online payment method": "",
+  "Issued by": "",
+  "First registration date": "",
+  "Address": "",
+  "CGVMember": "Thành viên CGV",
+  "Confirmed": "Đã xác nhận",
+  "Pending": "Chờ xác nhận",
+  "Cancelled": "Hủy vé",
+  "Used": "Đã sử dụng",
+  "Expired": "Hết hạn"
 }
