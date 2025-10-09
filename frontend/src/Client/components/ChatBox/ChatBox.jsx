@@ -61,7 +61,7 @@ const ChatBox = () => {
   const [loading, setLoading] = useState(false);
   const listRef = useRef(null);
   const clientIdRef = useRef(null);
-  // keep track of admin replies appended to chat (no separate state needed)
+  // keep track of admin replies appended to chat
 
   useEffect(() => {
     const routePrompts = getRoutePrompts(location.pathname);
@@ -75,12 +75,10 @@ const ChatBox = () => {
       try {
         const all = getChatMessages();
         const mine = all.filter(m => m.clientId === clientIdRef.current && m.adminReply && m.id);
-        // Only pick those not delivered yet
         const delivered = new Set(getDeliveredReplyIdsSafe());
         const newOnes = mine.filter(m => !delivered.has(m.id));
         if (newOnes.length > 0) {
           const notices = newOnes.map(m => ({ id: m.id, text: m.adminReply }));
-          // append to chat as assistant messages
           setMessages(prev => [...prev, ...notices.map(n => ({ role: 'assistant', content: `Admin: ${n.text}` }))]);
           notices.forEach(n => markReplyDelivered(n.id));
           scrollToBottom();

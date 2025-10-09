@@ -5,6 +5,7 @@ import { ArrowLeft, Plus, Minus, CreditCard, CheckCircle } from 'lucide-react';
 import { bookTicket } from '../../../services/ticketService';
 import { getAllCombos } from '../../../services/comboService';
 import { createNotification, createBookingSuccessNotification } from '../../../services/notificationService';
+import { createPaymentOrder } from '../../../services/paymentService';
 import './ComboSelectionPage.css';
 import { useTranslation } from 'react-i18next';
 
@@ -19,7 +20,7 @@ const ComboSelectionPage = () => {
   const [user, setUser] = useState(null);
   
   const [selectedCombos, setSelectedCombos] = useState({});
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('cash');
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
   const [booking, setBooking] = useState(false);
   const [message, setMessage] = useState('');
   const [combos, setCombos] = useState([]);
@@ -149,6 +150,11 @@ const ComboSelectionPage = () => {
       setMessage(t('PleaseChooseMethodPay'));
       return;
     }
+    const onlineMethods = ['vietqr', 'momo', 'zalopay'];
+    if (!onlineMethods.includes(selectedPaymentMethod)) {
+      setMessage(t('Please choose an online payment method'));
+      return;
+    }
 
     if (!showtime?.id) {
       setMessage(t('NotValidShowtime'));  
@@ -224,26 +230,33 @@ const ComboSelectionPage = () => {
         throw new Error('Seat number is required');
       }
 
-      const bookingResult = await bookTicket(ticketData);
-      
-      try {
-        const notificationData = createBookingSuccessNotification(
-          user.id,
-          movie?.title || movie?.name || 'Not defined movie',
-          seatNumbers,
-          showTime
-        );
-        await createNotification(notificationData);
-        console.log('Booking success notification created');
-      } catch (notificationError) {
-        console.error('Error creating notification:', notificationError);
+      // instead of booking right away, redirect to payment sandbox with order payload
+      const summary = {
+        ticketPrice: getTicketPrice(),
+        comboPrice,
+        totalPrice: totalPrice
+      };
+
+      // 1) Create order on backend (signature generated in Spring)
+      const orderPayload = {
+        amount: summary.totalPrice,
+        orderInfo: `${ticketData.movieTitle} - ${ticketData.seatNumber}`,
+        method: selectedPaymentMethod, // 'momo' | 'zalopay' | 'vietqr' | 'vnpay'
+        returnUrl: window.location.origin + '/payment/sandbox',
+        notifyUrl: 'http://localhost:8080/api/payment/notify',
+        extraData: { showtimeId: ticketData.showtimeId, seats: ticketData.seatNumber }
+      };
+      const order = await createPaymentOrder(orderPayload);
+
+      // Backend returns { orderId, signature, payUrl } for redirect to sandbox gateway
+      if (order?.payUrl) {
+        // 2) redirect user to gateway sandbox
+        window.location.href = order.payUrl;
+        return;
       }
-      
-      setMessage('Booking Ticket Successfully!');
-      
-      setTimeout(() => {
-        navigate('/tickets');
-      }, 2000);
+
+      // Fallback: local sandbox page
+      navigate('/payment/sandbox', { state: { ticketData, summary, method: selectedPaymentMethod } });
       
     } catch (error) {
       console.error('Error booking tickets:', error);

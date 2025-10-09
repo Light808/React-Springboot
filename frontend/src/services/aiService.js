@@ -42,7 +42,7 @@ export function saveChatMessage(userMessage, aiResponse, username = null) {
       userMessage,
       aiResponse,
       timestamp: new Date().toISOString(),
-      status: 'pending', // pending, replied
+      status: 'pending', 
       isRead: false,
       adminReply: null,
       repliedAt: null,
@@ -183,7 +183,7 @@ export async function chatAI(messages) {
       const data = await res.json();
       aiResponse = data?.reply || 'Sorry, I could not generate a response.';
     } catch (error) {
-      console.warn('AI API not available, using mock response:', error.message);
+      console.warn('AI API not available:', error.message);
       aiResponse = mockAI(messages);
     }
   }

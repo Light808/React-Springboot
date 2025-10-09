@@ -18,10 +18,15 @@ import EGiftPage from './Client/pages/EGift/EGiftPage';
 import AdminDashboard from './Admin/pages/Admin/AdminDashboard';
 import AdminRoute from './Admin/components/Admin/AdminRoute';
 import AdminChatWidget from './Admin/components/AdminChatWidget/AdminChatWidget';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import { getCurrentUser, logoutUser, isAuthenticated } from './services/userService';
 import DailySpinPage from './Client/pages/DailySpinPage';
 import ChatBox from './Client/components/ChatBox/ChatBox';
+import PaymentSandbox from './Client/pages/PaymentSandbox/PaymentSandbox.jsx';
+
+function ProtectedRoute({ children }) {
+  return isAuthenticated() ? children : <Navigate to="/" replace />;
+}
 
 function App() {
   const [user, setUser] = useState(null);
@@ -63,20 +68,6 @@ function App() {
     }
   };
 
-  // Protected Route component
-  const ProtectedRoute = ({ children }) => {
-    if (isLoading) {
-      return (
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
-          <p>Đang kiểm tra đăng nhập...</p>
-        </div>
-      );
-    }
-    
-    return user ? children : <Navigate to="/" replace />;
-  };
-
   if (isLoading) {
     return (
       <div className="app-loading">
@@ -89,53 +80,61 @@ function App() {
   return (
     <Router>
       <ScrollToTop />
-      <div className="app">
-        <Header user={user} setUser={setUser} onLogout={handleLogout} />
-        <main className="app-main">
-          <Routes>
-            <Route path="/" element={<Homepage />} />
-            <Route path="/cinemas" element={<CinemasPage />} />
-            <Route path="/cinema/:cinemaId" element={<CinemaDetailPage />} />
-            <Route path="/movie/:movieId" element={<MovieDetailPage />} />
-            <Route path="/tickets" element={<TicketListPage userId={user?.id} />} />
-            <Route path="/seat-selection" element={<SeatMapPage />} />
-            <Route path="/combo-selection" element={<ComboSelectionPage />} />
-            <Route path="/news" element={<NewsPage />} />
-            <Route path="/news/:id" element={<NewsDetailPage />} />
-            <Route path="/membership" element={<MembershipPage />} />
-            <Route path="/egift" element={<EGiftPage />} />
-            <Route path="/game" element={<DailySpinPage />} />
-            
-            {/* Protected routes - chỉ cho user đã đăng nhập */}
-            <Route 
-              path="/profile" 
-              element={
-                <ProtectedRoute>
-                  <ProfilePage />
-                </ProtectedRoute>
-              } 
-            />
-            
-            {/* Admin routes */}
-            <Route 
-              path="/admin/dashboard" 
-              element={
-                <AdminRoute>
-                  <AdminDashboard />
-                </AdminRoute>
-              } 
-            />
-            <Route path="/admin/*" element={<Navigate to="/admin/dashboard" replace />} />
-            
-            {/* Catch all route */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </main>
-        {!window.location.pathname.startsWith('/admin') && <Footer />}
-        {!window.location.pathname.startsWith('/admin') && <ChatBox />}
-        {window.location.pathname.startsWith('/admin') && <AdminChatWidget />}
-      </div>
+      <RouteAwareLayout user={user} setUser={setUser} onLogout={handleLogout} />
     </Router>
+  );
+}
+
+function RouteAwareLayout({ user, setUser, onLogout }) {
+  const location = useLocation();
+  return (
+    <div className="app">
+      <Header user={user} setUser={setUser} onLogout={onLogout} />
+      <main className="app-main">
+        <Routes>
+          <Route path="/" element={<Homepage />} />
+          <Route path="/cinemas" element={<CinemasPage />} />
+          <Route path="/cinema/:cinemaId" element={<CinemaDetailPage />} />
+          <Route path="/movie/:movieId" element={<MovieDetailPage />} />
+          <Route path="/tickets" element={<TicketListPage userId={user?.id} />} />
+          <Route path="/seat-selection" element={<SeatMapPage />} />
+          <Route path="/combo-selection" element={<ComboSelectionPage />} />
+          <Route path="/news" element={<NewsPage />} />
+          <Route path="/news/:id" element={<NewsDetailPage />} />
+          <Route path="/membership" element={<MembershipPage />} />
+          <Route path="/egift" element={<EGiftPage />} />
+          <Route path="/game" element={<DailySpinPage />} />
+          <Route path="/payment/sandbox" element={<PaymentSandbox />} />
+          
+          {/* Protected routes - chỉ cho user đã đăng nhập */}
+          <Route 
+            path="/profile" 
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* Admin routes */}
+          <Route 
+            path="/admin/dashboard" 
+            element={
+              <AdminRoute>
+                <AdminDashboard />
+              </AdminRoute>
+            } 
+          />
+          <Route path="/admin/*" element={<Navigate to="/admin/dashboard" replace />} />
+          
+          {/* Catch all route */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </main>
+      {!location.pathname.startsWith('/admin') && <Footer />}
+      {!location.pathname.startsWith('/admin') && <ChatBox />}
+      {location.pathname.startsWith('/admin') && <AdminChatWidget />}
+    </div>
   );
 }
 
