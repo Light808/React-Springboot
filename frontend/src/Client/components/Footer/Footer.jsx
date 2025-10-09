@@ -18,19 +18,19 @@ const Footer = () => {
             
             <div className={`company-details`}>
               <p><strong>{t('Business Registration No')}: </strong> 0932082976 </p>
-              <p><strong>{t('Issued by:')}</strong> Department of Planning and Investment of Ho Chi Minh City </p>
+              <p><strong>{t('Issued by:')}</strong> {t('Department of Planning and Investment of Ho Chi Minh City')} </p>
               <p><strong>{t('First registration date:')}</strong> 01/09/2025</p>
-              <p><strong>{t('Address:')}</strong> 146A Nguyen Van Qua Street, Dong Hung Thuan Ward, District 12, Ho Chi Minh City</p>
+              <p><strong>{t('Address:')}</strong> {t('146A Nguyen Van Qua Street, Dong Hung Thuan Ward, District 12, Ho Chi Minh City')}</p>
             </div>
             
             <div className={`footer-links`}>
-              <Link to="/about"> About us</Link>
+              <Link to="/about"> {t('About us')}</Link>
               <span> - </span>
-              <Link to="/privacy"> Privacy</Link>
+              <Link to="/privacy"> {t('Privacy')}</Link>
               <span> - </span>
-              <Link to="/support"> Support</Link>
+              <Link to="/support"> {t('Support')}</Link>
               <span> - </span>
-              <Link to="/contact">Contact</Link>
+              <Link to="/contact">{t('Contact')}</Link>
               <span> - </span>
               <span className={`version`}>v8.1</span>
             </div>
