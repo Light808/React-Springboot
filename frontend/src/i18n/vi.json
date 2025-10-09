@@ -186,5 +186,15 @@
   "EnterPassword": "",
   "liked": "",
   "like": "",
-  "Coin": "Điểm danh nhận xu"
+  "Coin": "Điểm danh nhận xu",
+  "Sunday": "",
+  "Monday": "",
+  "Tuesday": "",
+  "Wednesday": "",
+  "Thursday": "",
+  "Friday": "",
+  "Saturday": "",
+  "dateObj.day": "",
+  "dateObj.month": "",
+  "Please choose an online payment method": ""
 }

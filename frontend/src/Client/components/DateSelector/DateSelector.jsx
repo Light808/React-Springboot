@@ -17,7 +17,7 @@ const DateSelector = ({ selectedDate, onDateChange }) => {
       const date = new Date(today);
       date.setDate(today.getDate() + i);
       
-      const dayNames = [t('CN'), t('T2'), t('T3'), t('T4'), t('T5'), t('T6'), t('T7')];
+      const dayNames = [t('Sunday'), t('Monday'), t('Tuesday'), t('Wednesday'), t('Thursday'), t('Friday'), t('Saturday')];
       const dayName = dayNames[date.getDay()];
       
       dates.push({
@@ -52,7 +52,7 @@ const DateSelector = ({ selectedDate, onDateChange }) => {
              className={`date-item ${currentDate === dateObj.fullDate ? 'active' : ''}`}
              onClick={() => handleDateClick(dateObj)}
            >
-             <div className="date-month-day">{t('dateObj.day')}/{t('dateObj.month')}</div>
+             <div className="date-month-day">{dateObj.day}/{dateObj.month}</div>
              <div className="date-day">{dateObj.dayName}</div>  
           </button>
         ))}

@@ -183,5 +183,15 @@
   "Partner": "",
   "liked": "",
   "like": "",
-  "Coin": "Check-in and receive coins"
+  "Coin": "Check-in and receive coins",
+  "Sunday": "",
+  "Monday": "",
+  "Tuesday": "",
+  "Wednesday": "",
+  "Thursday": "",
+  "Friday": "",
+  "Saturday": "",
+  "dateObj.day": "",
+  "dateObj.month": "",
+  "Please choose an online payment method": ""
 }
