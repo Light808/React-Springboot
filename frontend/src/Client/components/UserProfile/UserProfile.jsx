@@ -2,8 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { getCurrentUserSync, updateUserProfile, getUserProfile } from '../../../services/userService';
 import { User, Settings, Crown, Gift, Star, Ticket, Calendar, CreditCard, Award, TrendingUp, Shield, Upload, X, Home, Info, Store, Gift as GiftIcon } from 'lucide-react';
 import './UserProfile.css';
+import { useTranslation } from 'react-i18next';
+
 
 const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSettings = false }) => {
+  const { t } = useTranslation();
   const [user, setUser] = useState(null);
   const [avatarUrl, setAvatarUrl] = useState(null);
   const popupRef = useRef(null);
@@ -33,16 +36,89 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
   };
   
   const benefits = [
-    { key: 'home', icon: Home, title: 'Trang Chủ', color: '#3b82f6', description: 'Khám phá phim đang chiếu, lịch chiếu theo rạp và đặt vé nhanh chóng.', ctaText: 'Xem lịch chiếu', ctaHref: '/' },
-    { key: 'member', icon: User, title: 'Thành viên CGV', color: '#3b82f6', description: 'Tích điểm, lên hạng thành viên để nhận ưu đãi độc quyền và quà tặng.', ctaText: 'Tìm hiểu hạng thành viên', ctaHref: '/membership' },
-    { key: 'cinemas', icon: Info, title: 'Rạp CGV', color: '#3b82f6', description: 'Tìm rạp gần bạn, xem thông tin chi tiết và dịch vụ đi kèm.', ctaText: 'Tìm rạp', ctaHref: '/#cinemas' },
-    { key: 'special', icon: Star, title: 'Rạp Đặc Biệt', color: '#3b82f6', description: 'Trải nghiệm IMAX, 4DX, GOLD CLASS và nhiều định dạng cao cấp.', ctaText: 'Khám phá rạp đặc biệt', ctaHref: '/#special' },
-    { key: 'news', icon: Gift, title: 'Tin mới & Ưu đãi', color: '#3b82f6', description: 'Cập nhật tin tức phim ảnh và các khuyến mãi hấp dẫn mỗi ngày.', ctaText: 'Xem ưu đãi', ctaHref: '/news' },
-    { key: 'tickets', icon: Ticket, title: 'Vé của tôi', color: '#3b82f6', description: 'Quản lý vé đã mua, theo dõi lịch sử giao dịch và xuất vé điện tử.', ctaText: 'Xem vé', ctaHref: '/tickets' },
-    { key: 'store', icon: Store, title: 'CGV Store', color: '#3b82f6', description: 'Mua bắp nước, combo ưu đãi và quà lưu niệm chính hãng.', ctaText: 'Mua ngay', ctaHref: '/#store' },
-    { key: 'egift', icon: GiftIcon, title: 'CGV eGift', color: '#3b82f6', isNew: true, description: 'Gửi quà xem phim tiện lợi cho người thân và bạn bè qua eGift.', ctaText: 'Mua eGift', ctaHref: '/egift' },
-    { key: 'redeem', icon: Award, title: 'Đổi ưu đãi', color: '#3b82f6', description: 'Dùng điểm tích lũy để đổi vé, combo và quà tặng hấp dẫn.', ctaText: 'Đổi ngay', ctaHref: '/#redeem' }
-  ];
+  {
+    key: 'home',
+    icon: Home,
+    title: t('Trang Chủ'),
+    color: '#3b82f6',
+    description: t('Khám phá phim đang chiếu, lịch chiếu theo rạp và đặt vé nhanh chóng.'),
+    ctaText: t('Xem lịch chiếu'),
+    ctaHref: '/'
+  },
+  {
+    key: 'member',
+    icon: User,
+    title: t('Thành viên CGV'),
+    color: '#3b82f6',
+    description: t('Tích điểm, lên hạng thành viên để nhận ưu đãi độc quyền và quà tặng.'),
+    ctaText: t('Tìm hiểu hạng thành viên'),
+    ctaHref: '/membership'
+  },
+  {
+    key: 'cinemas',
+    icon: Info,
+    title: t('Rạp CGV'),
+    color: '#3b82f6',
+    description: t('Tìm rạp gần bạn, xem thông tin chi tiết và dịch vụ đi kèm.'),
+    ctaText: t('Tìm rạp'),
+    ctaHref: '/#cinemas'
+  },
+  {
+    key: 'special',
+    icon: Star,
+    title: t('Rạp Đặc Biệt'),
+    color: '#3b82f6',
+    description: t('Trải nghiệm IMAX, 4DX, GOLD CLASS và nhiều định dạng cao cấp.'),
+    ctaText: t('Khám phá rạp đặc biệt'),
+    ctaHref: '/#special'
+  },
+  {
+    key: 'news',
+    icon: Gift,
+    title: t('Tin mới & Ưu đãi'),
+    color: '#3b82f6',
+    description: t('Cập nhật tin tức phim ảnh và các khuyến mãi hấp dẫn mỗi ngày.'),
+    ctaText: t('Xem ưu đãi'),
+    ctaHref: '/news'
+  },
+  {
+    key: 'tickets',
+    icon: Ticket,
+    title: t('Vé của tôi'),
+    color: '#3b82f6',
+    description: t('Quản lý vé đã mua, theo dõi lịch sử giao dịch và xuất vé điện tử.'),
+    ctaText: t('Xem vé'),
+    ctaHref: '/tickets'
+  },
+  {
+    key: 'store',
+    icon: Store,
+    title: t('CGV Store'),
+    color: '#3b82f6',
+    description: t('Mua bắp nước, combo ưu đãi và quà lưu niệm chính hãng.'),
+    ctaText: t('Mua ngay'),
+    ctaHref: '/#store'
+  },
+  {
+    key: 'egift',
+    icon: GiftIcon,
+    title: t('CGV eGift'),
+    color: '#3b82f6',
+    isNew: true,
+    description: t('Gửi quà xem phim tiện lợi cho người thân và bạn bè qua eGift.'),
+    ctaText: t('Mua eGift'),
+    ctaHref: '/egift'
+  },
+  {
+    key: 'redeem',
+    icon: Award,
+    title: t('Đổi ưu đãi'),
+    color: '#3b82f6',
+    description: t('Dùng điểm tích lũy để đổi vé, combo và quà tặng hấp dẫn.'),
+    ctaText: t('Đổi ngay'),
+    ctaHref: '/#redeem'
+  }
+];
   
 
   useEffect(() => {
@@ -282,42 +358,43 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
     if (!file) return;
 
     // Validate file type
-    if (!file.type.startsWith('image/')) {
-      alert('Vui lòng chọn file ảnh hợp lệ!');
-      return;
-    }
+  if (!file.type.startsWith('image/')) {
+    alert(t('Please select a valid image file!'));
+    return;
+  }
 
-    // Validate file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      alert('Kích thước file không được vượt quá 5MB!');
-      return;
-    }
+  // Validate file size (max 5MB)
+  if (file.size > 5 * 1024 * 1024) {
+    alert(t('File size must not exceed 5MB!'));
+    return;
+  }
 
-    setIsUploading(true);
-    
-    // Create preview URL
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const imageUrl = e.target.result;
-      setUploadedAvatar(imageUrl);
-      setAvatarUrl(imageUrl);
-      setIsUploading(false);
-      
-      // Update user data
-      const updatedUser = { ...user, avatarUrl: imageUrl, customAvatar: true };
-      localStorage.setItem('currentUser', JSON.stringify(updatedUser));
-      setUser(updatedUser);
-      
-      // Notify parent component
-      if (onAvatarChange) {
-        onAvatarChange(imageUrl, updatedUser);
-      }
-    };
-    
-    reader.onerror = () => {
-      alert('Lỗi khi đọc file ảnh!');
-      setIsUploading(false);
-    };
+  setIsUploading(true);
+
+  // Create preview URL
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const imageUrl = e.target.result;
+    setUploadedAvatar(imageUrl);
+    setAvatarUrl(imageUrl);
+    setIsUploading(false);
+
+  // Update user data
+  const updatedUser = { ...user, avatarUrl: imageUrl, customAvatar: true };
+  localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+  setUser(updatedUser);
+
+    // Notify parent component
+    if (onAvatarChange) {
+      onAvatarChange(imageUrl, updatedUser);
+    }
+  };
+
+  reader.onerror = () => {
+    alert(t('Error reading image file!'));
+    setIsUploading(false);
+  };
+
     
     reader.readAsDataURL(file);
   };
