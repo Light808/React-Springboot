@@ -1,11 +1,16 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, Clock, MapPin, Ticket, Eye, Trash2, Filter, Search, BarChart3, CheckCircle, XCircle } from 'lucide-react';
 import { getTicketsByUser, downloadTicket, exportUserTickets, getUserTicketStats, cancelTicketWithReason, downloadFile, getTicketDetails, refundTicket, getUserRefundStats } from '../../../services/ticketService';
+import { addFunds } from '../../../services/virtualWalletService';
 import { getMovieById } from '../../../services/movieService';
-import styles from './TicketListPage.module.css';         
+import styles from './TicketListPage.module.css';
+import { useTranslation } from 'react-i18next';         
 
 const TicketListPage = ({ userId }) => {
+  const {t} = useTranslation();
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -87,9 +92,8 @@ const TicketListPage = ({ userId }) => {
         } catch (refundStatsError) {
           console.error('Error fetching refund stats:', refundStatsError);
         }
-      // eslint-disable-next-line no-unused-vars
       } catch (err) {
-        setError('Không thể tải danh sách vé. Vui lòng thử lại sau.');
+        setError('Reload Ticket list failed, please try again.');
       } finally {
         setLoading(false);
       }
@@ -102,7 +106,7 @@ const TicketListPage = ({ userId }) => {
     let filtered = tickets;
     const removeVietnameseDiacritics = (str) => {
       if (!str) return '';
-      
+
       return str
         .normalize('NFD') 
         .replace(/[\u0300-\u036f]/g, '') 
@@ -110,7 +114,7 @@ const TicketListPage = ({ userId }) => {
         .toLowerCase();
     };
 
-    // Function to check if text contains search query (case-insensitive, diacritic-insensitive)
+    // Function to check if text contains search query 
     const containsSearchQuery = (text, query) => {
       if (!text || !query) return false;
       
@@ -122,7 +126,7 @@ const TicketListPage = ({ userId }) => {
 
     if (searchQuery.trim()) {
       filtered = filtered.filter(ticket => {
-        const movieTitle = movieTitles[ticket.id] || ticket.movieTitle || 'Tên phim';
+        const movieTitle = movieTitles[ticket.id] || ticket.movieTitle || 'movie name';
         return containsSearchQuery(movieTitle, searchQuery) ||
                containsSearchQuery(ticket.cinemaName, searchQuery) ||
                containsSearchQuery(ticket.showtimeId, searchQuery);
@@ -170,18 +174,17 @@ const TicketListPage = ({ userId }) => {
 
   const getStatusBadge = (status) => {
     const statusConfig = {
-      'confirmed': { text: 'Đã xác nhận', class: `${styles['status-confirmed']}` },
-      'pending': { text: 'Chờ xác nhận', class: `${styles['status-pending']}` },
-      'cancelled': { text: 'Đã hủy', class: `${styles['status-cancelled']}` },
-      'used': { text: 'Đã sử dụng', class: `${styles['status-used']}` },
-      'expired': { text: 'Hết hạn', class: `${styles['status-expired']}` }
+      'confirmed': { text: t('Confirmed'), class: `${styles['status-confirmed']}` },
+      'pending': { text: t('Pending'), class: `${styles['status-pending']}` },
+      'cancelled': { text: t('Cancelled'), class: `${styles['status-cancelled']}` },
+      'used': { text: t('Used'), class: `${styles['status-used']}` },
+      'expired': { text: t('Expired'), class: `${styles['status-expired']}` }
     };
 
     const config = statusConfig[status] || { text: status, class: `${styles['status-default']}` };
     return <span className={`${styles['status-badge']} ${config.class}`}>{config.text}</span>;
   };
 
-  // eslint-disable-next-line no-unused-vars
   const handleDownloadTicket = async (ticketId) => {
     try {
       setActionLoading(prev => ({ ...prev, [ticketId]: true }));
@@ -287,7 +290,16 @@ const TicketListPage = ({ userId }) => {
     try {
       setActionLoading(prev => ({ ...prev, [selectedTicket.id]: true }));
       await refundTicket(selectedTicket.id, parseFloat(refundAmount), refundReason);
-      alert('Hoàn tiền thành công!');
+      // credit sandbox wallet
+      try {
+        const credited = Math.max(0, Math.floor(parseFloat(refundAmount)));
+        if (credited > 0) {
+          addFunds(credited, `Refund for ticket ${selectedTicket.id}`);
+        }
+      } catch (e) {
+        console.warn('Could not credit sandbox wallet after refund:', e);
+      }
+      alert('Hoàn tiền thành công! Số dư ví đã được cộng.');
       setShowRefundModal(false);
       setRefundAmount('');
       setRefundReason('');
@@ -327,7 +339,6 @@ const TicketListPage = ({ userId }) => {
     }
   };
 
-  // eslint-disable-next-line no-unused-vars
   const handleExportTickets = async (format = 'pdf') => {
     try {
       setActionLoading(prev => ({ ...prev, export: true }));

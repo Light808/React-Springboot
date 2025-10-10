@@ -1,12 +1,21 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useRef } from 'react';
 import { getCurrentUserSync, updateUserProfile, getUserProfile } from '../../../services/userService';
 import { User, Settings, Crown, Gift, Star, Ticket, Calendar, CreditCard, Award, TrendingUp, Shield, Upload, X, Home, Info, Store, Gift as GiftIcon } from 'lucide-react';
 import './UserProfile.css';
+<<<<<<< HEAD
 import { useTranslation } from 'react-i18next';
 
 
 const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSettings = false }) => {
   const { t } = useTranslation();
+=======
+import { getBalance } from '../../../services/virtualWalletService';
+import { useTranslation } from 'react-i18next';
+
+const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSettings = false }) => {
+  const {t} = useTranslation();
+>>>>>>> 5051902170c597c92ecd19f00fb30f136d63dc1a
   const [user, setUser] = useState(null);
   const [avatarUrl, setAvatarUrl] = useState(null);
   const popupRef = useRef(null);
@@ -21,10 +30,24 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
     totalSpent: 0,
     totalPoints: 0
   });
+  const [walletBalance, setWalletBalance] = useState(getBalance());
 
   useEffect(() => {
-    // initialOpenSettings no longer used (settings moved to separate modal)
   }, [initialOpenSettings]);
+  
+  // Listen to sandbox wallet updates
+  useEffect(() => {
+    const onWalletUpdated = (e) => {
+      if (e && e.detail && typeof e.detail.balance === 'number') {
+        setWalletBalance(e.detail.balance);
+      } else {
+        setWalletBalance(getBalance());
+      }
+    };
+    window.addEventListener('sandboxWalletUpdated', onWalletUpdated);
+    setWalletBalance(getBalance());
+    return () => window.removeEventListener('sandboxWalletUpdated', onWalletUpdated);
+  }, []);
   
   const userStats = {
     totalMovies: 47,
@@ -36,6 +59,7 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
   };
   
   const benefits = [
+<<<<<<< HEAD
   {
     key: 'home',
     icon: Home,
@@ -119,6 +143,18 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
     ctaHref: '/#redeem'
   }
 ];
+=======
+    { key: 'home', icon: Home, title: t('Home'), color: '#3b82f6', description: 'Khám phá phim đang chiếu, lịch chiếu theo rạp và đặt vé nhanh chóng.', ctaText: 'Xem lịch chiếu', ctaHref: '/' },
+    { key: 'member', icon: User, title: t('CGVMember'), color: '#3b82f6', description: 'Tích điểm, lên hạng thành viên để nhận ưu đãi độc quyền và quà tặng.', ctaText: 'Tìm hiểu hạng thành viên', ctaHref: '/membership' },
+    { key: 'cinemas', icon: Info, title: t('CGVCinema'), color: '#3b82f6', description: 'Tìm rạp gần bạn, xem thông tin chi tiết và dịch vụ đi kèm.', ctaText: 'Tìm rạp', ctaHref: '/#cinemas' },
+    { key: 'special', icon: Star, title: t('SpecialCinema'), color: '#3b82f6', description: 'Trải nghiệm IMAX, 4DX, GOLD CLASS và nhiều định dạng cao cấp.', ctaText: 'Khám phá rạp đặc biệt', ctaHref: '/#special' },
+    { key: 'news', icon: Gift, title: t('NewAndOffer'), color: '#3b82f6', description: 'Cập nhật tin tức phim ảnh và các khuyến mãi hấp dẫn mỗi ngày.', ctaText: 'Xem ưu đãi', ctaHref: '/news' },
+    { key: 'tickets', icon: Ticket, title: t('MyTicket'), color: '#3b82f6', description: 'Quản lý vé đã mua, theo dõi lịch sử giao dịch và xuất vé điện tử.', ctaText: 'Xem vé', ctaHref: '/tickets' },
+    { key: 'store', icon: Store, title: 'CGVStore', color: '#3b82f6', description: 'Mua bắp nước, combo ưu đãi và quà lưu niệm chính hãng.', ctaText: 'Mua ngay', ctaHref: '/#store' },
+    { key: 'egift', icon: GiftIcon, title: 'CGVEGift', color: '#3b82f6', isNew: true, description: 'Gửi quà xem phim tiện lợi cho người thân và bạn bè qua eGift.', ctaText: 'Mua eGift', ctaHref: '/egift' },
+    { key: 'redeem', icon: Award, title: t('ChangeOffer'), color: '#3b82f6', description: 'Dùng điểm tích lũy để đổi vé, combo và quà tặng hấp dẫn.', ctaText: 'Đổi ngay', ctaHref: '/#redeem' }
+  ];
+>>>>>>> 5051902170c597c92ecd19f00fb30f136d63dc1a
   
 
   useEffect(() => {
@@ -210,7 +246,7 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
   };
 
   // Function để refresh dữ liệu chi tiêu
-  // eslint-disable-next-line no-unused-vars
+
   const refreshSpendingData = () => {
     calculateUserSpending();
   };
@@ -236,7 +272,6 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
   }, [isPopup]);
 
   // Handle closing animation
-  // eslint-disable-next-line no-unused-vars
   const handleClose = () => {
     if (popupRef.current) {
       popupRef.current.classList.add('closing');
@@ -257,7 +292,7 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
       
       console.log('Loading from localStorage - avatarUrl:', currentUser.avatarUrl, 'customAvatar:', currentUser.customAvatar);
       
-      // Kiểm tra nếu có custom avatar
+      // Check if have custom avatar
       if (currentUser.customAvatar && currentUser.avatarUrl) {
         setAvatarUrl(currentUser.avatarUrl);
         setUploadedAvatar(currentUser.avatarUrl);
@@ -267,7 +302,7 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
         setUploadedAvatar(currentUser.avatarUrl);
         console.log('Using custom avatar (fallback) from localStorage:', currentUser.avatarUrl);
       } else {
-        // Tạo initials giống Header
+        // create initial like header
         const generateInitials = (name) => {
           if (!name) return 'U';
           const displayName = currentUser.fullName || currentUser.username;
@@ -320,7 +355,6 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
     }
   };
 
-  // eslint-disable-next-line no-unused-vars
   const generateNewAvatar = async () => {
     if (!user?.username) return;
     
@@ -339,12 +373,12 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
       setAvatarUrl(initials);
       setUploadedAvatar(null);
       
-      // Cập nhật avatar trong localStorage
+      // update avatar in storage
       const updatedUser = { ...user, avatarUrl: initials, customAvatar: false };
       localStorage.setItem('currentUser', JSON.stringify(updatedUser));
       setUser(updatedUser);
       
-      // Thông báo cho Header để cập nhật avatar
+      // Notification to Header to update avatar
       if (onAvatarChange) {
         onAvatarChange(initials, updatedUser);
       }
@@ -363,6 +397,7 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
     return;
   }
 
+<<<<<<< HEAD
   // Validate file size (max 5MB)
   if (file.size > 5 * 1024 * 1024) {
     alert(t('File size must not exceed 5MB!'));
@@ -394,6 +429,13 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
     alert(t('Error reading image file!'));
     setIsUploading(false);
   };
+=======
+    // Validate file size 
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Kích thước file không được vượt quá 5MB!');
+      return;
+    }
+>>>>>>> 5051902170c597c92ecd19f00fb30f136d63dc1a
 
     
     reader.readAsDataURL(file);
@@ -406,7 +448,6 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
   const removeCustomAvatar = () => {
     setUploadedAvatar(null);
     
-    // Tạo initials giống Header
     const generateInitials = (name) => {
       if (!name) return 'U';
       const displayName = user.fullName || user.username;
@@ -419,13 +460,11 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
     };
     const initials = generateInitials(user.fullName || user.username);
     setAvatarUrl(initials);
-    
-    // Cập nhật localStorage
+
     const updatedUser = { ...user, avatarUrl: initials, customAvatar: false };
     localStorage.setItem('currentUser', JSON.stringify(updatedUser));
     setUser(updatedUser);
-    
-    // Thông báo cho Header
+
     if (onAvatarChange) {
       onAvatarChange(initials, updatedUser);
     }
@@ -695,6 +734,15 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
                 <span className="stat-number">{userSpending.totalPoints}</span>
               </div>
             </div>
+
+                      
+          <div className="stat-item">
+              <div className="stat-info">
+                <span className="stat-label"> Số dư ví </span>
+                <span className="stat-number">{formatCurrency(walletBalance)}</span>
+              </div>
+            </div>
+
           </div>
           
           <div className="level-progress">

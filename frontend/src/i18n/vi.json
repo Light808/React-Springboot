@@ -259,5 +259,11 @@
   "Nhập mật khẩu hiện tại": "Nhập mật khẩu hiện tại",
   "Mật khẩu mới": "Mật khẩu mới",
   "Ít nhất 6 ký tự": "Ít nhất 6 ký tự",
-  "Xác nhận mật khẩu mới": "Xác nhận mật khẩu mới"
+  "Xác nhận mật khẩu mới": "Xác nhận mật khẩu mới",
+  "CGVMember": "Thành viên CGV",
+  "Confirmed": "Đã xác nhận",
+  "Pending": "Chờ xác nhận",
+  "Cancelled": "Hủy vé",
+  "Used": "Đã sử dụng",
+  "Expired": "Hết hạn"
 }

@@ -18,9 +18,15 @@ const Footer = () => {
             
             <div className={`company-details`}>
               <p><strong>{t('Business Registration No')}: </strong> 0932082976 </p>
+<<<<<<< HEAD
               <p><strong>{t('Issued by:')}</strong> {t('Department of Planning and Investment of Ho Chi Minh City')} </p>
               <p><strong>{t('First registration date:')}</strong> 01/09/2025</p>
               <p><strong>{t('Address')}:</strong> {t('146A Nguyen Van Qua Street, Dong Hung Thuan Ward, District 12, Ho Chi Minh City')}</p>
+=======
+              <p><strong>{t('Issued by')}:</strong> Department of Planning and Investment of Ho Chi Minh City </p>
+              <p><strong>{t('First registration date')}:</strong> 01/09/2025</p>
+              <p><strong>{t('Address')}:</strong> 146A Nguyen Van Qua Street, Dong Hung Thuan Ward, District 12, Ho Chi Minh City</p>
+>>>>>>> 5051902170c597c92ecd19f00fb30f136d63dc1a
             </div>
             
             <div className={`footer-links`}>

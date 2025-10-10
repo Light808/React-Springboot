@@ -22,6 +22,9 @@ export function addFunds(amount, note = 'Top up') {
   const next = current + Math.max(0, Math.floor(amount));
   setBalance(next);
   recordTxn({ type: 'topup', amount, note });
+  try {
+    window.dispatchEvent(new CustomEvent('sandboxWalletUpdated', { detail: { balance: next, type: 'topup', amount } }));
+  } catch {}
   return next;
 }
 
@@ -35,6 +38,9 @@ export function pay(amount, note = 'Payment') {
   const next = current - Math.floor(amount);
   setBalance(next);
   recordTxn({ type: 'payment', amount: -Math.floor(amount), note });
+  try {
+    window.dispatchEvent(new CustomEvent('sandboxWalletUpdated', { detail: { balance: next, type: 'payment', amount: -Math.floor(amount) } }));
+  } catch {}
   return true;
 }
 

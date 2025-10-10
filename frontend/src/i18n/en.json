@@ -258,5 +258,11 @@
   "Nhập mật khẩu hiện tại": "Enter current password",
   "Mật khẩu mới": "New Password",
   "Ít nhất 6 ký tự": "At least 6 characters",
-  "Xác nhận mật khẩu mới": "Confirm New Password"
+  "Xác nhận mật khẩu mới": "Confirm New Password",
+  "CGVMember": "CGV Member",
+  "Confirmed": "Confirmed",
+  "Pending": "Pending",
+  "Cancelled": "Cancelled",
+  "Used": "Used",
+  "Expired": "Expired"
 }
