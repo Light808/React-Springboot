@@ -3,8 +3,10 @@ import React, { useState } from 'react';
 import { Star, Send } from 'lucide-react';
 import { createReview } from '../../../services/reviewService';
 import styles from './ReviewForm.module.css';
+import { useTranslation } from 'react-i18next';
 
 const ReviewForm = ({ movieId, onReviewAdded }) => {
+  const { t } = useTranslation();
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
   const [userName, setUserName] = useState('');
@@ -20,17 +22,17 @@ const ReviewForm = ({ movieId, onReviewAdded }) => {
     e.preventDefault();
     
     if (!userName.trim()) {
-      setError('Vui lòng nhập tên của bạn');
+      setError(t('Vui lòng nhập tên của bạn'));
       return;
     }
     
     if (rating === 0) {
-      setError('Vui lòng chọn điểm đánh giá');
+      setError(t('Vui lòng chọn điểm đánh giá'));
       return;
     }
     
     if (!comment.trim()) {
-      setError('Vui lòng nhập bình luận');
+      setError(t('Vui lòng nhập bình luận'));
       return;
     }
 
@@ -54,7 +56,7 @@ const ReviewForm = ({ movieId, onReviewAdded }) => {
       const newReview = await createReview(reviewData);
       console.log('Review created successfully:', newReview);
       
-      setSuccess('Đánh giá của bạn đã được gửi thành công!');
+      setSuccess(t('Đánh giá của bạn đã được gửi thành công!'));
       setRating(0);
       setComment('');
       setUserName('');
@@ -65,7 +67,7 @@ const ReviewForm = ({ movieId, onReviewAdded }) => {
         }, 2000);
       }    
     } catch (error) {
-      setError('Có lỗi xảy ra khi gửi đánh giá. Vui lòng thử lại.');
+      setError(t('Có lỗi xảy ra khi gửi đánh giá. Vui lòng thử lại.'));
     } finally {
       setIsSubmitting(false);
     }
@@ -73,7 +75,7 @@ const ReviewForm = ({ movieId, onReviewAdded }) => {
 
   return (
     <div className={`${styles['review-form-container']}`}> 
-      <h3 className={`${styles['review-form-title']}`}>Viết đánh giá của bạn</h3>
+      <h3 className={`${styles['review-form-title']}`}>{t('Viết đánh giá của bạn')}</h3>
       
       <form onSubmit={handleSubmit} className={`${styles['review-form']}`}>
         <div className={`${styles['form-group']}`}>
@@ -86,7 +88,7 @@ const ReviewForm = ({ movieId, onReviewAdded }) => {
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
             className={`${styles['form-input']}`}
-            placeholder="Nhập tên của bạn"
+            placeholder={t("Nhập tên của bạn")}
             maxLength={50}
           />
         </div>
@@ -108,26 +110,26 @@ const ReviewForm = ({ movieId, onReviewAdded }) => {
               </button>
             ))}
             <span className={`${styles['rating-text']}`}>
-              {rating > 0 ? `${rating}/5 sao` : 'Chọn điểm đánh giá'}
+              {rating > 0 ? `${rating}/5 star` : t('Chọn điểm đánh giá')}
             </span>
           </div>
         </div>
 
         <div className={`${styles['form-group']}`}>
           <label htmlFor="comment" className={`${styles['form-label']}`}>
-            Bình luận *
+            {t('Bình luận')} *
           </label>
           <textarea
             id="comment"
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             className={`${styles['form-textarea']}`}
-            placeholder="Chia sẻ suy nghĩ của bạn về bộ phim này..."
+            placeholder= {t("Chia sẻ suy nghĩ của bạn về bộ phim này...")}
             rows={4}
             maxLength={500}
           />
           <div className={`${styles['character-count']}`}>
-            {comment.length}/500 ký tự
+            {comment.length}/{t('500 ký tự')}
           </div>
         </div>
 
@@ -151,12 +153,12 @@ const ReviewForm = ({ movieId, onReviewAdded }) => {
           {isSubmitting ? (
             <>
               <div className={`${styles['loading-spinner']}`}></div>
-              Đang gửi...
+              {t('Đang gửi...')}
             </>
           ) : (
             <>
               <Send size={16} />
-              Gửi đánh giá
+              {t('Gửi đánh giá')}
             </>
           )}
         </button>

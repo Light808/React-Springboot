@@ -72,7 +72,7 @@ function App() {
     return (
       <div className="app-loading">
         <div className="loading-spinner"></div>
-        <p>Đang tải ứng dụng...</p>
+        <p>Loading...</p>
       </div>
     );
   }

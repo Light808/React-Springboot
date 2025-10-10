@@ -2,8 +2,10 @@
 import React, { useState } from 'react';
 import { Filter, Star, Clock, Plus } from 'lucide-react';
 import './Sidebar.css';
+import { useTranslation } from 'react-i18next';
 
 const Sidebar = ({ onSelectGenre, genres, selectedGenre }) => {
+  const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
   const [priceRange, setPriceRange] = useState([0, 500]);
   const [rating, setRating] = useState(5);
@@ -97,7 +99,7 @@ const Sidebar = ({ onSelectGenre, genres, selectedGenre }) => {
       <div className={`${'sidebar-section'}`}>
         <h4 className={`${'sidebar-title'}`}> 
           <Star size={20} />
-          Đánh giá
+          {t('Đánh giá')}
         </h4>
         <div className={`${'rating-options'}`}>
           {[5, 4, 3, 2, 1].map((star) => (
@@ -129,7 +131,7 @@ const Sidebar = ({ onSelectGenre, genres, selectedGenre }) => {
       <div className={`${'sidebar-section'}`}>
         <div className={`${'price-range'}`}>
           <div className={`${'price-range-header'}`}>
-            <h4 className={`${'price-range-title'}`}>Khoảng giá</h4>
+            <h4 className={`${'price-range-title'}`}>{t('Khoảng giá')}</h4>
             <div className={`${'price-range-values'}`}>
               {priceRange[0]} - {priceRange[1]}
             </div>
@@ -149,20 +151,20 @@ const Sidebar = ({ onSelectGenre, genres, selectedGenre }) => {
       <div className={`${'sidebar-section'}`}>
         <h4 className={`${'sidebar-title'}`}>
           <Clock size={20} />
-          Thời lượng
+          {t('Thời lượng')}
         </h4>
         <div className={`${'year-filters'}`}>
           <div className={`${'year-item'}`}>
             <input type="checkbox" id="duration-1" />
-            <label htmlFor="duration-1">Dưới 90 phút</label>
+            <label htmlFor="duration-1">{t('Dưới 90 phút')}</label>
           </div>
           <div className={`${'year-item'}`}>
             <input type="checkbox" id="duration-2" />
-            <label htmlFor="duration-2">90-120 phút</label>
+            <label htmlFor="duration-2">90-120 {t('phút')}</label>
           </div>
           <div className={`${'year-item'}`}>
             <input type="checkbox" id="duration-3" />
-            <label htmlFor="duration-3">Trên 120 phút</label>
+            <label htmlFor="duration-3">{t('Trên 120 phút')}</label>
           </div>
         </div>
       </div>
@@ -170,10 +172,10 @@ const Sidebar = ({ onSelectGenre, genres, selectedGenre }) => {
       {/* Action Buttons */}
       <div className={`${'action-buttons'}`}>
         <button className={`${'clear-filters'}`} onClick={clearAllFilters}>
-          Xóa tất cả bộ lọc
+          {t('Xóa tất cả bộ lọc')}  
         </button>
         <button className={`${'apply-filters'}`} onClick={applyFilters}>
-          Áp dụng
+          {t('Áp dụng')}
         </button>
       </div>
     </aside>
