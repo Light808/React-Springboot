@@ -34,6 +34,7 @@ const Footer = () => {
               <span> - </span>
               <span className={`version`}>v8.1</span>
             </div>
+            </div>
           </div>
         </div>
 
@@ -86,7 +87,6 @@ const Footer = () => {
             </div>
           </div>
         </div>
-      </div>
     </footer>
   );
 };
