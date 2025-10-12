@@ -1,6 +1,6 @@
 const API_BASE_URL = 'http://localhost:8080/api';
 
-// Lấy tất cả combo đang hoạt động
+// getAllCombos
 export const getAllCombos = async () => {
   try {
     const response = await fetch(`${API_BASE_URL}/combos`, {
@@ -22,7 +22,7 @@ export const getAllCombos = async () => {
   }
 };
 
-// Lấy tất cả combo (Admin)
+// get All Combos Admin
 export const getAllCombosAdmin = async () => {
   try {
     const response = await fetch(`${API_BASE_URL}/combos/all`, {
@@ -44,7 +44,7 @@ export const getAllCombosAdmin = async () => {
   }
 };
 
-// Lấy combo theo ID
+// get Combo by ID
 export const getComboById = async (id) => {
   try {
     const response = await fetch(`${API_BASE_URL}/combos/${id}`, {
@@ -66,7 +66,7 @@ export const getComboById = async (id) => {
   }
 };
 
-// Tìm kiếm combo theo tên
+// search Combos by Name
 export const searchCombosByName = async (name) => {
   try {
     const response = await fetch(`${API_BASE_URL}/combos/search?name=${encodeURIComponent(name)}`, {
@@ -88,7 +88,7 @@ export const searchCombosByName = async (name) => {
   }
 };
 
-// Tìm combo theo khoảng giá
+// search Combos by Price Range
 export const getCombosByPriceRange = async (minPrice, maxPrice) => {
   try {
     const response = await fetch(`${API_BASE_URL}/combos/price-range?minPrice=${minPrice}&maxPrice=${maxPrice}`, {
@@ -110,7 +110,7 @@ export const getCombosByPriceRange = async (minPrice, maxPrice) => {
   }
 };
 
-// Tìm combo theo giá tối đa
+// search Combos by Max Price
 export const getCombosByMaxPrice = async (maxPrice) => {
   try {
     const response = await fetch(`${API_BASE_URL}/combos/max-price?maxPrice=${maxPrice}`, {
@@ -132,7 +132,7 @@ export const getCombosByMaxPrice = async (maxPrice) => {
   }
 };
 
-// Tạo combo mới (Admin)
+// create Combo (Admin)
 export const createCombo = async (comboData) => {
   try {
     const response = await fetch(`${API_BASE_URL}/combos`, {
@@ -155,7 +155,7 @@ export const createCombo = async (comboData) => {
   }
 };
 
-// Cập nhật combo (Admin)
+// update Combo (Admin)
 export const updateCombo = async (id, comboData) => {
   try {
     const response = await fetch(`${API_BASE_URL}/combos/${id}`, {
@@ -178,7 +178,7 @@ export const updateCombo = async (id, comboData) => {
   }
 };
 
-// Xóa combo (Admin)
+// delete Combo (Admin)
 export const deleteCombo = async (id) => {
   try {
     const response = await fetch(`${API_BASE_URL}/combos/${id}`, {

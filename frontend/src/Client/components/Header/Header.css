@@ -573,7 +573,7 @@
 
 .status-badge {
   background-color: #d5e5fa;
-  color: #2c7be5;
+  color: #2c7be5 !important;
   padding: 0.2rem 0.5rem;
   border-radius: 0.25rem;
   font-size: 0.7rem;

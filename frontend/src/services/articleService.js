@@ -1,6 +1,6 @@
 const API_BASE_URL = 'http://localhost:8080/api';
 
-// Lấy tất cả bài viết
+// get all articles
 export const getArticles = async () => {
   try {
     const response = await fetch(`${API_BASE_URL}/articles`);
@@ -14,7 +14,7 @@ export const getArticles = async () => {
   }
 };
 
-// Lấy bài viết theo ID
+// get article by id
 export const getArticleById = async (id) => {
   try {
     const response = await fetch(`${API_BASE_URL}/articles/${id}`);
@@ -28,7 +28,7 @@ export const getArticleById = async (id) => {
   }
 };
 
-// Lấy bài viết liên quan đến phim
+// get articles by movie id
 export const getArticlesByMovieId = async (movieId) => {
   try {
     const response = await fetch(`${API_BASE_URL}/articles/movie/${movieId}`);
@@ -42,7 +42,7 @@ export const getArticlesByMovieId = async (movieId) => {
   }
 };
 
-// Tìm kiếm bài viết
+// search articles by title
 export const searchArticles = async (query) => {
   try {
     const response = await fetch(`${API_BASE_URL}/articles/search?title=${encodeURIComponent(query)}`);
@@ -56,7 +56,7 @@ export const searchArticles = async (query) => {
   }
 };
 
-// Lấy bài viết theo danh mục
+// get articles by category
 export const getArticlesByCategory = async (category) => {
   try {
     const response = await fetch(`${API_BASE_URL}/articles/category/${category}`);

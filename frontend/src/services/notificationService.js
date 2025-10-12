@@ -130,8 +130,8 @@ export async function deleteAllNotificationsByUser(userId) {
 export function createBookingSuccessNotification(userId, movieTitle, seatNumbers, showTime) {
   return {
     userId: userId,
-    title: 'Đặt vé thành công',
-    message: `Bạn đã đặt vé thành công cho phim "${movieTitle}" tại ghế ${seatNumbers} vào ${new Date(showTime).toLocaleString('vi-VN')}`,
+    title: 'Booking successful',
+    message: `You Booking successfully for movie "${movieTitle}" at seat ${seatNumbers} at ${new Date(showTime).toLocaleString('en-EN')}`,
     type: 'booking_success',
     isRead: false,
     relatedType: 'booking'
@@ -141,8 +141,8 @@ export function createBookingSuccessNotification(userId, movieTitle, seatNumbers
 export function createTicketApprovedNotification(userId, movieTitle, ticketNumber) {
   return {
     userId: userId,
-    title: 'Vé đã được duyệt',
-    message: `Vé ${ticketNumber} cho phim "${movieTitle}" đã được admin duyệt và sẵn sàng sử dụng`,
+    title: 'Ticket approved',
+    message: `Ticket ${ticketNumber} for movie "${movieTitle}"  has been admin approved and ready to use`,
     type: 'ticket_approved',
     isRead: false,
     relatedType: 'ticket'
@@ -152,8 +152,8 @@ export function createTicketApprovedNotification(userId, movieTitle, ticketNumbe
 export function createTicketCancelledNotification(userId, movieTitle, ticketNumber) {
   return {
     userId: userId,
-    title: 'Vé đã bị hủy',
-    message: `Vé ${ticketNumber} cho phim "${movieTitle}" đã bị hủy bởi admin`,
+    title: 'Ticket cancelled',
+    message: `Ticket ${ticketNumber} for movie "${movieTitle}" has been cancelled by admin`,
     type: 'ticket_cancelled',
     isRead: false,
     relatedType: 'ticket'

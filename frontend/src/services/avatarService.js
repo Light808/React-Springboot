@@ -1,6 +1,5 @@
 /* eslint-disable no-case-declarations */
 const AVATAR_APIS = {
-    // API for DiceBear
     diceBearPersonas: 'https://api.dicebear.com/7.x/personas/svg',
     diceBearAvataaars: 'https://api.dicebear.com/7.x/avataaars/svg',
     diceBearMicah: 'https://api.dicebear.com/7.x/micah/svg',
@@ -9,7 +8,7 @@ const AVATAR_APIS = {
     uiAvatars: 'https://ui-avatars.com/api'
 };
 
-// DiceBear Micah
+// Generates a default avatar URL based on the username
 export const generateAvatarUrl = (username) => {
   if (!username) return null;
   const seed = encodeURIComponent(username);

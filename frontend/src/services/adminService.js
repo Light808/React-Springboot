@@ -258,7 +258,7 @@ export const updateTicketStatus = async (ticketId, status) => {
   try {
     const adminToken = localStorage.getItem('adminToken');
     if (!adminToken) {
-      throw new Error('Không có token admin');
+      throw new Error('not have token admin');
     }
 
     const response = await fetch(`${API_BASE_URL}/tickets/${ticketId}/status`, {

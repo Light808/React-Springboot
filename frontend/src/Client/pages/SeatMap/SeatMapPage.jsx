@@ -156,23 +156,45 @@ const SeatMapPage = ({ showtimeId, userId }) => {
       };
 
       console.log('SeatMapPage: Creating single ticket for multiple seats:', ticketData);
-      await bookTicket(ticketData);
       
-      // Tạo thông báo đặt vé thành công
-      try {
-        const notificationData = createBookingSuccessNotification(
-          user?.id || userId,
-          movie?.title || movie?.name || 'Phim',
-          seatNumbers,
-          showTime
-        );
-        await createNotification(notificationData);
-      } catch (notificationError) {
-        console.error('Error creating notification:', notificationError);
+      // Handle different payment methods
+      if (selectedPaymentMethod === 'vietqr') {
+        const summary = {
+          totalPrice: totalPrice,
+          ticketPrice: totalPrice,
+          comboPrice: 0,
+          totalTickets: selectedSeats.length
+        };
+        
+        navigate('/payment/vietqr', { 
+          state: { 
+            ticketData, 
+            summary, 
+            orderId: `CGV-${Date.now()}`,
+            amount: totalPrice
+          } 
+        });
+        return;
+      } else {
+        // Direct booking for other payment methods
+        await bookTicket(ticketData);
+        
+        // Tạo thông báo đặt vé thành công
+        try {
+          const notificationData = createBookingSuccessNotification(
+            user?.id || userId,
+            movie?.title || movie?.name || 'Phim',
+            seatNumbers,
+            showTime
+          );
+          await createNotification(notificationData);
+        } catch (notificationError) {
+          console.error('Error creating notification:', notificationError);
+        }
+        
+        setStep(3);
+        setMessage('Đặt vé thành công!');
       }
-      
-      setStep(3);
-      setMessage('Đặt vé thành công!');
     } catch (error) {
       console.error('Error booking tickets:', error);
       setMessage('Đặt vé thất bại. Vui lòng thử lại.');

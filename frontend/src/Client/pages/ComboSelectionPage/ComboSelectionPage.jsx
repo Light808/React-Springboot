@@ -229,7 +229,6 @@ const ComboSelectionPage = () => {
       if (!ticketData.seatNumber) {
         throw new Error('Seat number is required');
       }
-
       // instead of booking right away, redirect to payment sandbox with order payload
       const summary = {
         ticketPrice: getTicketPrice(),
@@ -237,26 +236,33 @@ const ComboSelectionPage = () => {
         totalPrice: totalPrice
       };
 
-      // 1) Create order on backend (signature generated in Spring)
       const orderPayload = {
         amount: summary.totalPrice,
         orderInfo: `${ticketData.movieTitle} - ${ticketData.seatNumber}`,
-        method: selectedPaymentMethod, // 'momo' | 'zalopay' | 'vietqr' | 'vnpay'
+        method: selectedPaymentMethod, 
         returnUrl: window.location.origin + '/payment/sandbox',
         notifyUrl: 'http://localhost:8080/api/payment/notify',
         extraData: { showtimeId: ticketData.showtimeId, seats: ticketData.seatNumber }
       };
       const order = await createPaymentOrder(orderPayload);
 
-      // Backend returns { orderId, signature, payUrl } for redirect to sandbox gateway
       if (order?.payUrl) {
-        // 2) redirect user to gateway sandbox
         window.location.href = order.payUrl;
         return;
       }
-
-      // Fallback: local sandbox page
-      navigate('/payment/sandbox', { state: { ticketData, summary, method: selectedPaymentMethod } });
+      // Handle different payment methods
+      if (selectedPaymentMethod === 'vietqr') {
+        navigate('/payment/vietqr', { 
+          state: { 
+            ticketData, 
+            summary, 
+            orderId: order?.orderId,
+            amount: summary.totalPrice
+          } 
+        });
+      } else {
+        navigate('/payment/sandbox', { state: { ticketData, summary, method: selectedPaymentMethod } });
+      }
       
     } catch (error) {
       console.error('Error booking tickets:', error);

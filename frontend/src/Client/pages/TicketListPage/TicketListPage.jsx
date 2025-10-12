@@ -7,7 +7,7 @@ import { getTicketsByUser, downloadTicket, exportUserTickets, getUserTicketStats
 import { addFunds } from '../../../services/virtualWalletService';
 import { getMovieById } from '../../../services/movieService';
 import styles from './TicketListPage.module.css';
-import { useTranslation } from 'react-i18next';         
+import { useTranslation } from 'react-i18next';
 
 const TicketListPage = ({ userId }) => {
   const {t} = useTranslation();
@@ -42,7 +42,7 @@ const TicketListPage = ({ userId }) => {
         setError(null);
         const ticketData = await getTicketsByUser(userId);
         setTickets(ticketData);
-        setFilteredTickets(ticketData);        
+        setFilteredTickets(ticketData);
         const movieTitlesMap = {};
 
         ticketData.forEach(ticket => {
@@ -108,13 +108,13 @@ const TicketListPage = ({ userId }) => {
       if (!str) return '';
 
       return str
-        .normalize('NFD') 
-        .replace(/[\u0300-\u036f]/g, '') 
-        .replace(/đ/g, 'd').replace(/Đ/g, 'D') 
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/đ/g, 'd').replace(/Đ/g, 'D')
         .toLowerCase();
     };
 
-    // Function to check if text contains search query 
+    // Function to check if text contains search query
     const containsSearchQuery = (text, query) => {
       if (!text || !query) return false;
       
@@ -128,8 +128,8 @@ const TicketListPage = ({ userId }) => {
       filtered = filtered.filter(ticket => {
         const movieTitle = movieTitles[ticket.id] || ticket.movieTitle || 'movie name';
         return containsSearchQuery(movieTitle, searchQuery) ||
-               containsSearchQuery(ticket.cinemaName, searchQuery) ||
-               containsSearchQuery(ticket.showtimeId, searchQuery);
+              containsSearchQuery(ticket.cinemaName, searchQuery) ||
+              containsSearchQuery(ticket.showtimeId, searchQuery);
       });
     }
 
@@ -207,7 +207,7 @@ const TicketListPage = ({ userId }) => {
         const modal = document.createElement('div');
         modal.className = styles['ticket-detail-modal'];
         modal.innerHTML = `
-          <div class="${styles['modal-content']}">   
+          <div class="${styles['modal-content']}">
             <div class="${styles['modal-header']}">
               <h3>Chi tiết vé</h3>
               <button class="${styles['close-btn']}">&times;</button>
@@ -247,7 +247,7 @@ const TicketListPage = ({ userId }) => {
               </div>
             </div>
           </div>
-        `;       
+        `;
         document.body.appendChild(modal);
         
         // Close modal handlers
@@ -321,8 +321,8 @@ const TicketListPage = ({ userId }) => {
       await cancelTicketWithReason(selectedTicket.id, cancelReason);
       
       // Update local state
-      setTickets(prev => prev.map(ticket => 
-        ticket.id === selectedTicket.id 
+      setTickets(prev => prev.map(ticket =>
+        ticket.id === selectedTicket.id
           ? { ...ticket, status: 'cancelled', cancellationReason: cancelReason }
           : ticket
       ));
@@ -355,7 +355,7 @@ const TicketListPage = ({ userId }) => {
 
   if (!userId) {
     return (
-      <div className={`${styles['ticket-list-page']}`}>  
+      <div className={`${styles['ticket-list-page']}`}>
         <div className={`${styles['container']}`}>
           <div className={`${styles['login-required']}`}>
             <h2>Vé của tôi</h2>
@@ -402,7 +402,7 @@ const TicketListPage = ({ userId }) => {
                   <span className={`${styles['stat-label']}`}>Đã xác nhận</span>
                 </div>
               </div>
-              <div className={`${styles['stat-card']}`}> 
+              <div className={`${styles['stat-card']}`}>
                 <div className={`${styles['stat-icon']} ${styles['used']}`}>
                   <CheckCircle size={24} />
                 </div>
@@ -430,7 +430,7 @@ const TicketListPage = ({ userId }) => {
                 </div>
               </div>
               <div className={`${styles['stat-card']}`}>
-                <div className={`${styles['stat-icon']} ${styles['refund']}`}>  
+                <div className={`${styles['stat-icon']} ${styles['refund']}`}>
                   <XCircle size={24} />
                 </div>
                 <div className={`${styles['stat-content']}`}>
@@ -512,10 +512,10 @@ const TicketListPage = ({ userId }) => {
         {/* Empty State */}
         {!loading && !error && !movieTitlesLoading && filteredTickets.length === 0 && (
           <div className={`${styles['empty-state']}`}>
-            <Ticket size={64} className={`${styles['empty-icon']}`} /> 
+            <Ticket size={64} className={`${styles['empty-icon']}`} />
             <h3>Chưa có vé nào</h3>
             <p>
-              {searchQuery || statusFilter !== 'all' 
+              {searchQuery || statusFilter !== 'all'
                 ? 'Không tìm thấy vé phù hợp với bộ lọc của bạn'
                 : 'Bạn chưa đặt vé phim nào. Hãy khám phá và đặt vé ngay!'
               }
@@ -533,8 +533,8 @@ const TicketListPage = ({ userId }) => {
               <div key={ticket.id} className={`${styles['ticket-card']}`}>
                 <div className={`${styles['ticket-header']}`}>
                   <div className={`${styles['ticket-poster']}`}>
-                    <img 
-                      src={ticket.moviePoster || '/default-movie.jpg'} 
+                    <img
+                      src={ticket.moviePoster || '/default-movie.jpg'}
                       alt={ticket.movieTitle || 'Movie Poster'}
                       className={`${styles['movie-poster-img']}`}
                       onError={(e) => {
@@ -645,7 +645,7 @@ const TicketListPage = ({ userId }) => {
             <div className={`${styles['modal-content']}`}>
               <div className={`${styles['modal-header']}`}>
                 <h3>Hủy vé</h3>
-                <button 
+                <button
                   className={`${styles['close-btn']}`}
                   onClick={() => {
                     setShowCancelModal(false);
@@ -704,7 +704,7 @@ const TicketListPage = ({ userId }) => {
             <div className={`${styles['modal-content']}`}>
               <div className={`${styles['modal-header']}`}>
                 <h3>Hoàn tiền vé</h3>
-                <button 
+                <button
                   className={`${styles['close-btn']}`}
                   onClick={() => {
                     setShowRefundModal(false);

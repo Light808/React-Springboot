@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import Header from './Client/components/Header/Header';
@@ -17,12 +18,13 @@ import MembershipPage from './Client/pages/Membership/MembershipPage';
 import EGiftPage from './Client/pages/EGift/EGiftPage';
 import AdminDashboard from './Admin/pages/Admin/AdminDashboard';
 import AdminRoute from './Admin/components/Admin/AdminRoute';
-import AdminChatWidget from './Admin/components/AdminChatWidget/AdminChatWidget';
+import PaymentManagement from './Admin/pages/PaymentManagement/PaymentManagement';
 import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import { getCurrentUser, logoutUser, isAuthenticated } from './services/userService';
 import DailySpinPage from './Client/pages/DailySpinPage';
 import ChatBox from './Client/components/ChatBox/ChatBox';
 import PaymentSandbox from './Client/pages/PaymentSandbox/PaymentSandbox.jsx';
+import VietQRPayment from './Client/pages/VietQRPayment/VietQRPayment.jsx';
 
 function ProtectedRoute({ children }) {
   return isAuthenticated() ? children : <Navigate to="/" replace />;
@@ -32,15 +34,12 @@ function App() {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Kiểm tra user đã đăng nhập khi component mount
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
         if (isAuthenticated()) {
           const currentUser = await getCurrentUser();
-          if (currentUser) {
-            setUser(currentUser);
-          }
+          if (currentUser) setUser(currentUser);
         }
       } catch (error) {
         console.error('Auth check failed:', error);
@@ -53,10 +52,7 @@ function App() {
     checkAuthStatus();
   }, []);
 
-  // eslint-disable-next-line no-unused-vars
-  const handleLogin = (userData) => {
-    setUser(userData);
-  };
+  const handleLogin = (userData) => setUser(userData);
 
   const handleLogout = async () => {
     try {
@@ -87,6 +83,7 @@ function App() {
 
 function RouteAwareLayout({ user, setUser, onLogout }) {
   const location = useLocation();
+
   return (
     <div className="app">
       <Header user={user} setUser={setUser} onLogout={onLogout} />
@@ -105,35 +102,45 @@ function RouteAwareLayout({ user, setUser, onLogout }) {
           <Route path="/egift" element={<EGiftPage />} />
           <Route path="/game" element={<DailySpinPage />} />
           <Route path="/payment/sandbox" element={<PaymentSandbox />} />
-          
-          {/* Protected routes - chỉ cho user đã đăng nhập */}
-          <Route 
-            path="/profile" 
+          <Route path="/payment/vietqr" element={<VietQRPayment />} />
+
+          {/* Protected routes */}
+          <Route
+            path="/profile"
             element={
               <ProtectedRoute>
                 <ProfilePage />
               </ProtectedRoute>
-            } 
+            }
           />
-          
+
           {/* Admin routes */}
-          <Route 
-            path="/admin/dashboard" 
+          <Route
+            path="/admin/dashboard"
             element={
               <AdminRoute>
                 <AdminDashboard />
               </AdminRoute>
-            } 
+            }
+          />
+          <Route
+            path="/admin/payments"
+            element={
+              <AdminRoute>
+                <PaymentManagement />
+              </AdminRoute>
+            }
           />
           <Route path="/admin/*" element={<Navigate to="/admin/dashboard" replace />} />
-          
-          {/* Catch all route */}
+
+          {/* Fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
+
+      {/* Footer & ChatBox (ẩn trong admin) */}
       {!location.pathname.startsWith('/admin') && <Footer />}
       {!location.pathname.startsWith('/admin') && <ChatBox />}
-      {location.pathname.startsWith('/admin') && <AdminChatWidget />}
     </div>
   );
 }

@@ -13,7 +13,8 @@ import {
   Building2,
   Clock,
   TrendingUp,
-  TrendingDown
+  TrendingDown,
+  DollarSign
 } from 'lucide-react';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { Line, Bar } from 'react-chartjs-2';
@@ -27,6 +28,7 @@ import ComboManagement from '../../components/ComboManagement/ComboManagement';
 import SeatManagement from '../../components/SeatManagement/SeatManagement';
 import MovieManagement from '../../components/MovieManagement/MovieManagement';
 import CinemaManagement from '../../components/CinemaManagement/CinemaManagement';
+import PaymentManagement from '../PaymentManagement/PaymentManagement';
 import styles from './AdminDashboard.module.css';
 import { useTranslation } from 'react-i18next';
 
@@ -286,6 +288,8 @@ const AdminDashboard = () => {
             )}
           </div>
         );
+      case 'payments':
+        return <PaymentManagement />;
       case 'users':
         return <UserManagement />;
       case 'tickets':
@@ -329,7 +333,13 @@ const AdminDashboard = () => {
             <BarChart3 size={20}/> 
           Dashboard 
           </button>
-                        
+          <button
+            className={`${styles.navItem} ${activeTab === 'payments' ? styles.active : ''}`}
+            onClick={() => setActiveTab('payments')}
+          >
+            <DollarSign size={20} />
+            Quản lý thanh toán
+          </button>
           <button 
             className={`${styles.navItem} ${activeTab === 'movies' ? styles.active : ''}`}
             onClick={() => setActiveTab('movies')}
@@ -406,6 +416,7 @@ const AdminDashboard = () => {
         <div className={styles.header}>
           <h1>
             {activeTab === 'dashboard' && 'Dashboard'}
+            {activeTab === 'payments' && 'Quản lý thanh toán'}
             {activeTab === 'users' && 'Quản lý người dùng'}
             {activeTab === 'tickets' && 'Quản lý vé'}
             {activeTab === 'news' && 'Quản lý tin tức'}

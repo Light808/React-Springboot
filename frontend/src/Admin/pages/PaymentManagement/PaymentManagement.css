@@ -1,0 +1,75 @@
+body {
+  background: #f8fafc;
+}
+.payment-mgmt-container {
+  padding: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.payment-mgmt-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  box-shadow: 0 2px 12px #0001;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.payment-mgmt-table th,
+.payment-mgmt-table td {
+  padding: 14px 10px;
+  text-align: left;
+}
+.payment-mgmt-table thead {
+  background: #f3f4f6;
+}
+.payment-mgmt-table tbody tr:nth-child(even) {
+  background: #fafbfc;
+}
+.status-badge {
+  color: #fff;
+  padding: 4px 14px;
+  border-radius: 12px;
+  font-weight: 600;
+  display: inline-block;
+  font-size: 0.92rem;
+}
+.status-paid { background: #22c55e; }
+.status-pending { background: #eab308; }
+.status-expired, .status-failed { background: #ef4444; }
+.action-btn {
+  border: none;
+  border-radius: 8px;
+  padding: 6px 12px;
+  color: #fff;
+  margin-right: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 0.98rem;
+  transition: background 0.2s;
+}
+.action-btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.btn-paid {
+  background: #22c55e;
+}
+.btn-paid:hover {
+  background: #16a34a;
+}
+.btn-expired {
+  background: #ef4444;
+}
+.btn-expired:hover {
+  background: #b91c1c;
+}
+
+@media (max-width: 800px) {
+  .payment-mgmt-container {
+    padding: 10px;
+  }
+  .payment-mgmt-table th, .payment-mgmt-table td {
+    padding: 8px 4px;
+    font-size: 0.94rem;
+  }
+}

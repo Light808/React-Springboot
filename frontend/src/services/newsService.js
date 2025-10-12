@@ -21,11 +21,11 @@ export const getAllNews = async (page = 0, size = 10, category = null, featured 
     if (data.success) {
       return data.news;
     } else {
-      throw new Error(data.message || 'Không thể tải tin tức');
+      throw new Error(data.message || 'Cannot fetch news');
     }
   } catch (error) {
     console.error('Error fetching news:', error);
-    throw new Error('Không thể kết nối đến server tin tức');
+    throw new Error('Cannot fetch news');
   }
 };
 
@@ -44,11 +44,11 @@ export const getNewsById = async (id) => {
     if (data.success) {
       return data.news;
     } else {
-      throw new Error(data.message || 'Không tìm thấy bài viết');
+      throw new Error(data.message || 'Cannot fetch news article');
     }
   } catch (error) {
     console.error('Error fetching news article:', error);
-    throw new Error('Không thể tải bài viết');
+    throw new Error('Cannot fetch news article');
   }
 };
 
@@ -67,11 +67,11 @@ export const getFeaturedNews = async () => {
     if (data.success) {
       return data.news;
     } else {
-      throw new Error(data.message || 'Không thể tải tin tức nổi bật');
+      throw new Error(data.message || 'Cannot fetch featured news');
     }
   } catch (error) {
     console.error('Error fetching featured news:', error);
-    throw new Error('Không thể tải tin tức nổi bật');
+    throw new Error('Cannot fetch featured news');
   }
 };
 
@@ -90,11 +90,11 @@ export const getNewsByCategory = async (category) => {
     if (data.success) {
       return data.news;
     } else {
-      throw new Error(data.message || 'Không thể tải tin tức theo danh mục');
+      throw new Error(data.message || 'Cannot fetch news by category');
     }
   } catch (error) {
     console.error('Error fetching news by category:', error);
-    throw new Error('Không thể tải tin tức theo danh mục');
+    throw new Error('Cannot fetch news by category');
   }
 };
 
@@ -113,11 +113,11 @@ export const searchNews = async (query) => {
     if (data.success) {
       return data.news;
     } else {
-      throw new Error(data.message || 'Không thể tìm kiếm tin tức');
+      throw new Error(data.message || 'Cannot search news');
     }
   } catch (error) {
     console.error('Error searching news:', error);
-    throw new Error('Không thể tìm kiếm tin tức');
+    throw new Error('Cannot search news');
   }
 };
 
@@ -136,11 +136,11 @@ export const getNewsCategories = async () => {
     if (data.success) {
       return data.categories;
     } else {
-      throw new Error(data.message || 'Không thể tải danh mục tin tức');
+      throw new Error(data.message || 'Cannot fetch news categories');
     }
   } catch (error) {
     console.error('Error fetching news categories:', error);
-    throw new Error('Không thể tải danh mục tin tức');
+    throw new Error('Cannot fetch news categories');
   }
 };
 
@@ -159,11 +159,11 @@ export const getPopularNews = async () => {
     if (data.success) {
       return data.news;
     } else {
-      throw new Error(data.message || 'Không thể tải tin tức phổ biến');
+      throw new Error(data.message || 'Cannot fetch popular news');
     }
   } catch (error) {
     console.error('Error fetching popular news:', error);
-    throw new Error('Không thể tải tin tức phổ biến');
+    throw new Error('Cannot fetch popular news');
   }
 };
 
@@ -182,11 +182,11 @@ export const getRecentNews = async () => {
     if (data.success) {
       return data.news;
     } else {
-      throw new Error(data.message || 'Không thể tải tin tức gần đây');
+      throw new Error(data.message || 'Cannot fetch recent news');
     }
   } catch (error) {
     console.error('Error fetching recent news:', error);
-    throw new Error('Không thể tải tin tức gần đây');
+    throw new Error('Cannot fetch recent news');
   }
 };
 
@@ -206,11 +206,11 @@ export const createNews = async (newsData) => {
     if (data.success) {
       return data.news;
     } else {
-      throw new Error(data.message || 'Không thể tạo tin tức');
+      throw new Error(data.message || 'Cannot create news article');
     }
   } catch (error) {
     console.error('Error creating news:', error);
-    throw new Error('Không thể tạo tin tức');
+    throw new Error('Cannot create news article');
   }
 };
 
@@ -230,11 +230,11 @@ export const updateNews = async (id, newsData) => {
     if (data.success) {
       return data.news;
     } else {
-      throw new Error(data.message || 'Không thể cập nhật tin tức');
+      throw new Error(data.message || 'Cannot update news article');
     }
   } catch (error) {
     console.error('Error updating news:', error);
-    throw new Error('Không thể cập nhật tin tức');
+    throw new Error('cannot update news article');
   }
 };
 
@@ -252,10 +252,10 @@ export const deleteNews = async (id) => {
     if (data.success) {
       return true;
     } else {
-      throw new Error(data.message || 'Không thể xóa tin tức');
+      throw new Error(data.message || 'cannot delete news');
     }
   } catch (error) {
     console.error('Error deleting news:', error);
-    throw new Error('Không thể xóa tin tức');
+    throw new Error('cannot delete news');
   }
 };
