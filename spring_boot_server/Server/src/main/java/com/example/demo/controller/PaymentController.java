@@ -1,4 +1,3 @@
-// src/main/java/com/example/payment/controller/PaymentController.java
 package com.example.demo.controller;
 
 import java.net.URLEncoder;
@@ -8,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,10 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.model.CreateOrderRequest;
 import com.example.demo.model.CreateOrderResponse;
 import com.example.demo.model.PaymentOrder;
-import com.example.demo.model.Ticket;
 import com.example.demo.model.VerifyResponse;
 import com.example.demo.repository.PaymentOrderRepository;
-import com.example.demo.repository.TicketRepository;
 
 @RestController
 @RequestMapping("/api/payment")
@@ -37,11 +33,9 @@ public class PaymentController {
     this.repo = repo;
   }
 
-  @Autowired
-   private TicketRepository TicketRepository;
 
   @PostMapping("/create-order")
-public CreateOrderResponse createOrder(@RequestBody CreateOrderRequest req) {
+  public CreateOrderResponse createOrder(@RequestBody CreateOrderRequest req) {
     String orderId = "local-" + UUID.randomUUID();
     PaymentOrder order = new PaymentOrder(
         orderId,
@@ -80,34 +74,13 @@ public CreateOrderResponse createOrder(@RequestBody CreateOrderRequest req) {
 
   // For admin/webhook to confirm payment
   @PostMapping("/mark-paid")
-    public VerifyResponse markPaid(@RequestParam String orderId) {
+  public VerifyResponse markPaid(@RequestParam String orderId) {
     return repo.findById(orderId).map(o -> {
-        o.setStatus("paid");
-        repo.save(o);
-        if (o.getUserId() != null && o.getOrderInfo() != null && o.getAmount() != null) {
-        //check if ticket already exists for this orderId
-        Ticket ticket = new Ticket();
-        ticket.setUserId(o.getUserId());
-        ticket.setUserName(o.getUserName());
-        ticket.setUserEmail(o.getUserEmail());
-        ticket.setStatus("pending");
-        ticket.setPaymentStatus("paid");
-        ticket.setPaymentMethod(o.getMethod());
-        ticket.setBookingTime(java.time.LocalDateTime.now().toString());
-        ticket.setNotes("[Auto-create by Admin MarkPaid]");
-
-        // Parse orderInfo to get showtimeId, movieTitle
-        ticket.setMovieTitle(o.getOrderInfo());
-        try { 
-            ticket.setPrice(o.getAmount());
-        } catch (Exception ignore) {}
-
-        TicketRepository.save(ticket);
-        }
-
-    return new VerifyResponse(o.getOrderId(), o.getStatus());
-  }).orElseGet(() -> new VerifyResponse(orderId, "failed"));
-}
+      o.setStatus("paid");
+      repo.save(o);
+      return new VerifyResponse(o.getOrderId(), o.getStatus());
+    }).orElseGet(() -> new VerifyResponse(orderId, "failed"));
+  }
 
   @PostMapping("/mark-expired")
   public VerifyResponse markExpired(@RequestParam String orderId) {

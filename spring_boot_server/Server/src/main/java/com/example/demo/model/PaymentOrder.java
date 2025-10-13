@@ -19,9 +19,10 @@ public class PaymentOrder {
   private Long amount;
   private String orderInfo;
   private String method;
-  private String status;
+  private String status;       
   private Instant createdAt;
-
+  
+  // Additional user details
   private String userId;
   private String userName;
   private String userEmail;

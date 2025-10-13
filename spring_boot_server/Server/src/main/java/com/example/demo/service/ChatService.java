@@ -49,7 +49,7 @@ public class ChatService {
             );
 
             Map<String, Object> body = new HashMap<>();
-            body.put("model", "gpt-3.5-turbo"); 
+            body.put("model", "gpt-3.5-turbo");
             body.put("messages", List.of(systemMsg, userMsg));
 
             HttpHeaders headers = new HttpHeaders();

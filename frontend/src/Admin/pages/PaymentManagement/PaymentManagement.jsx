@@ -1,3 +1,5 @@
+/* eslint-disable no-empty */
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import './PaymentManagement.css';
 import { getAllOrders, markPaid, markExpired } from '../../../services/paymentService';
@@ -34,8 +36,17 @@ function PaymentManagement() {
     try {
       if (status === 'paid') {
         await markPaid(id);
+        // Notify client tabs to finalize booking immediately
+        try {
+          localStorage.setItem('paymentStatusUpdate', JSON.stringify({ orderId: id, status: 'paid', ts: Date.now() }));
+          setTimeout(() => localStorage.removeItem('paymentStatusUpdate'), 50);
+        } catch (_) {}
       } else {
         await markExpired(id);
+        try {
+          localStorage.setItem('paymentStatusUpdate', JSON.stringify({ orderId: id, status: 'expired', ts: Date.now() }));
+          setTimeout(() => localStorage.removeItem('paymentStatusUpdate'), 50);
+        } catch (_) {}
       }
       await fetchOrders();
     } catch (e) {

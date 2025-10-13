@@ -229,7 +229,6 @@ const ComboSelectionPage = () => {
       if (!ticketData.seatNumber) {
         throw new Error('Seat number is required');
       }
-      // instead of booking right away, redirect to payment sandbox with order payload
       const summary = {
         ticketPrice: getTicketPrice(),
         comboPrice,
@@ -237,12 +236,12 @@ const ComboSelectionPage = () => {
       };
 
       const orderPayload = {
-        amount: summary.totalPrice,
-        orderInfo: `${ticketData.movieTitle} - ${ticketData.seatNumber}`,
-        method: selectedPaymentMethod, 
-        returnUrl: window.location.origin + '/payment/sandbox',
-        notifyUrl: 'http://localhost:8080/api/payment/notify',
-        extraData: { showtimeId: ticketData.showtimeId, seats: ticketData.seatNumber }
+        amount: Number(summary.totalPrice) || 0,
+        orderInfo: `${ticketData.movieTitle} - ${ticketData.seatNumber}`.trim(),
+        method: selectedPaymentMethod,
+        userId: String(user?.id || `guest-${Date.now()}`),
+        userName: String(user?.name || user?.fullName || user?.username || 'Guest'),
+        userEmail: String(user?.email || 'guest@example.com'),
       };
       const order = await createPaymentOrder(orderPayload);
 
@@ -257,8 +256,19 @@ const ComboSelectionPage = () => {
             ticketData, 
             summary, 
             orderId: order?.orderId,
-            amount: summary.totalPrice
+            amount: summary.totalPrice,
+            qrUrl: order?.qrUrl,
+            qrData: order?.qrData
           } 
+        });
+      } else if (selectedPaymentMethod === 'zalopay') {
+        navigate('/payment/zalopay', {
+          state: {
+            ticketData,
+            summary,
+            description: `${ticketData.movieTitle} - ${ticketData.seatNumber}`,
+            user
+          }
         });
       } else {
         navigate('/payment/sandbox', { state: { ticketData, summary, method: selectedPaymentMethod } });

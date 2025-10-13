@@ -26,6 +26,7 @@ const VietQRPayment = () => {
   const [isChecking, setIsChecking] = useState(false);
   const [currentOrderId, setCurrentOrderId] = useState(orderId || null);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [isFinalized, setIsFinalized] = useState(false); 
 
   useEffect(() => {
     if (!ticketData) {
@@ -35,7 +36,13 @@ const VietQRPayment = () => {
     
     // Prevent duplicate initialization
     if (!isInitialized) {
-      initializeOrder();
+      if (orderId) {
+        setCurrentOrderId(orderId);
+        if (payload?.qrUrl) setQrUrl(payload.qrUrl);
+        if (payload?.qrData && !payload?.qrUrl) setQrCode(payload.qrData);
+      } else {
+        initializeOrder();
+      }
       setIsInitialized(true);
     }
     const timer = setInterval(() => {
@@ -51,13 +58,31 @@ const VietQRPayment = () => {
 
     const checkInterval = setInterval(() => {
       checkPaymentStatus();
-    }, 5000);
+    }, 3000);
 
     return () => {
       clearInterval(timer);
       clearInterval(checkInterval);
     };
   }, []);
+
+  // Listen for admin mark-paid via localStorage cross-tab events
+  useEffect(() => {
+    const onStorage = (e) => {
+      if (e.key !== 'paymentStatusUpdate' || !e.newValue) return;
+      try {
+        const data = JSON.parse(e.newValue);
+        if (data?.orderId && data.orderId === currentOrderId && data?.status === 'paid') {
+          setPaymentStatus('paid');
+          handlePaymentSuccess();
+        }
+      } catch (_) {
+        // ignore parsing errors
+      }
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, [currentOrderId]);
 
   const resolveAmountVnd = () => {
     const raw = amount ?? summary?.totalPrice ?? ticketData?.price ?? 0;
@@ -79,12 +104,12 @@ const VietQRPayment = () => {
         return;
       }
       const payload = {
-        amount: amountVnd,
-        orderInfo: `${ticketData?.movieTitle || 'Movie'} ${getSeatText()}`,
+        amount: Number(amountVnd) || 0,
+        orderInfo: `${ticketData?.movieTitle || 'Movie'} ${getSeatText()}`.trim(),
         method: 'vietqr',
-        userId: ticketData?.userId || 'user123',
-        userName: ticketData?.userName || 'Nguyễn Văn A',
-        userEmail: ticketData?.userEmail || 'user@example.com'
+        userId: String(ticketData?.userId || `guest-${Date.now()}`),
+        userName: String(ticketData?.userName || ticketData?.userFullName || 'Guest'),
+        userEmail: String(ticketData?.userEmail || 'guest@example.com'),
       };
       const res = await createPaymentOrder(payload);
       if (res?.orderId) setCurrentOrderId(res.orderId);
@@ -119,14 +144,36 @@ const VietQRPayment = () => {
   };
 
   const handlePaymentSuccess = async () => {
+    if (isFinalized) return;
+    setIsFinalized(true);
     try {
-      const result = await bookTicket({ 
-        ...ticketData, 
-        paymentStatus: 'paid', 
-        status: 'pending', 
-        paymentMethod: 'vietqr' 
-      });
-      
+      // Information ticket
+      const seatNumberStr = Array.isArray(ticketData?.seatNumber) ? ticketData.seatNumber.join(', ') : (ticketData?.seatNumber || '');
+      const seatIdStr = Array.isArray(ticketData?.seatId) ? ticketData.seatId.join(', ') : (ticketData?.seatId || seatNumberStr);
+      const showTimeIso = ticketData?.showTime || new Date().toISOString();
+      const showDateIso = ticketData?.showDate || new Date(showTimeIso).toISOString().split('T')[0];
+      const moviePoster = ticketData?.moviePoster || ticketData?.movieThumbnail || '/default-movie.jpg';
+      const finalTicket = {
+        userId: ticketData?.userId,
+        showtimeId: ticketData?.showtimeId,
+        seatId: seatIdStr,
+        seatNumber: seatNumberStr,
+        movieId: ticketData?.movieId,
+        movieTitle: ticketData?.movieTitle || ticketData?.movieName || 'Movie',
+        moviePoster,
+        movieThumbnail: ticketData?.movieThumbnail || moviePoster,
+        cinemaName: ticketData?.cinemaName || 'Movie Theater',
+        cinemaAddress: ticketData?.cinemaAddress || '',
+        showDate: showDateIso,
+        showTime: showTimeIso,
+        price: Number(resolveAmountVnd()),
+        status: 'pending',
+        paymentMethod: 'vietqr',
+        paymentStatus: 'paid',
+        isRefundable: true,
+        notes: ticketData?.notes || ''
+      };
+      const result = await bookTicket(finalTicket);
       try {
         const notificationData = createBookingSuccessNotification(
           ticketData.userId,
@@ -138,20 +185,18 @@ const VietQRPayment = () => {
       } catch (e) {
         console.warn('Create notification failed:', e);
       }
-      
-      // Notify user then redirect to My Tickets
-      alert('Payment successful! Your ticket has been booked and is awaiting confirmation..');
       navigate('/tickets', {
         replace: true,
         state: {
           payment: 'success',
           ticketId: result?.id || null,
           method: 'vietqr'
-        } 
+        }
       });
     } catch (error) {
       console.error('Error finalizing booking:', error);
-      alert('Could not finalize booking. Please contact support.');
+      // fallback: still navigate to tickets so user can refresh their list
+      navigate('/tickets', { replace: true });
     }
   };
 

@@ -1,0 +1,106 @@
+.zalopay-payment-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 24px;
+}
+
+.zpay-card {
+  width: 100%;
+  max-width: 520px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  padding: 20px;
+}
+
+.zpay-card h2 {
+  margin: 0 0 12px;
+}
+
+.zpay-order {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.zpay-order span {
+  color: #6b7280;
+  display: block;
+}
+
+.zpay-qr {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  border: 1px dashed #e5e7eb;
+  border-radius: 12px;
+  min-height: 260px;
+  margin-bottom: 16px;
+}
+
+.zpay-qr-img {
+  width: 240px;
+  height: 240px;
+  object-fit: contain;
+}
+
+.zpay-qr-ph {
+  color: #6b7280;
+}
+
+.zpay-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
+.zpay-actions-inline {
+  margin-top: 8px;
+}
+
+.zpay-btn {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  cursor: pointer;
+}
+
+.zpay-btn.zpay-primary {
+  background: #2563eb;
+  color: #fff;
+  border-color: #2563eb;
+}
+
+.zpay-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.zpay-status {
+  font-size: 14px;
+}
+
+.zpay-status.zpay-pending {
+  color: #92400e;
+}
+
+.zpay-status.zpay-success {
+  color: #065f46;
+}
+
+.zpay-status.zpay-expired {
+  color: #991b1b;
+}
+
+.zpay-error {
+  color: #b91c1c;
+  margin-top: 8px;
+}
+
+

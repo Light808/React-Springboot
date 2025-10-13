@@ -1,11 +1,13 @@
 package com.example.demo.model;
 
+import java.time.LocalDateTime;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
-import java.time.LocalDateTime;
 
 @Data
 @Document(collection = "tickets")
@@ -13,8 +15,8 @@ public class Ticket {
     @Id
     private String id;
     private String userId;
-    private String userName;  // Tên người dùng
-    private String userEmail; // Email người dùng
+    private String userName;
+    private String userEmail;
     private String showtimeId;
     private String seatId;
     private String seatNumber;
