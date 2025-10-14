@@ -62,19 +62,20 @@ const MovieDetailPage = () => {
 
   // Format time ago for reviews
   const formatTimeAgo = (dateString) => {
-    if (!dateString) return 'Not found';
+    if (!dateString) return t('Not found');
     
     const now = new Date();
     const reviewDate = new Date(dateString);
     const diffInMs = now - reviewDate;
     const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
     
-    if (diffInDays === 0) return 'Today';
-    if (diffInDays === 1) return '1 day ago';
-    if (diffInDays < 7) return `${diffInDays} days ago`;
-    if (diffInDays < 30) return `${Math.floor(diffInDays / 7)} week ago`;
-    return `${Math.floor(diffInDays / 30)} month ago`;
+    if (diffInDays === 0) return t('Today');
+    if (diffInDays === 1) return t('1 day ago');
+    if (diffInDays < 7) return t('{{count}} days ago', { count: diffInDays });
+    if (diffInDays < 30) return t('{{count}} week ago', { count: Math.floor(diffInDays / 7) });
+    return t('{{count}} month ago', { count: Math.floor(diffInDays / 30) });
   };
+
 
   // Fetch community reviews from API
   const fetchCommunityReviews = async () => {
@@ -98,8 +99,8 @@ const MovieDetailPage = () => {
       
       setCommunityReviews(transformedReviews);
     } catch (error) {
-      console.error('Error fetching community reviews:', error);
-      setReviewsError('Không thể tải đánh giá từ cộng đồng');
+      console.error(t('Error fetching community reviews:'), error);
+      setReviewsError(t('Không thể tải đánh giá từ cộng đồng'));
     } finally {
       setReviewsLoading(false);
     }
@@ -120,8 +121,8 @@ const MovieDetailPage = () => {
       
       setNewsArticles(news);
     } catch (error) {
-      console.error('Error fetching news articles:', error);
-      setNewsError('Cannot reload news');
+      console.error(t('Error fetching news articles:'), error);
+      setNewsError(t('Cannot reload news'));
     } finally {
       setNewsLoading(false);
     }
@@ -144,8 +145,8 @@ const MovieDetailPage = () => {
         const movieData = await getMovieById(movieId);
         setMovie(movieData);
       } catch (err) {
-        console.error('Error fetching movie:', err);
-        setError('Không thể tải thông tin phim. Vui lòng thử lại sau.');
+        console.error(t('Error fetching movie:'), err);
+        setError(t('Không thể tải thông tin phim. Vui lòng thử lại sau.'));
       } finally {
         setLoading(false);
       }
@@ -167,8 +168,8 @@ const MovieDetailPage = () => {
         const articles = await getArticlesByMovieId(movieId);
         setRelatedArticles(articles);
       } catch (err) {
-        console.error('Error fetching related articles:', err);
-        setArticlesError('Không thể tải bài viết liên quan');
+        console.error(t('Error fetching related articles:'), err);
+        setArticlesError(t('Không thể tải bài viết liên quan'));
         setRelatedArticles([]);
       } finally {
         setArticlesLoading(false);
@@ -194,7 +195,7 @@ const MovieDetailPage = () => {
       <div className={`${styles['movie-detail-page']}`}>
         <div className={`${styles['loading-container']}`}>
           <div className={`${styles['loading-spinner']}`}></div>
-          <p>Đang tải thông tin phim...</p>
+          <p>{t('Đang tải thông tin phim...')}</p>
         </div>
       </div>
     );
@@ -205,7 +206,7 @@ const MovieDetailPage = () => {
       <div className={`${styles['movie-detail-page']}`}>
         <div className={`${styles['error-container']}`}>
           <h2>Lỗi</h2>
-          <p>{error || 'Không tìm thấy thông tin phim'}</p>
+          <p>{error || t('Không tìm thấy thông tin phim')}</p>
         </div>
       </div>
     );
@@ -226,7 +227,7 @@ const MovieDetailPage = () => {
   };
 
   const getTitle = (movie) => {
-    return movie.title || movie.name || movie.movieName || 'Không có tiêu đề';
+    return movie.title || movie.name || movie.movieName || t('Không có tiêu đề');
   };
 
   const getEnglishTitle = (movie) => {
@@ -237,11 +238,11 @@ const MovieDetailPage = () => {
     if (movie.genres && Array.isArray(movie.genres)) {
       return movie.genres.join(', ');
     }
-    return movie.genre || movie.category || 'Không có thể loại';
+    return movie.genre || movie.category || t('Không có thể loại');
   };
 
   const getDescription = (movie) => {
-    return movie.description || movie.overview || movie.summary || movie.synopsis || 'Không có mô tả.';
+    return movie.description || movie.overview || movie.summary || movie.synopsis || t('Không có mô tả.');
   };
 
   const getRating = (movie) => {
@@ -250,7 +251,7 @@ const MovieDetailPage = () => {
 
   const getDuration = (movie) => {
     const duration = movie.duration || movie.runtime || movie.length;
-    return duration ? `${duration} phút` : 'Không có thông tin';
+    return duration ? `${duration} phút` : t('Không có thông tin');
   };
 
   const getReleaseDate = (movie) => {
@@ -258,25 +259,25 @@ const MovieDetailPage = () => {
       const date = new Date(movie.releaseDate);
       return date.toLocaleDateString('vi-VN');
     }
-    return movie.releaseYear || movie.year || 'Không có thông tin';
+    return movie.releaseYear || movie.year || t('Không có thông tin');
   };
 
   const getAgeRating = (movie) => {
-    return movie.ageRating || movie.ageLimit || movie.certification || 'Không có thông tin';
+    return movie.ageRating || movie.ageLimit || movie.certification || t('Không có thông tin');
   };
 
   const getCast = (movie) => {
     if (movie.cast && Array.isArray(movie.cast)) {
       return movie.cast.join(', ');
     }
-    return movie.actors || movie.starring || 'Không có thông tin';
+    return movie.actors || movie.starring || t('Không có thông tin');
   };
 
   const getDirector = (movie) => {
     if (movie.director && Array.isArray(movie.director)) {
       return movie.director.join(', ');
     }
-    return movie.director || 'Không có thông tin';
+    return movie.director || t('Không có thông tin');
   };
 
   // Handle like review
@@ -285,7 +286,7 @@ const MovieDetailPage = () => {
       await likeReview(reviewId);
       fetchCommunityReviews();
     } catch (error) {
-      console.error('Error liking review:', error);
+      console.error(t('Error liking review:'), error);
     }
   };
 
@@ -295,7 +296,7 @@ const MovieDetailPage = () => {
       await dislikeReview(reviewId);
       fetchCommunityReviews();
     } catch (error) {
-      console.error('Error disliking review:', error);
+      console.error(t('Error disliking review:'), error);
     }
   };
 
@@ -364,7 +365,7 @@ const MovieDetailPage = () => {
                   onClick={handleRateMovie}
                 >
                   <Star size={16} />
-                  <span>Đánh giá</span>
+                  <span>{t('Đánh giá')}</span>
                 </button>
                 
                 {movie.trailerUrl ? (
@@ -382,7 +383,7 @@ const MovieDetailPage = () => {
                   className={`${styles['action-btn']} ${styles['buy-ticket-btn']}`}
                   onClick={handleBuyTicket}
                 >
-                  <span>Mua vé</span>
+                  <span>{t('Mua vé')}</span>
                 </button>
               </div>
 
@@ -392,28 +393,28 @@ const MovieDetailPage = () => {
                 <div className={`${styles['detail-item']}`}>
                   <div className={`${styles['detail-header']}`}>
                     <ThumbsUp size={16} />
-                    <span>Hài lòng</span>
+                    <span>{t('Hài lòng')}</span>
                   </div>
                   <div className={`${styles['detail-value']}`}>{getRating(movie)}%</div>
                 </div>
                 <div className={`${styles['detail-item']}`}>
                   <div className={`${styles['detail-header']}`}>
                     <Calendar size={16} />
-                    <span>Khởi chiếu</span>
+                    <span>{t('Khởi chiếu')}</span>
                   </div>
                   <div className={`${styles['detail-value']}`}>{getReleaseDate(movie)}</div>
                 </div>
                 <div className={`${styles['detail-item']}`}>
                   <div className={`${styles['detail-header']}`}>
                     <Clock size={16} />
-                    <span>Thời lượng</span>
+                    <span>{t('Thời lượng')}</span>
                   </div>
                   <div className={`${styles['detail-value']}`}>{getDuration(movie)}</div>
                 </div>
                 <div className={`${styles['detail-item']}`}>
                   <div className={`${styles['detail-header']}`}>
                     <User size={16} />
-                    <span>Giới hạn tuổi</span>
+                    <span>{t('Giới hạn tuổi')}</span>
                   </div>
                   <div className={`${styles['detail-value']}`}>{getAgeRating(movie)}</div>
                 </div>
@@ -426,11 +427,11 @@ const MovieDetailPage = () => {
 
             <div className={`${styles['cast-director']}`}>
               <div className={`${styles['cast-section']}`}>
-                <h4>Diễn viên</h4>
+                <h4>{t('Diễn viên')}</h4>
                 <p>{getCast(movie)}</p>
               </div>
               <div className={`${styles['director-section']}`}>
-                <h4>Đạo diễn</h4>
+                <h4>{t('Đạo diễn')}</h4>
                 <p>{getDirector(movie)}</p>
               </div>
             </div>
@@ -475,7 +476,7 @@ const MovieDetailPage = () => {
                 ></iframe>
               ) : (
                 <div className={`${styles['no-trailer']}`}>
-                  <p>Chưa có trailer cho phim này</p>
+                  <p>{t('Chưa có trailer cho phim này')}</p>
                 </div>
               )}
             </div>
@@ -497,7 +498,7 @@ const MovieDetailPage = () => {
                     ></iframe>
                   ) : (
                     <div className={`${styles['no-trailer']}`}>
-                      <p>Chưa có trailer cho phim này</p>
+                      <p>{t('Chưa có trailer cho phim này')}</p>
                     </div>
                   )}
                 </div>
@@ -505,13 +506,13 @@ const MovieDetailPage = () => {
 
               {/* Related articles */}
               <div className={`${styles['related-articles']}`}>
-                <h3>Bài viết liên quan</h3>
+                <h3>{t('Bài viết liên quan')}</h3>
                 {articlesLoading ? (
-                  <div className={`${styles['loading-message']}`}>Đang tải bài viết liên quan...</div>
+                  <div className={`${styles['loading-message']}`}>{t('Đang tải bài viết liên quan...')}</div>
                 ) : articlesError ? (
                   <div className={`${styles['error-message']}`}>{articlesError}</div>
                 ) : relatedArticles.length === 0 ? (
-                  <div className={`${styles['no-articles-message']}`}>Chưa có bài viết liên quan nào</div>
+                  <div className={`${styles['no-articles-message']}`}>{t('Chưa có bài viết liên quan nào')}</div>
                 ) : (
                   <div className={`${styles['articles-grid']}`}>
                     {relatedArticles.map((item) => (
@@ -539,13 +540,13 @@ const MovieDetailPage = () => {
 
               {/* Community Reviews */}
               <div className={`${styles['community-section']}`}>
-                <h3>Cộng đồng</h3>
+                <h3>{t('Cộng đồng')}</h3>
                 
                 {/* Loading State */}
                 {reviewsLoading && (
                   <div className={`${styles['loading-message']}`}>
                     <div className={`${styles['loading-spinner']}`}></div>
-                    <p>Đang tải đánh giá từ cộng đồng...</p>
+                    <p>{t('Đang tải đánh giá từ cộng đồng...')}</p>
                   </div>
                 )}
                 
@@ -564,7 +565,7 @@ const MovieDetailPage = () => {
                   <div className={`${styles['reviews-grid']}`}>
                     {communityReviews.length === 0 ? (
                       <div className={`${styles['no-reviews-message']}`}>
-                        <p>Chưa có đánh giá nào từ cộng đồng. Hãy là người đầu tiên đánh giá!</p>
+                        <p>{t('Chưa có đánh giá nào từ cộng đồng. Hãy là người đầu tiên đánh giá!')}</p>
                       </div>
                     ) : (
                       communityReviews.slice(0, 3).map((review) => (
@@ -604,7 +605,7 @@ const MovieDetailPage = () => {
                             <button 
                               className={`${styles['thumbs-up-btn']}`}
                               onClick={() => handleLikeReview(review.id)}
-                              title="Thích"
+                              title={t('Thích')}
                             >
                               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                 <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
@@ -613,7 +614,7 @@ const MovieDetailPage = () => {
                             <button 
                               className={`${styles['thumbs-down-btn']}`}
                               onClick={() => handleDislikeReview(review.id)}
-                              title="Không thích"
+                              title={t('Không thích')}
                             >
                               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                 <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/>
@@ -636,7 +637,7 @@ const MovieDetailPage = () => {
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
                   >
-                    Xem thêm các đánh giá khác
+                    {t('Xem thêm các đánh giá khác')}
                   </button>
                 )}
               </div>
@@ -646,7 +647,7 @@ const MovieDetailPage = () => {
 
         {activeTab === 'reviews' && (
           <div className={`${styles['reviews-section']}`} ref={reviewsSectionRef}>
-            <h2>Đánh giá từ cộng đồng</h2>
+            <h2>{t('Đánh giá từ cộng đồng')}</h2>
             
             {/* Review Form */}
             <ReviewForm 
@@ -656,13 +657,13 @@ const MovieDetailPage = () => {
             
             {/* All Reviews */}
             <div className={`${styles['all-reviews-section']}`}>
-              <h3>Tất cả đánh giá ({communityReviews.length})</h3>
+              <h3>{t('Tất cả đánh giá')} ({communityReviews.length})</h3>
               
               {/* Loading State */}
               {reviewsLoading && (
                 <div className={`${styles['loading-message']}`}>
                   <div className={`${styles['loading-spinner']}`}></div>
-                  <p>Đang tải đánh giá từ cộng đồng...</p>
+                  <p>{t('Đang tải đánh giá từ cộng đồng...')}</p>
                 </div>
               )}
 
@@ -671,7 +672,7 @@ const MovieDetailPage = () => {
                 <div className={`${styles['error-message']}`}>
                   <p>{reviewsError}</p>
                   <button onClick={fetchCommunityReviews} className={`${styles['retry-btn']}`}>
-                    Thử lại
+                  {t('Thử lại')}
                   </button>
                 </div>
               )}
@@ -681,7 +682,7 @@ const MovieDetailPage = () => {
                 <div className={`${styles['reviews-grid']}`}>
                   {communityReviews.length === 0 ? (
                     <div className={`${styles['no-reviews-message']}`}>
-                      <p>Chưa có đánh giá nào từ cộng đồng. Hãy là người đầu tiên đánh giá!</p>
+                      <p>{t('Chưa có đánh giá nào từ cộng đồng. Hãy là người đầu tiên đánh giá!')}</p>
                     </div>
                   ) : (
                     communityReviews.map((review) => (
@@ -749,7 +750,7 @@ const MovieDetailPage = () => {
         {activeTab === 'news' && (
           <div className={newsStyles['news-section']}>
             <div className={newsStyles['news-header']}>
-              <h2>Tin tức điện ảnh</h2>
+              <h2>{t('Tin tức điện ảnh')}</h2>
               <div className={newsStyles['news-filters']}>
                 <button 
                   className={`${newsStyles['filter-btn']} ${selectedNewsCategory === 'all' ? newsStyles['active'] : ''}`}
@@ -758,7 +759,7 @@ const MovieDetailPage = () => {
                     fetchNewsArticles('all');
                   }}
                 >
-                  Tất cả
+                  {t('Tất cả')}
                 </button>
                 <button 
                   className={`${newsStyles['filter-btn']} ${selectedNewsCategory === 'phim' ? newsStyles['active'] : ''}`}
@@ -767,7 +768,7 @@ const MovieDetailPage = () => {
                     fetchNewsArticles('phim');
                   }}
                 >
-                  Phim
+                  {t('Phim')}
                 </button>
                 <button 
                   className={`${newsStyles['filter-btn']} ${selectedNewsCategory === 'rap' ? newsStyles['active'] : ''}`}
@@ -776,7 +777,7 @@ const MovieDetailPage = () => {
                     fetchNewsArticles('rap');
                   }}
                 >
-                  Rạp chiếu
+                  {t('Rạp chiếu')}
                 </button>
                 <button 
                   className={`${newsStyles['filter-btn']} ${selectedNewsCategory === 'su-kien' ? newsStyles['active'] : ''}`}
@@ -785,7 +786,7 @@ const MovieDetailPage = () => {
                     fetchNewsArticles('su-kien');
                   }}
                 >
-                  Sự kiện
+                  {t('Sự kiện')}
                 </button>
               </div>
             </div>
@@ -794,7 +795,7 @@ const MovieDetailPage = () => {
             {newsLoading && (
               <div className={styles['loading-message']}>
                 <div className={styles['loading-spinner']}></div>
-                <p>Đang tải tin tức...</p>
+                <p>{t('Đang tải tin tức...')}</p>
               </div>
             )}
 
@@ -803,7 +804,7 @@ const MovieDetailPage = () => {
               <div className={styles['error-message']}>
                 <p>{newsError}</p>
                 <button onClick={() => fetchNewsArticles(selectedNewsCategory)} className={styles['retry-btn']}>
-                  Thử lại
+                {t('Thử lại')}
                 </button>
               </div>
             )}
@@ -813,7 +814,7 @@ const MovieDetailPage = () => {
               <div className={newsStyles['news-grid']}>
                 {newsArticles.length === 0 ? (
                   <div className={newsStyles['no-news-message']}>
-                    <p>Chưa có tin tức nào trong danh mục này</p>
+                    <p>{t('Chưa có tin tức nào trong danh mục này')}</p>
                   </div>
                 ) : (
                   newsArticles.map((article) => (
@@ -827,26 +828,26 @@ const MovieDetailPage = () => {
                           }}
                         />
                         {article.featured && (
-                          <div className={newsStyles['featured-badge']}>Nổi bật</div>
+                          <div className={newsStyles['featured-badge']}>{t('Nổi bật')}</div>
                         )}
                       </div>
                       <div className={newsStyles['news-content']}>
                         <div className={newsStyles['news-meta']}>
                           <span className={newsStyles['news-category']}>{article.category || 'Tin tức'}</span>
                           <span className={newsStyles['news-date']}>
-                            {article.createdAt ? formatTimeAgo(article.createdAt) : 'Không có ngày'}
+                            {article.createdAt ? formatTimeAgo(article.createdAt) : t('Không có ngày')}
                           </span>
                         </div>
                         <h3 className={newsStyles['news-title']}>{article.title}</h3>
                         <p className={newsStyles['news-excerpt']}>
-                          {article.excerpt || article.summary || article.content?.substring(0, 150) + '...' || 'Không có mô tả'}
+                          {article.excerpt || article.summary || article.content?.substring(0, 150) + '...' || t('Không có mô tả')}
                         </p>
                         <div className={newsStyles['news-footer']}>
                           <span className={newsStyles['news-author']}>
                             {article.author || 'Biên tập viên'}
                           </span>
                           <button className={newsStyles['read-more-btn']}>
-                            Đọc thêm
+                          {t('Đọc thêm')}
                           </button>
                         </div>
                       </div>
@@ -860,7 +861,7 @@ const MovieDetailPage = () => {
             {!newsLoading && !newsError && newsArticles.length > 0 && (
               <div className={newsStyles['load-more-section']}>
                 <button className={newsStyles['load-more-btn']}>
-                  Xem thêm tin tức
+                {t('Xem thêm tin tức')}
                 </button>
               </div>
             )}
