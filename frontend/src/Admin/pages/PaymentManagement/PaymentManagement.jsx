@@ -60,43 +60,59 @@ function PaymentManagement() {
     <div className="payment-mgmt-container">
       <h1>Quản lý Thanh toán (VietQR)</h1>
       {loading ? <p>Đang tải…</p> : error ? <p style={{ color: 'red' }}>{error}</p> : (
-        <>
+        <div className="payment-mgmt-layout">
+          <div className="payment-mgmt-list">
           <table className="payment-mgmt-table">
             <thead>
               <tr>
                 <th>Mã thanh toán</th>
-                <th>User</th>
+                <th>UserEmail</th>
                 <th>Thông tin</th>
                 <th>Số tiền</th>
                 <th>Trạng thái</th>
-                <th>Thao tác</th>
               </tr>
             </thead>
             <tbody>
               {orders.map((o) => (
                 <tr key={o.orderId} onClick={() => setSelectedOrder(o)} style={{ cursor: 'pointer', background: selectedOrder?.orderId === o.orderId ? '#dbeafe' : undefined }}>
                   <td>{o.orderId}</td>
-                  <td>{o.userName || o.userEmail || o.userId || '-'}</td>
+                  <td>{o.userEmail || '-'}</td>
                   <td>{o.orderInfo}</td>
                   <td style={{ color: '#2563eb', fontWeight: 600 }}>{o.amount?.toLocaleString('vi-VN')}₫</td>
                   <td>
                     <span className={`status-badge status-${o.status}`}>{o.status}</span>
                   </td>
-                  <td>
-                    {o.status === 'pending' && (
-                      <>
-                        <button disabled={actionLoading[o.orderId]} className="action-btn btn-paid" onClick={e => { e.stopPropagation(); handleMark(o.orderId, 'paid'); }}>Mark Paid</button>
-                        <button disabled={actionLoading[o.orderId]} className="action-btn btn-expired" onClick={e => { e.stopPropagation(); handleMark(o.orderId, 'expired'); }}>Mark Expired</button>
-                      </>
-                    )}
-                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
-          <div style={{ minHeight: 20 }} />
-          {selectedOrder && <PaymentOrderDetail order={selectedOrder} />}
-        </>
+          </div>
+          <div className="payment-mgmt-detail">
+            {selectedOrder && (
+              <div className="payment-mgmt-detail-card">
+                <PaymentOrderDetail order={selectedOrder} />
+                {selectedOrder.status === 'pending' && (
+                  <div className="detail-actions">
+                    <button
+                      disabled={actionLoading[selectedOrder.orderId]}
+                      className="action-btn btn-paid btn-pill"
+                      onClick={() => handleMark(selectedOrder.orderId, 'paid')}
+                    >
+                      ✓ Mark Paid
+                    </button>
+                    <button
+                      disabled={actionLoading[selectedOrder.orderId]}
+                      className="action-btn btn-expired btn-pill"
+                      onClick={() => handleMark(selectedOrder.orderId, 'expired')}
+                    >
+                      ✕ Mark Expired
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
       )}
     </div>
   );

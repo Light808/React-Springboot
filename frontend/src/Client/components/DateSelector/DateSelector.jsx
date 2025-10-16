@@ -25,7 +25,7 @@ const DateSelector = ({ selectedDate, onDateChange }) => {
         day: date.getDate(),
         month: date.getMonth() + 1,
         dayName: dayName,
-        fullDate: date.toISOString().split('T')[0] 
+        fullDate: date.toISOString().split('T')[0]
       });
     }
     
@@ -43,9 +43,9 @@ const DateSelector = ({ selectedDate, onDateChange }) => {
   };
 
   return (
-    <div className="date-selector">     
+    <div className="date-selector">
       <div className="date-list">
-      <LanguageSwitcher />  
+      <LanguageSwitcher />
         {dates.map((dateObj, index) => (
           <button
              key={index}
@@ -53,7 +53,7 @@ const DateSelector = ({ selectedDate, onDateChange }) => {
              onClick={() => handleDateClick(dateObj)}
            >
              <div className="date-month-day">{dateObj.day}/{dateObj.month}</div>
-             <div className="date-day">{dateObj.dayName}</div>  
+             <div className="date-day">{dateObj.dayName}</div>
           </button>
         ))}
       </div>

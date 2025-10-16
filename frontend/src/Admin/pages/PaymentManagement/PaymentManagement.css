@@ -6,6 +6,11 @@ body {
   max-width: 1200px;
   margin: 0 auto;
 }
+.payment-mgmt-layout { display: grid; grid-template-columns: 1fr 420px; gap: 28px; align-items: start; }
+.payment-mgmt-list { min-width: 0; }
+.payment-mgmt-detail { position: sticky; top: 24px; }
+.payment-mgmt-detail-card { background:#fff; border-radius:12px; box-shadow:0 2px 12px #0001; padding: 8px; }
+.detail-actions { display:flex; gap:12px; justify-content:flex-end; padding: 12px 8px 4px; }
 .payment-mgmt-table {
   width: 100%;
   border-collapse: collapse;
@@ -63,11 +68,15 @@ body {
 .btn-expired:hover {
   background: #b91c1c;
 }
+.btn-pill { border-radius: 999px; padding: 10px 16px; box-shadow: 0 2px 6px #0002; }
 
 @media (max-width: 800px) {
   .payment-mgmt-container {
     padding: 10px;
   }
+  .payment-mgmt-layout { grid-template-columns: 1fr; }
+  .payment-mgmt-detail { position: static; }
+  .payment-mgmt-detail-card { box-shadow:none; padding:0; background:transparent; }
   .payment-mgmt-table th, .payment-mgmt-table td {
     padding: 8px 4px;
     font-size: 0.94rem;

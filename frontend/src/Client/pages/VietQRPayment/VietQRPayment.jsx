@@ -66,7 +66,7 @@ const VietQRPayment = () => {
     };
   }, []);
 
-  // Listen for admin mark-paid via localStorage cross-tab events
+  // Confirm paid from admin
   useEffect(() => {
     const onStorage = (e) => {
       if (e.key !== 'paymentStatusUpdate' || !e.newValue) return;

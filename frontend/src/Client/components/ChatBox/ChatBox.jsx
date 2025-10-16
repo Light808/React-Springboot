@@ -10,12 +10,12 @@ const ChatBox = () => {
   const [input, setInput] = useState("");
   const messagesEndRef = useRef(null);
 
-  // Cuộn xuống cuối khi có tin nhắn mới
+  // Scroll down
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Tải lịch sử chat khi mở popup
+  // Reload chat history 
   useEffect(() => {
     if (isOpen) {
       getChatHistory().then((history) => setMessages(history));
@@ -37,7 +37,7 @@ const ChatBox = () => {
     } catch (err) {
       setMessages((prev) => [
         ...prev,
-        { sender: "bot", message: "Không thể kết nối đến server." },
+        { sender: "bot", message: "Cannot connect to server." },
       ]);
     }
   };
@@ -48,14 +48,12 @@ const ChatBox = () => {
 
   return (
     <>
-      {/* Nút bật chat */}
       {!isOpen && (
         <button className="chat-toggle-btn" onClick={() => setIsOpen(true)}>
           <MessageCircle size={28} />
         </button>
       )}
 
-      {/* Popup chat */}
       {isOpen && (
         <div className="chat-popup">
           <div className="chat-header">
@@ -86,7 +84,7 @@ const ChatBox = () => {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Nhập tin nhắn..."
+              placeholder="Text message..."
             />
             <button onClick={handleSend}>
               <Send size={18} />

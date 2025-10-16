@@ -1,4 +1,3 @@
-import React from 'react';
 import MovieCard from '../MovieCard/MovieCard';
 import styles from './FeaturedMovies.module.css';
 import { useTranslation } from 'react-i18next';

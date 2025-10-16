@@ -4,7 +4,7 @@ import { registerUser, loginUser } from '../../../services/userService';
 import { adminLogin } from '../../../services/adminService';
 import { Eye, EyeOff, X, AlertCircle, CheckCircle, Shield } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import './LoginModal.css'; 
+import './LoginModal.css';
 import { useTranslation } from "react-i18next";
 
 const LoginModal = ({ isOpen, onClose, onLogin }) => {

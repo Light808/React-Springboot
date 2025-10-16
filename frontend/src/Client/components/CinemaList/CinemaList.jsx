@@ -52,7 +52,7 @@ const CinemaList = ({ cinemas }) => {
               <div className={`${styles['cinema-info']}`}>
                 <h3 className={`${styles['cinema-name']}`}>{getCinemaName(cinema)}</h3>
                 <div className={`${styles['cinema-rating']}`}>
-                  <Star size={16} fill="#fbbf24" className={`${styles['rating-icon']}`}/> 
+                  <Star size={16} fill="#fbbf24" className={`${styles['rating-icon']}`}/>
                   <span>{getCinemaRating(cinema)}</span>
                   <span className={`${styles['rating-count']}`}>{getReviewCount(cinema)} {t('review')}</span>
                 </div>
@@ -91,10 +91,10 @@ const CinemaList = ({ cinemas }) => {
             
             <div className={`${styles['cinema-card-footer']}`}>
               <button className={`${styles['view-schedule-btn']}`}>
-                Xem lịch chiếu
+                {t('ViewShowtimes')}
               </button>
               <button className={`${styles['book-ticket-btn']}`}>
-                Đặt vé
+                {t('BookNow')}
               </button>
             </div>
           </div>

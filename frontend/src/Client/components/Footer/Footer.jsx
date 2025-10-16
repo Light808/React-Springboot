@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import './Footer.css';
 import { useTranslation } from 'react-i18next';
@@ -6,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 const Footer = () => {
   const { t } = useTranslation();
   return (
-    <footer className={`main-footer`}> 
+    <footer className={`main-footer`}>
       <div className={`footer-content`}>
         <div className={`company-section`}>
           <div className={`company-logo`}>
@@ -14,13 +13,13 @@ const Footer = () => {
           </div>
           
           <div className={`company-info`}>
-            <h3 className={`company-name`}>CÔNG TY TNHH HAK</h3>
+            <h3 className={`company-name`}>Hank HAK Limited Liability Company</h3>
             
             <div className={`company-details`}>
               <p><strong>{t('Business Registration No')}: </strong> 0932082976 </p>
-              <p><strong>{t('Issued by:')}</strong> {t('Department of Planning and Investment of Ho Chi Minh City')} </p>
+              <p><strong>{t('Issued by:')}</strong> Department of Planning and Investment of Ho Chi Minh City</p>
               <p><strong>{t('First registration date:')}</strong> 01/09/2025</p>
-              <p><strong>{t('Address')}:</strong> {t('146A Nguyen Van Qua Street, Dong Hung Thuan Ward, District 12, Ho Chi Minh City')}</p>
+              <p><strong>{t('Address')}:</strong> 146A Nguyen Van Qua Street, Dong Hung Thuan Ward, District 12, Ho Chi Minh City</p>
             </div>
             
             <div className={`footer-links`}>

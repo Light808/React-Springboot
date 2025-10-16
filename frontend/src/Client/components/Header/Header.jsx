@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-empty */
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Search, MapPin, ChevronDown, User, LogOut, Settings, Ticket, CheckCircle, Shield, Bell } from 'lucide-react';
@@ -42,6 +41,7 @@ const Header = ({ user, setUser, onLogout }) => {
   const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
   const [notifications, setNotifications] = useState([]);
   const [notificationLoading, setNotificationLoading] = useState(false);
+  const [showAllNotifications, setShowAllNotifications] = useState(false);
   const cityOptions = React.useMemo(() => {
     const set = new Set();
     cinemas.forEach(c => { if (c.city) set.add(c.city); });
@@ -155,13 +155,13 @@ const Header = ({ user, setUser, onLogout }) => {
     if (!str) return '';
     
     return str
-      .normalize('NFD') 
-      .replace(/[\u0300-\u036f]/g, '') 
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
       .replace(/đ/g, 'd').replace(/Đ/g, 'D')
       .toLowerCase();
   };
 
-  // Function to check if text contains search query 
+  // Function to check if text contains search query
   const containsSearchQuery = (text, query) => {
     if (!text || !query) return false;
     
@@ -355,7 +355,7 @@ const Header = ({ user, setUser, onLogout }) => {
       console.log('Notification marked as read:', notificationId);
     } catch (error) {
       console.error('Error marking notification as read:', error);
-      alert('Lỗi khi đánh dấu thông báo đã đọc: ' + error.message);
+      alert('Error marking notification as read: ' + error.message);
     }
   };
 
@@ -366,11 +366,11 @@ const Header = ({ user, setUser, onLogout }) => {
       console.log('markAllNotificationsAsRead result:', result);
       
       // Update local state immediately
-      setNotifications(prev => 
-        prev.map(notif => ({ 
-          ...notif, 
-          isRead: true, 
-          readAt: new Date().toISOString() 
+      setNotifications(prev =>
+        prev.map(notif => ({
+          ...notif,
+          isRead: true,
+          readAt: new Date().toISOString()
         }))
       );
       setUnreadNotificationCount(0);
@@ -385,7 +385,7 @@ const Header = ({ user, setUser, onLogout }) => {
       console.log('All notifications marked as read');
     } catch (error) {
       console.error('Error marking all notifications as read:', error);
-      alert('Lỗi khi đánh dấu tất cả thông báo đã đọc: ' + error.message);
+      alert('Error marking all notifications as read: ' + error.message);
     }
   };
 
@@ -421,12 +421,12 @@ const Header = ({ user, setUser, onLogout }) => {
     const now = new Date();
     const diffInMinutes = Math.floor((now - date) / (1000 * 60));
     
-    if (diffInMinutes < 1) return 'Vừa xong';
-    if (diffInMinutes < 60) return `${diffInMinutes} phút trước`;
-    if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)} giờ trước`;
-    if (diffInMinutes < 10080) return `${Math.floor(diffInMinutes / 1440)} ngày trước`;
+    if (diffInMinutes < 1) return 'Just now';
+    if (diffInMinutes < 60) return `${diffInMinutes} minutes ago`;
+    if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)} hours ago`;
+    if (diffInMinutes < 10080) return `${Math.floor(diffInMinutes / 1440)} days ago`;
     
-    return date.toLocaleDateString('vi-VN', {
+    return date.toLocaleDateString('en-EN', {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',
@@ -510,16 +510,16 @@ const Header = ({ user, setUser, onLogout }) => {
   // Display admin header
   if (isAdminMode) {
     return (
-      <header className="header adminHeader"> 
-        <div className="header-container"> 
+      <header className="header adminHeader">
+        <div className="header-container">
           <div className="header-left"></div>
-          <div className="header-right admin-header-right">          
+          <div className="header-right admin-header-right">
             {isAdminLoggedIn ? (
               <div className="admin-user-info">
                 <span className="admin-welcome">{t('helloAdmin')}</span>
               </div>
             ) : (
-              <button 
+              <button
                 className="admin-login-btn"
                 onClick={() => setIsLoginModalOpen(true)}
                 title={t('loginAdmin')}
@@ -547,7 +547,7 @@ const Header = ({ user, setUser, onLogout }) => {
         </div>
 
         <div className="header-center">
-          <div className="search-container" ref={searchRef}> 
+          <div className="search-container" ref={searchRef}>
             <form onSubmit={handleSearch} className="search-form">
               <div className="search-input-container">
                 <Search size={18} className="search-icon" />
@@ -582,9 +582,9 @@ const Header = ({ user, setUser, onLogout }) => {
                           setSearchQuery('');
                         }}
                       >
-                        <div className="search-result-poster"> 
+                        <div className="search-result-poster">
                           {(movie.posterUrl || movie.poster || movie.imageUrl || movie.thumbnail || movie.image) ? (
-                            <img 
+                            <img
                               src={movie.posterUrl || movie.poster || movie.imageUrl || movie.thumbnail || movie.image} 
                               alt={movie.title || movie.movieName || movie.name}
                               className="search-result-image"
@@ -594,7 +594,7 @@ const Header = ({ user, setUser, onLogout }) => {
                               }}
                             />
                           ) : null}
-                          <div 
+                          <div
                             className="search-result-placeholder"
                             style={{ display: (movie.posterUrl || movie.poster || movie.imageUrl || movie.thumbnail || movie.image) ? 'none' : 'flex' }}
                           >
@@ -624,7 +624,7 @@ const Header = ({ user, setUser, onLogout }) => {
           <Link to="/cinemas" className="nav-link">{t('cinemas-system')}</Link>
           
           <div className="cinema-dropdown" ref={dropdownRef}>
-            <button 
+            <button
               className="nav-link cinema-dropdown-btn"
               onClick={() => setIsCinemaDropdownOpen(!isCinemaDropdownOpen)}
             >
@@ -662,7 +662,7 @@ const Header = ({ user, setUser, onLogout }) => {
                         </select>
                       </div>
                     </div>
-                  </div>                  
+                  </div>
                   <div className="cinema-list">
                     {loading ? (
                       <div className="loading-message">{t('loadingCinemaList')}</div>
@@ -676,15 +676,15 @@ const Header = ({ user, setUser, onLogout }) => {
                       filteredCinemas.map(cinema => {
                         const fallbackLogo = `https://via.placeholder.com/40x40/3b82f6/ffffff?text=${cinema.name.charAt(0)}`;
                         return (
-                          <div 
-                            key={cinema.id} 
+                          <div
+                            key={cinema.id}
                             className="cinema-item"
                             onClick={() => handleCinemaClick(cinema.id)}
                           >
                             <div className="logo-cinema">
                               {cinema.imageUrl ? (
-                                <img 
-                                  src={cinema.imageUrl} 
+                                <img
+                                  src={cinema.imageUrl}
                                   alt={cinema.name}
                                   className="logo-cinema-image"
                                   onError={(e) => {
@@ -693,9 +693,9 @@ const Header = ({ user, setUser, onLogout }) => {
                                   }}
                                 />
                               ) : null}
-                              <div 
+                              <div
                                 className="logo-cinema-circle"
-                                style={{ 
+                                style={{
                                   backgroundColor: fallbackLogo.bgColor,
                                   display: cinema.imageUrl ? 'none' : 'flex'
                                 }}
@@ -732,10 +732,10 @@ const Header = ({ user, setUser, onLogout }) => {
             <>
               {/* Notification Dropdown */}
               <div className="notification-dropdown" ref={notificationRef}>
-                <button 
+                <button
                   className="notification-btn"
                   onClick={() => setShowNotifications(!showNotifications)}
-                  title="{t('notifications')}" 
+                  title="{t('notifications')}"
                 >
                   <Bell size={20} />
                   {unreadNotificationCount > 0 && (
@@ -748,7 +748,7 @@ const Header = ({ user, setUser, onLogout }) => {
                     <div className="notification-header">
                       <h3>{t('notifications')}</h3>
                       {(() => {
-                        const hasUnread = notifications.length > 0 && notifications.some(notif => 
+                        const hasUnread = notifications.length > 0 && notifications.some(notif =>
                           notif.isRead === false || notif.isRead === undefined || !notif.isRead
                         );
                         
@@ -763,7 +763,7 @@ const Header = ({ user, setUser, onLogout }) => {
                         });
                         
                         return shouldShowButton && (
-                          <button 
+                          <button
                             className="mark-all-read-btn"
                             onClick={handleMarkAllAsRead}
                           >
@@ -785,9 +785,9 @@ const Header = ({ user, setUser, onLogout }) => {
                           <p>{t('noNotifications')}</p>
                         </div>
                       ) : (
-                        notifications.slice(0, 5).map(notification => (
-                          <div 
-                            key={notification.id} 
+                        (showAllNotifications ? notifications : notifications.slice(0, 5)).map(notification => (
+                          <div
+                            key={notification.id}
                             className={`notification-item ${!notification.isRead ? 'unread' : ''}`}
                           >
                             <div className="notification-content">
@@ -796,10 +796,12 @@ const Header = ({ user, setUser, onLogout }) => {
                               </div>
                               <div className="notification-details">
                                 <h4 className="notification-title">
-                                  {notification.title}
+                                  {notification.type === 'ticket_approved' ? 'Ticket approved' : notification.title}
                                 </h4>
                                 <p className="notification-message">
-                                  {notification.message}
+                                  {notification.type === 'ticket_approved'
+                                    ? 'Your ticket has been approved .'
+                                    : notification.message}
                                 </p>
                                 <span className="notification-time">
                                   {formatDate(notification.createdAt)}
@@ -807,10 +809,10 @@ const Header = ({ user, setUser, onLogout }) => {
                               </div>
                             </div>
                             <div className="notification-actions">
-                              <button 
+                              <button
                                 className="delete-btn"
                                 onClick={() => handleDeleteNotification(notification.id)}
-                                title="" 
+                                title="delete notification"
                               >
                                 ✕
                               </button>
@@ -822,13 +824,13 @@ const Header = ({ user, setUser, onLogout }) => {
                     
                     {notifications.length > 5 && (
                       <div className="notification-footer">
-                        <button 
+                        <button
                           className="view-all-btn"
                           onClick={() => {
-                            setShowNotifications(false);
+                            setShowAllNotifications(prev => !prev);
                           }}
                         >
-                          {t('viewAllNotifications')}
+                          {showAllNotifications ? t('showLessNotifications') || 'Show less' : t('viewAllNotifications')}
                         </button>
                       </div>
                     )}
@@ -837,15 +839,15 @@ const Header = ({ user, setUser, onLogout }) => {
               </div>
               
               <div className="user-dropdown" ref={userDropdownRef}>
-              <button 
+              <button
                 className="user-profile-btn"
                 onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
               >
                 <div className="user-avatar">
                   {userAvatar ? (
                     isCustomAvatar ? (
-                      <img 
-                        src={userAvatar} 
+                      <img
+                        src={userAvatar}
                         alt={user.fullName || user.username}
                         onError={() => {
                           const generateInitials = (name) => {
@@ -877,7 +879,7 @@ const Header = ({ user, setUser, onLogout }) => {
               </button>
               
               {isUserDropdownOpen && (
-                <div className="user-dropdown-content">                 
+                <div className="user-dropdown-content">
                   <div className="user-menu">
                     <button className="user-menu-item" onClick={() => {
                       setIsUserDropdownOpen(false);
@@ -912,7 +914,7 @@ const Header = ({ user, setUser, onLogout }) => {
               </div>
             </>
           ) : (
-            <button 
+            <button
               className="user-icon-btn"
               onClick={() => setIsLoginModalOpen(true)}
               title={t('login')}
@@ -926,7 +928,7 @@ const Header = ({ user, setUser, onLogout }) => {
       </div>
 
       {/* Login Modal */}
-      <LoginModal 
+      <LoginModal
         isOpen={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}
         onLogin={handleLoginSuccess}
@@ -935,7 +937,7 @@ const Header = ({ user, setUser, onLogout }) => {
 
     {/* User Profile Popup */}
     {isUserProfileOpen && (
-      <UserProfile 
+      <UserProfile
         isPopup={true}
         onClose={() => setIsUserProfileOpen(false)}
         onAvatarChange={handleAvatarChange}
@@ -943,7 +945,7 @@ const Header = ({ user, setUser, onLogout }) => {
     )}
 
     {isUserSettingsOpen && (
-      <UserSettingsModal 
+      <UserSettingsModal
         isOpen={isUserSettingsOpen}
         onClose={() => setIsUserSettingsOpen(false)}
       />
