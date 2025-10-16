@@ -36,7 +36,7 @@ public class ChatController {
         return result;
     }
 
-    // GET /api/chat/history
+    // Get chat history
     @GetMapping("/history")
     public List<ChatMessage> getHistory() {
         return chatService.getAllMessages();

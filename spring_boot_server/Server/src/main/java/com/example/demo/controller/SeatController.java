@@ -35,7 +35,7 @@ public class SeatController {
         return seatRepository.findById(id);
     }
 
-    // Lấy ghế theo showtime
+    // Get seats by showtime ID
     @GetMapping("/showtime/{showtimeId}")
     public List<Seat> getSeatsByShowtime(@PathVariable String showtimeId) {
         return seatRepository.findByShowtimeId(showtimeId);
@@ -46,33 +46,33 @@ public class SeatController {
         return seatRepository.save(seat);
     }
 
-    // Tạo nhiều ghế cùng lúc
+    // Create multiple seats
     @PostMapping("/batch")
     public List<Seat> createMultipleSeats(@RequestBody List<Seat> seats) {
         return seatRepository.saveAll(seats);
     }
 
+    // Update seat details
     @PutMapping("/{id}")
     public Seat updateSeat(@PathVariable String id, @RequestBody Seat seat) {
         seat.setId(id);
         return seatRepository.save(seat);
     }
 
-    // Đặt ghế
+    // book a seat
     @PutMapping("/{id}/book")
     public Seat bookSeat(@PathVariable String id, @RequestBody Map<String, String> request) {
         Optional<Seat> seatOpt = seatRepository.findById(id);
         if (seatOpt.isPresent()) {
             Seat seat = seatOpt.get();
-            
-            // Kiểm tra ghế đã được đặt chưa
+
             if (seat.isBooked() && seat.getBookedBy() != null && !seat.getBookedBy().trim().isEmpty()) {
-                throw new RuntimeException("Ghế đã được đặt bởi người khác");
+                throw new RuntimeException("Seat has already been booked");
             }
             
             String userId = request.get("userId");
             if (userId == null || userId.trim().isEmpty()) {
-                throw new RuntimeException("UserId không được để trống");
+                throw new RuntimeException("UserId not provided");
             }
             
             seat.setBooked(true);
@@ -80,27 +80,28 @@ public class SeatController {
             seat.setBookedAt(java.time.LocalDateTime.now().toString());
             return seatRepository.save(seat);
         }
-        throw new RuntimeException("Không tìm thấy ghế");
+        throw new RuntimeException("Not found seat");
     }
 
+    // unbook a seat
     @PutMapping("/{id}/unbook")
     public Seat unbookSeat(@PathVariable String id, @RequestBody Map<String, String> request) {
         Optional<Seat> seatOpt = seatRepository.findById(id);
         if (seatOpt.isPresent()) {
             Seat seat = seatOpt.get();
             
-            // Kiểm tra quyền hủy đặt ghế
+            // Check if the user is the one who booked the seat
             String userId = request.get("userId");
             if (userId == null || userId.trim().isEmpty()) {
-                throw new RuntimeException("UserId không được để trống");
+                throw new RuntimeException("UserId not provided");
             }
             
             if (!seat.isBooked() || seat.getBookedBy() == null || seat.getBookedBy().trim().isEmpty()) {
-                throw new RuntimeException("Ghế chưa được đặt");
+                throw new RuntimeException("Seat is not booked");
             }
             
             if (!userId.equals(seat.getBookedBy())) {
-                throw new RuntimeException("Bạn không có quyền hủy đặt ghế này");
+                throw new RuntimeException("You do not have the right to cancel this reservation.");
             }
             
             seat.setBooked(false);
@@ -108,7 +109,7 @@ public class SeatController {
             seat.setBookedAt(null);
             return seatRepository.save(seat);
         }
-        throw new RuntimeException("Không tìm thấy ghế");
+        throw new RuntimeException("Not found seat");
     }
 
     @DeleteMapping("/{id}")
@@ -116,7 +117,7 @@ public class SeatController {
         seatRepository.deleteById(id);
     }
 
-    // Xóa tất cả ghế theo showtime
+    // Delete seats by showtime ID
     @DeleteMapping("/showtime/{showtimeId}")
     public void deleteSeatsByShowtime(@PathVariable String showtimeId) {
         seatRepository.deleteByShowtimeId(showtimeId);

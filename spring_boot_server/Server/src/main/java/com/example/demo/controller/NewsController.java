@@ -32,6 +32,8 @@ import lombok.RequiredArgsConstructor;
 public class NewsController {
 
     private final NewsRepository newsRepository;
+
+    // Get all news with pagination, filtering, and search
     @GetMapping
     public ResponseEntity<Map<String, Object>> getAllNews(
             @RequestParam(defaultValue = "0") int page,
@@ -84,7 +86,7 @@ public class NewsController {
         } catch (Exception e) {
             Map<String, Object> response = new HashMap<>();
             response.put("success", false);
-            response.put("message", "Lỗi khi lấy danh sách tin tức: " + e.getMessage());
+            response.put("message", "Error when get news: " + e.getMessage());
             return ResponseEntity.status(500).body(response);
         }
     }
@@ -106,13 +108,13 @@ public class NewsController {
             } else {
                 Map<String, Object> response = new HashMap<>();
                 response.put("success", false);
-                response.put("message", "Không tìm thấy tin tức");
+                response.put("message", "No news found");
                 return ResponseEntity.status(404).body(response);
             }
         } catch (Exception e) {
             Map<String, Object> response = new HashMap<>();
             response.put("success", false);
-            response.put("message", "Lỗi khi lấy tin tức: " + e.getMessage());
+            response.put("message", "Error get news: " + e.getMessage());
             return ResponseEntity.status(500).body(response);
         }
     }
@@ -130,7 +132,7 @@ public class NewsController {
         } catch (Exception e) {
             Map<String, Object> response = new HashMap<>();
             response.put("success", false);
-            response.put("message", "Lỗi khi lấy tin tức nổi bật: " + e.getMessage());
+            response.put("message", "Error while retrieving featured news: " + e.getMessage());
             return ResponseEntity.status(500).body(response);
         }
     }
@@ -148,7 +150,7 @@ public class NewsController {
         } catch (Exception e) {
             Map<String, Object> response = new HashMap<>();
             response.put("success", false);
-            response.put("message", "Lỗi khi lấy tin tức theo danh mục: " + e.getMessage());
+            response.put("message", "Error when retrieving news by category: " + e.getMessage());
             return ResponseEntity.status(500).body(response);
         }
     }
@@ -167,7 +169,7 @@ public class NewsController {
         } catch (Exception e) {
             Map<String, Object> response = new HashMap<>();
             response.put("success", false);
-            response.put("message", "Lỗi khi tìm kiếm tin tức: " + e.getMessage());
+            response.put("message", "Error while searching for news: " + e.getMessage());
             return ResponseEntity.status(500).body(response);
         }
     }
@@ -190,7 +192,7 @@ public class NewsController {
         } catch (Exception e) {
             Map<String, Object> response = new HashMap<>();
             response.put("success", false);
-            response.put("message", "Lỗi khi lấy danh mục tin tức: " + e.getMessage());
+            response.put("message", "Error getting news category: " + e.getMessage());
             return ResponseEntity.status(500).body(response);
         }
     }
@@ -208,12 +210,12 @@ public class NewsController {
         } catch (Exception e) {
             Map<String, Object> response = new HashMap<>();
             response.put("success", false);
-            response.put("message", "Lỗi khi lấy tin tức phổ biến: " + e.getMessage());
+            response.put("message", "Error while retrieving popular news: " + e.getMessage());
             return ResponseEntity.status(500).body(response);
         }
     }
 
-    // Get recent news 
+    // Get recent news
     @GetMapping("/recent")
     public ResponseEntity<Map<String, Object>> getRecentNews() {
         try {
@@ -227,7 +229,7 @@ public class NewsController {
         } catch (Exception e) {
             Map<String, Object> response = new HashMap<>();
             response.put("success", false);
-            response.put("message", "Lỗi khi lấy tin tức gần đây: " + e.getMessage());
+            response.put("message", "Error retrieving recent news: " + e.getMessage());
             return ResponseEntity.status(500).body(response);
         }
     }
@@ -245,13 +247,13 @@ public class NewsController {
             
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
-            response.put("message", "Tạo tin tức thành công");
+            response.put("message", "Create news successfully");
             response.put("news", savedNews);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             Map<String, Object> response = new HashMap<>();
             response.put("success", false);
-            response.put("message", "Lỗi khi tạo tin tức: " + e.getMessage());
+            response.put("message", "Error creating news: " + e.getMessage());
             return ResponseEntity.status(500).body(response);
         }
     }
@@ -277,19 +279,19 @@ public class NewsController {
                 
                 Map<String, Object> response = new HashMap<>();
                 response.put("success", true);
-                response.put("message", "Cập nhật tin tức thành công");
+                response.put("message", "update news successfully");
                 response.put("news", updatedNews);
                 return ResponseEntity.ok(response);
             } else {
                 Map<String, Object> response = new HashMap<>();
                 response.put("success", false);
-                response.put("message", "Không tìm thấy tin tức");
+                response.put("message", "No news found");
                 return ResponseEntity.status(404).body(response);
             }
         } catch (Exception e) {
             Map<String, Object> response = new HashMap<>();
             response.put("success", false);
-            response.put("message", "Lỗi khi cập nhật tin tức: " + e.getMessage());
+            response.put("message", "Error updating news: " + e.getMessage());
             return ResponseEntity.status(500).body(response);
         }
     }
@@ -303,18 +305,18 @@ public class NewsController {
                 
                 Map<String, Object> response = new HashMap<>();
                 response.put("success", true);
-                response.put("message", "Xóa tin tức thành công");
+                response.put("message", "Delete news successfully");
                 return ResponseEntity.ok(response);
             } else {
                 Map<String, Object> response = new HashMap<>();
                 response.put("success", false);
-                response.put("message", "Không tìm thấy tin tức");
+                response.put("message", "No news found");
                 return ResponseEntity.status(404).body(response);
             }
         } catch (Exception e) {
             Map<String, Object> response = new HashMap<>();
             response.put("success", false);
-            response.put("message", "Lỗi khi xóa tin tức: " + e.getMessage());
+            response.put("message", "Error deleting news: " + e.getMessage());
             return ResponseEntity.status(500).body(response);
         }
     }

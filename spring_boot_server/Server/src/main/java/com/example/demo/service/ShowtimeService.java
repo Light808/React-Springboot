@@ -27,28 +27,26 @@ public class ShowtimeService {
     @Autowired
     private CinemaRepository cinemaRepository;
     
-    /**
-     * Tạo showtime mới với validation
-     */
+    // Create a new showtime validating movie 
     @Transactional
     @SuppressWarnings("UseSpecificCatch")
     public Showtime createShowtime(Showtime showtime) {
         try {
             Optional<Movie> movieOpt = movieRepository.findById(showtime.getMovieId());
             if (!movieOpt.isPresent()) {
-                throw new RuntimeException("Phim không tồn tại");
+                throw new RuntimeException("Movie not exists");
             }
 
             Optional<Cinema> cinemaOpt = cinemaRepository.findById(showtime.getCinemaId());
             if (!cinemaOpt.isPresent()) {
-                throw new RuntimeException("Rạp chiếu không tồn tại");
+                throw new RuntimeException("Cinema not exists");
             }
             
             Movie movie = movieOpt.get();
             Cinema cinema = cinemaOpt.get();
             
             if (!cinema.hasMovie(showtime.getMovieId())) {
-                throw new RuntimeException("Phim không có trong rạp chiếu này");
+                throw new RuntimeException("mOvie not exists in cinema");
             }
 
             showtime.setMovieName(getMovieTitle(movie));
@@ -65,12 +63,12 @@ public class ShowtimeService {
                 showtime.setPrice(80000);
             }
             if (showtime.getRoom() == null || showtime.getRoom().trim().isEmpty()) {
-                showtime.setRoom("Phòng 1");
+                showtime.setRoom("Room 1");
             }
             
             return showtimeRepository.save(showtime);
         } catch (Exception e) {
-            throw new RuntimeException("Lỗi khi tạo suất chiếu: " + e.getMessage());
+            throw new RuntimeException("Error when create showtime: " + e.getMessage());
         }
     }
     
@@ -85,7 +83,7 @@ public class ShowtimeService {
             
             return showtimes;
         } catch (Exception e) {
-            throw new RuntimeException("Lỗi khi lấy suất chiếu: " + e.getMessage());
+            throw new RuntimeException("Error to get showtime: " + e.getMessage());
         }
     }
 
@@ -99,7 +97,7 @@ public class ShowtimeService {
             
             return showtimes;
         } catch (Exception e) {
-            throw new RuntimeException("Lỗi khi lấy suất chiếu theo rạp: " + e.getMessage());
+            throw new RuntimeException("Error: " + e.getMessage());
         }
     }
     
@@ -114,7 +112,7 @@ public class ShowtimeService {
             
             return showtimes;
         } catch (Exception e) {
-            throw new RuntimeException("Lỗi khi lấy suất chiếu theo phim: " + e.getMessage());
+            throw new RuntimeException("Error when getting movie showtimes: " + e.getMessage());
         }
     }
     
@@ -129,9 +127,7 @@ public class ShowtimeService {
             List<Showtime> filteredShowtimes = showtimes.stream()
                 .filter(showtime -> {
                     LocalDateTime showtimeDate = showtime.getStartTime();
-                    return showtimeDate != null && 
-                           showtimeDate.isAfter(startOfDay) && 
-                           showtimeDate.isBefore(endOfDay);
+                    return showtimeDate != null && showtimeDate.isAfter(startOfDay) && showtimeDate.isBefore(endOfDay);
                 })
                 .toList();
             
@@ -141,7 +137,7 @@ public class ShowtimeService {
             
             return filteredShowtimes;
         } catch (Exception e) {
-            throw new RuntimeException("Lỗi khi lấy suất chiếu theo ngày: " + e.getMessage());
+            throw new RuntimeException("Error when getting showtime by date: " + e.getMessage());
         }
     }
 
@@ -151,7 +147,7 @@ public class ShowtimeService {
         try {
             Optional<Showtime> existingOpt = showtimeRepository.findById(showtimeId);
             if (!existingOpt.isPresent()) {
-                throw new RuntimeException("Suất chiếu không tồn tại");
+                throw new RuntimeException("Showtime not exists");
             }
             
             Showtime existing = existingOpt.get();
@@ -175,25 +171,27 @@ public class ShowtimeService {
             
             return showtimeRepository.save(existing);
         } catch (Exception e) {
-            throw new RuntimeException("Lỗi khi cập nhật suất chiếu: " + e.getMessage());
+            throw new RuntimeException("Error updating showtimes: " + e.getMessage());
         }
     }
     
+    // Delete showtime
     @Transactional
     @SuppressWarnings("UseSpecificCatch")
     public boolean deleteShowtime(String showtimeId) {
         try {
             if (!showtimeRepository.existsById(showtimeId)) {
-                throw new RuntimeException("Suất chiếu không tồn tại");
+                throw new RuntimeException("Showtime not exists");
             }
             
             showtimeRepository.deleteById(showtimeId);
             return true;
         } catch (Exception e) {
-            throw new RuntimeException("Lỗi khi xóa suất chiếu: " + e.getMessage());
+            throw new RuntimeException("Error deleting showtime: " + e.getMessage());
         }
     }
 
+    // Helper to populate movie and cinema info in showtime
     private void populateShowtimeInfo(Showtime showtime) {
         if (showtime.getMovieId() != null) {
             Optional<Movie> movieOpt = movieRepository.findById(showtime.getMovieId());

@@ -13,6 +13,7 @@ public class AdminInitializer implements CommandLineRunner {
     @Autowired
     private AdminRepository adminRepository;
     
+    // Create a default admin if none exists
     @Override
     public void run(String... args) throws Exception {
         if (adminRepository.count() == 0) {

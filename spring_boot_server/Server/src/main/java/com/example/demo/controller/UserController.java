@@ -94,7 +94,7 @@ public class UserController {
                 return ResponseEntity.badRequest().build();
             }
 
-            // Lấy user hiện tại từ database để giữ nguyên password
+            // Get existing user data to preserve fields not being updated
             Optional<User> existingUserOpt = userRepository.findById(id);
             if (!existingUserOpt.isPresent()) {
                 return ResponseEntity.notFound().build();
@@ -102,7 +102,7 @@ public class UserController {
             
             User existingUser = existingUserOpt.get();
             
-            // Chỉ cập nhật các field được gửi lên, giữ nguyên password
+            // Just update fields that are provided in the request
             if (user.getUsername() != null) {
                 existingUser.setUsername(user.getUsername());
             }
@@ -124,13 +124,13 @@ public class UserController {
             if (user.getAvatar() != null) {
                 existingUser.setAvatar(user.getAvatar());
             }
-            // Chỉ cập nhật password nếu được gửi lên và không null
+            // Just update password if it's provided and not empty
             if (user.getPassword() != null && !user.getPassword().trim().isEmpty()) {
                 existingUser.setPassword(user.getPassword());
             }
 
             User updatedUser = userRepository.save(existingUser);
-            updatedUser.setPassword(null); // Chỉ ẩn password trong response
+            updatedUser.setPassword(null); 
             return ResponseEntity.ok(updatedUser);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -185,7 +185,7 @@ public class UserController {
             Optional<User> userOpt = userRepository.findByUsernameAndPassword(username, password);
             if (userOpt.isPresent()) {
                 User user = userOpt.get();
-                // Cập nhật thời gian đăng nhập cuối
+                // update last login time
                 user.setLastLoginAt(java.time.LocalDateTime.now());
                 userRepository.save(user);
                 user.setPassword(null);
@@ -218,7 +218,7 @@ public class UserController {
         }
     }
 
-    // Cập nhật thời gian đăng nhập cuối
+    // update last login time
     @PostMapping("/{id}/update-login")
     public ResponseEntity<User> updateLastLogin(@PathVariable String id) {
         try {
@@ -237,7 +237,7 @@ public class UserController {
         }
     }
 
-    // Lấy thông tin user profile (có lastLoginAt)
+    // Get user profile 
     @GetMapping("/profile")
     public ResponseEntity<User> getProfile(@RequestParam String userId) {
         try {
@@ -254,7 +254,7 @@ public class UserController {
         }
     }
     
-    // Cập nhật thông tin user (cho user tự cập nhật)
+    // Update user profile (for user to update their own profile)
     @PutMapping("/profile/{userId}")
     public ResponseEntity<User> updateProfile(@PathVariable String userId, @RequestBody User userData) {
         try {
@@ -264,14 +264,13 @@ public class UserController {
             }
             
             User user = userOpt.get();
-            
-            // Cập nhật thông tin nếu có
+
             if (userData.getFullName() != null && !userData.getFullName().trim().isEmpty()) {
                 user.setFullName(userData.getFullName());
             }
             if (userData.getEmail() != null && !userData.getEmail().trim().isEmpty()) {
                 String newEmail = userData.getEmail();
-                // Kiểm tra email trùng lặp (trừ chính user hiện tại)
+                // Check duplicate email
                 if (!user.getEmail().equals(newEmail) && userRepository.existsByEmail(newEmail)) {
                     return ResponseEntity.status(HttpStatus.CONFLICT).build();
                 }
@@ -293,7 +292,7 @@ public class UserController {
         }
     }
     
-    // Thay đổi mật khẩu (cho user tự đổi)
+    // Change password (user must provide current password)
     @PostMapping("/change-password/{userId}")
     public ResponseEntity<User> changePassword(@PathVariable String userId, @RequestBody Map<String, String> passwordData) {
         try {
@@ -324,7 +323,7 @@ public class UserController {
         }
     }
     
-    // Admin đổi mật khẩu cho user (không cần mật khẩu hiện tại)
+    // Admin reset user password (no need to provide current password)
     @PostMapping("/admin/reset-password/{userId}")
     public ResponseEntity<User> adminResetPassword(@PathVariable String userId, @RequestBody Map<String, String> passwordData) {
         try {

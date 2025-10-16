@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.model.Showtime;
 import com.example.demo.model.Movie;
-import com.example.demo.repository.ShowtimeRepository;
+import com.example.demo.model.Showtime;
 import com.example.demo.repository.MovieRepository;
+import com.example.demo.repository.ShowtimeRepository;
 import com.example.demo.service.ShowtimeService;
 
 @RestController
@@ -62,26 +62,26 @@ public class ShowtimeController {
                 showtime.setCinemaName("Galaxy Studio");
             }
             if (showtime.getCinemaAddress() == null || showtime.getCinemaAddress().trim().isEmpty()) {
-                showtime.setCinemaAddress("123 Đường ABC, Quận 1, TP.HCM");
+                showtime.setCinemaAddress("");
             }
         }
         
         return showtimes;
     }
 
-    // Thêm endpoint để lấy showtimes theo movieId
+    // Add endpoint to get showtimes by movie ID
     @GetMapping("/movie/{movieId}")
     public List<Showtime> getShowtimesByMovieId(@PathVariable String movieId) {
         return showtimeRepository.findByMovieId(movieId);
     }
 
-    // Thêm endpoint để lấy showtimes theo query parameter
+    // Add endpoint to get showtimes by movie ID using request param
     @GetMapping(params = "movieId")
     public List<Showtime> getShowtimesByMovieIdParam(@RequestParam String movieId) {
         return showtimeRepository.findByMovieId(movieId);
     }
     
-    // Lấy showtimes theo rạp chiếu
+    // Add endpoint to get showtimes by cinema ID
     @GetMapping("/cinema/{cinemaId}")
     public List<Showtime> getShowtimesByCinemaId(@PathVariable String cinemaId) {
         List<Showtime> showtimes = showtimeRepository.findByCinemaId(cinemaId);
@@ -108,13 +108,13 @@ public class ShowtimeController {
         return showtimes;
     }
     
-    // Lấy showtimes theo rạp và phim
+    // Get showtimes by cinema ID and movie ID
     @GetMapping("/cinema/{cinemaId}/movie/{movieId}")
     public List<Showtime> getShowtimesByCinemaAndMovie(@PathVariable String cinemaId, @PathVariable String movieId) {
         return showtimeService.getShowtimesByCinemaAndMovie(cinemaId, movieId);
     }
     
-    // Lấy showtimes theo ngày và rạp chiếu
+    // Get showtimes by cinema ID and date
     @GetMapping("/cinema/{cinemaId}/date/{date}")
     public List<Showtime> getShowtimesByDateAndCinema(@PathVariable String cinemaId, @PathVariable String date) {
         return showtimeService.getShowtimesByDateAndCinema(cinemaId, date);

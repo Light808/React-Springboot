@@ -56,30 +56,30 @@ public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String
         String adminKey = loginData.get("adminKey");
         
         if (username == null || password == null) {
-            return ResponseEntity.badRequest().body(createErrorResponse("Username và password không được để trống"));
+            return ResponseEntity.badRequest().body(createErrorResponse("Username and password are required"));
         }
         
         if (adminKey == null || adminKey.trim().isEmpty()) {
-            return ResponseEntity.badRequest().body(createErrorResponse("Admin key là bắt buộc"));
+            return ResponseEntity.badRequest().body(createErrorResponse("Admin key is required"));
         }
         
         // Admin key
-        String validAdminKey = "Tyra2508"; 
+        String validAdminKey = "Tyra2508";
         if (!validAdminKey.equals(adminKey)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(createErrorResponse("Admin key không hợp lệ"));
-        }   
+                .body(createErrorResponse("Admin key not valid"));
+        }
         
         Optional<Admin> adminOpt = adminRepository.findByUsername(username);
         if (!adminOpt.isPresent()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(createErrorResponse("Tài khoản admin không tồn tại"));
+                .body(createErrorResponse("Admin account does not exist"));
         }
         
         Admin admin = adminOpt.get();
         if (!admin.getPassword().equals(password)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(createErrorResponse("Mật khẩu không đúng"));
+                .body(createErrorResponse("Wrong password"));
         }
         
         admin.setLastLoginAt(LocalDateTime.now());
@@ -87,7 +87,7 @@ public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String
         
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
-        response.put("message", "Đăng nhập thành công");
+        response.put("message", "Login successful");
         response.put("admin", createAdminResponse(admin));
         response.put("token", "admin-token-" + admin.getId());
         
@@ -95,11 +95,11 @@ public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String
         
     } catch (Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(createErrorResponse("Lỗi server: " + e.getMessage()));
+            .body(createErrorResponse("Error server: " + e.getMessage()));
     }
 }
     
-    // Đăng xuất admin
+    // Logout admin
     @PostMapping("/logout")
     public ResponseEntity<Map<String, Object>> logout(@RequestParam String adminId) {
         try {
@@ -107,19 +107,19 @@ public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String
             if (adminOpt.isPresent()) {
                 Map<String, Object> response = new HashMap<>();
                 response.put("success", true);
-                response.put("message", "Đăng xuất thành công");
+                response.put("message", "Logout successful");
                 return ResponseEntity.ok(response);
             } else {
                 return ResponseEntity.badRequest()
-                    .body(createErrorResponse("Admin không tồn tại"));
+                    .body(createErrorResponse("Admin not found"));
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(createErrorResponse("Lỗi server: " + e.getMessage()));
+                .body(createErrorResponse("Error server: " + e.getMessage()));
         }
     }
     
-    // Lấy thông tin admin hiện tại
+    // Get admin profile
     @GetMapping("/profile")
     public ResponseEntity<Map<String, Object>> getProfile(@RequestParam String adminId) {
         try {
@@ -136,11 +136,11 @@ public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String
             
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(createErrorResponse("Lỗi server: " + e.getMessage()));
+                .body(createErrorResponse("Error server: " + e.getMessage()));
         }
     }
     
-    // Lấy thống kê tổng quan
+    // Get dashboard stats
     @GetMapping("/stats")
     public ResponseEntity<Map<String, Object>> getStats() {
         try {
@@ -158,9 +158,9 @@ public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String
             
             // Chart data - Revenue by month (last 6 months)
             Map<String, Double> monthlyRevenue = new HashMap<>();
-            String[] months = {"Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6"};
+            String[] months = {"January", "February", "March", "April", "May", "June"};
             for (String month : months) {
-                monthlyRevenue.put(month, Math.random() * 20000000 + 10000000); 
+                monthlyRevenue.put(month, Math.random() * 20000000 + 10000000);
             }
             
             // Chart data - Ticket sales by day of week
@@ -172,9 +172,9 @@ public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String
             
             // Chart data - User growth by week (last 4 weeks)
             Map<String, Integer> weeklyUserGrowth = new HashMap<>();
-            String[] weeks = {"Tuần 1", "Tuần 2", "Tuần 3", "Tuần 4"};
+            String[] weeks = {"Week 1", "Week 2", "Week 3", "Week 4"};
             for (String week : weeks) {
-                weeklyUserGrowth.put(week, (int)(Math.random() * 20 + 5)); // Mock data for now
+                weeklyUserGrowth.put(week, (int)(Math.random() * 20 + 5));
             }
             
             // Most popular movies (by ticket count)
@@ -207,11 +207,11 @@ public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String
             
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(createErrorResponse("Lỗi server: " + e.getMessage()));
+                .body(createErrorResponse("Error server: " + e.getMessage()));
         }
     }
     
-    // Lấy tất cả admin (chỉ super admin)
+    // Get all admins
     @GetMapping("/admins")
     public ResponseEntity<Map<String, Object>> getAllAdmins() {
         try {
@@ -225,23 +225,21 @@ public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String
             
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(createErrorResponse("Lỗi server: " + e.getMessage()));
+                .body(createErrorResponse("Error server: " + e.getMessage()));
         }
     }
     
-    // Lấy danh sách vé
+    // Get all tickets
     @GetMapping("/tickets")
     public ResponseEntity<Map<String, Object>> getAllTickets() {
         try {
             List<com.example.demo.model.Ticket> tickets = ticketRepository.findAll();
-            
-            // Thêm thông tin user vào mỗi ticket
             for (com.example.demo.model.Ticket ticket : tickets) {
                 if (ticket.getUserId() != null) {
                     Optional<com.example.demo.model.User> userOpt = userRepository.findById(ticket.getUserId());
                     if (userOpt.isPresent()) {
                         com.example.demo.model.User user = userOpt.get();
-                        // Thêm thông tin user vào ticket
+                        // Add user details to ticket response
                         ticket.setUserName(user.getFullName());
                         ticket.setUserEmail(user.getEmail());
                     }
@@ -256,11 +254,11 @@ public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String
             
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(createErrorResponse("Lỗi server: " + e.getMessage()));
+                .body(createErrorResponse("Error server: " + e.getMessage()));
         }
     }
     
-    // Lấy danh sách người dùng
+    // Get all users
     @GetMapping("/users")
     public ResponseEntity<Map<String, Object>> getAllUsers() {
         try {
@@ -274,11 +272,11 @@ public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String
             
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(createErrorResponse("Lỗi server: " + e.getMessage()));
+                .body(createErrorResponse("Error server: " + e.getMessage()));
         }
     }
     
-    // Lấy chi tiết người dùng theo ID
+    // Get user by ID
     @GetMapping("/users/{userId}")
     public ResponseEntity<Map<String, Object>> getUserById(@PathVariable String userId) {
         try {
@@ -288,7 +286,7 @@ public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String
             }
             
             com.example.demo.model.User user = userOpt.get();
-            user.setPassword(null); // Không trả về password
+            user.setPassword(null);
             
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
@@ -298,11 +296,11 @@ public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String
             
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(createErrorResponse("Lỗi server: " + e.getMessage()));
+                .body(createErrorResponse("Error server: " + e.getMessage()));
         }
     }
     
-    // Tạo người dùng mới
+    // Create new user
     @PostMapping("/users")
     public ResponseEntity<Map<String, Object>> createUser(@RequestBody Map<String, Object> userData) {
         try {
@@ -317,25 +315,25 @@ public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String
             // Validation
             if (username == null || username.trim().isEmpty()) {
                 return ResponseEntity.badRequest()
-                    .body(createErrorResponse("Tên đăng nhập không được để trống"));
+                    .body(createErrorResponse("Username not be empty"));
             }
             if (password == null || password.trim().isEmpty()) {
                 return ResponseEntity.badRequest()
-                    .body(createErrorResponse("Mật khẩu không được để trống"));
+                    .body(createErrorResponse("Password not be empty"));
             }
             if (email == null || email.trim().isEmpty()) {
                 return ResponseEntity.badRequest()
-                    .body(createErrorResponse("Email không được để trống"));
+                    .body(createErrorResponse("Email not be empty"));
             }
 
             if (userRepository.existsByUsername(username)) {
                 return ResponseEntity.badRequest()
-                    .body(createErrorResponse("Tên đăng nhập đã tồn tại"));
+                    .body(createErrorResponse("Username has existed"));
             }
 
             if (userRepository.existsByEmail(email)) {
                 return ResponseEntity.badRequest()
-                    .body(createErrorResponse("Email đã tồn tại"));
+                    .body(createErrorResponse("Email has existed"));
             }
 
             com.example.demo.model.User newUser = new com.example.demo.model.User();
@@ -354,18 +352,18 @@ public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String
             
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
-            response.put("message", "Tạo người dùng thành công");
+            response.put("message", "Create user successfully");
             response.put("user", savedUser);
             
             return ResponseEntity.ok(response);
             
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(createErrorResponse("Lỗi server: " + e.getMessage()));
+                .body(createErrorResponse("Error server: " + e.getMessage()));
         }
     }
     
-    // Cập nhật thông tin người dùng
+    // update user
     @PutMapping("/users/{userId}")
     public ResponseEntity<Map<String, Object>> updateUser(@PathVariable String userId, @RequestBody Map<String, Object> userData) {
         try {
@@ -375,17 +373,17 @@ public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String
             }
             
             com.example.demo.model.User user = userOpt.get();
-            
-            // Cập nhật thông tin nếu có
+
             if (userData.containsKey("fullName")) {
                 user.setFullName((String) userData.get("fullName"));
             }
+
             if (userData.containsKey("email")) {
                 String newEmail = (String) userData.get("email");
-                // Kiểm tra email trùng lặp (trừ chính user hiện tại)
+                // Check duplicate email
                 if (!user.getEmail().equals(newEmail) && userRepository.existsByEmail(newEmail)) {
                     return ResponseEntity.badRequest()
-                        .body(createErrorResponse("Email đã tồn tại"));
+                        .body(createErrorResponse("Email has existed"));
                 }
                 user.setEmail(newEmail);
             }
@@ -407,18 +405,18 @@ public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String
             
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
-            response.put("message", "Cập nhật thông tin người dùng thành công");
+            response.put("message", "Update user successfully");
             response.put("user", updatedUser);
             
             return ResponseEntity.ok(response);
             
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(createErrorResponse("Lỗi server: " + e.getMessage()));
+                .body(createErrorResponse("Error server: " + e.getMessage()));
         }
     }
     
-    // Xóa người dùng
+    // Delete user
     @DeleteMapping("/users/{userId}")
     public ResponseEntity<Map<String, Object>> deleteUser(@PathVariable String userId) {
         try {
@@ -431,18 +429,18 @@ public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String
             
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
-            response.put("message", "Xóa người dùng thành công");
+            response.put("message", "Delete user successfully");
             
             return ResponseEntity.ok(response);
             
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(createErrorResponse("Lỗi server: " + e.getMessage()));
+                .body(createErrorResponse("Error server: " + e.getMessage()));
         }
     }
     
     
-    // Tìm kiếm người dùng
+    // Search users 
     @GetMapping("/users/search")
     public ResponseEntity<Map<String, Object>> searchUsers(@RequestParam String keyword) {
         try {
@@ -462,20 +460,20 @@ public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String
             
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(createErrorResponse("Lỗi server: " + e.getMessage()));
+                .body(createErrorResponse("Error server: " + e.getMessage()));
         }
     }
     
-    // Cập nhật trạng thái vé
+    // Update ticket status
     @PostMapping("/tickets/{ticketId}/status")
     public ResponseEntity<Map<String, Object>> updateTicketStatus(
-            @PathVariable String ticketId, 
+            @PathVariable String ticketId,
             @RequestBody Map<String, String> statusData) {
         try {
             String newStatus = statusData.get("status");
             if (newStatus == null || newStatus.trim().isEmpty()) {
                 return ResponseEntity.badRequest()
-                    .body(createErrorResponse("Trạng thái không được để trống"));
+                    .body(createErrorResponse("Status is required"));
             }
             
             Optional<com.example.demo.model.Ticket> ticketOpt = ticketRepository.findById(ticketId);
@@ -489,30 +487,30 @@ public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String
             
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
-            response.put("message", "Cập nhật trạng thái vé thành công");
+            response.put("message", "Update ticket status successfully");
             response.put("ticket", ticket);
             
             return ResponseEntity.ok(response);
             
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(createErrorResponse("Lỗi server: " + e.getMessage()));
+                .body(createErrorResponse("Error server: " + e.getMessage()));
         }
     }
     
-    // Tạo admin mới (chỉ super admin)
+    // Create new admin (Just super_admin)
     @PostMapping("/create")
     public ResponseEntity<Map<String, Object>> createAdmin(@RequestBody Admin adminData) {
         try {
 
             if (adminRepository.existsByUsername(adminData.getUsername())) {
                 return ResponseEntity.badRequest()
-                    .body(createErrorResponse("Username đã tồn tại"));
+                    .body(createErrorResponse("Username has existed"));
             }
             
             if (adminData.getEmail() != null && adminRepository.existsByEmail(adminData.getEmail())) {
                 return ResponseEntity.badRequest()
-                    .body(createErrorResponse("Email đã tồn tại"));
+                    .body(createErrorResponse("Email has existed"));
             }
             
             Admin newAdmin = new Admin();
@@ -528,14 +526,14 @@ public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String
             
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
-            response.put("message", "Tạo admin thành công");
+            response.put("message", "Create admin successfully");
             response.put("admin", createAdminResponse(savedAdmin));
             
             return ResponseEntity.ok(response);
             
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(createErrorResponse("Lỗi server: " + e.getMessage()));
+                .body(createErrorResponse("Error server: " + e.getMessage()));
         }
     }
     

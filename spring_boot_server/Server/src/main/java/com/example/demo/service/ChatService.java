@@ -37,7 +37,7 @@ public class ChatService {
         try {
             String apiUrl = "https://openrouter.ai/api/v1/chat/completions";
 
-            // Đúng format OpenRouter API
+            // Prepare the request payload
             Map<String, Object> systemMsg = Map.of(
                     "role", "system",
                     "content", "You are a friendly movie assistant. Please answer in English."

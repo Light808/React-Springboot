@@ -31,6 +31,7 @@ public class ArticleController {
     @Autowired
     private ArticleRepository articleRepository;
 
+    // Get all articles
     @GetMapping
     public ResponseEntity<List<Article>> getAllArticles(
             @RequestParam(defaultValue = "published") String status,
@@ -48,6 +49,7 @@ public class ArticleController {
         }
     }
 
+    // Get article by ID
     @GetMapping("/{id}")
     public ResponseEntity<Article> getArticleById(@PathVariable String id) {
         try {
@@ -62,6 +64,7 @@ public class ArticleController {
         }
     }
 
+    // Get articles by movie ID
     @GetMapping("/movie/{movieId}")
     public ResponseEntity<List<Article>> getArticlesByMovieId(@PathVariable String movieId) {
         try {
@@ -71,7 +74,8 @@ public class ArticleController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
+    
+    // Search articles by title or content
     @GetMapping("/search")
     public ResponseEntity<List<Article>> searchArticles(@RequestParam String title) {
         try {
@@ -82,6 +86,7 @@ public class ArticleController {
         }
     }
 
+    // Get articles by category
     @GetMapping("/category/{category}")
     public ResponseEntity<List<Article>> getArticlesByCategory(@PathVariable String category) {
         try {
@@ -92,6 +97,7 @@ public class ArticleController {
         }
     }
 
+    // Get latest articles with pagination
     @GetMapping("/latest")
     public ResponseEntity<List<Article>> getLatestArticles(@RequestParam(defaultValue = "10") int limit) {
         try {
@@ -103,6 +109,7 @@ public class ArticleController {
         }
     }
 
+    // Get featured articles
     @GetMapping("/featured")
     public ResponseEntity<List<Article>> getFeaturedArticles() {
         try {
@@ -113,6 +120,7 @@ public class ArticleController {
         }
     }
 
+    // Get articles by author
     @GetMapping("/author/{author}")
     public ResponseEntity<List<Article>> getArticlesByAuthor(@PathVariable String author) {
         try {
@@ -123,6 +131,7 @@ public class ArticleController {
         }
     }
 
+    // Create a new article
     @PostMapping
     public ResponseEntity<Article> createArticle(@RequestBody Article article) {
         try {
@@ -166,6 +175,7 @@ public class ArticleController {
         }
     }
 
+    // Update an existing article
     @PutMapping("/{id}")
     public ResponseEntity<Article> updateArticle(@PathVariable String id, @RequestBody Article article) {
         try {
@@ -196,6 +206,7 @@ public class ArticleController {
         }
     }
 
+    // Delete an article
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteArticle(@PathVariable String id) {
         try {
@@ -210,6 +221,7 @@ public class ArticleController {
         }
     }
 
+    // Get article counts
     @GetMapping("/count/movie/{movieId}")
     public ResponseEntity<Long> getArticleCountByMovieId(@PathVariable String movieId) {
         try {
@@ -220,6 +232,7 @@ public class ArticleController {
         }
     }
 
+    // Get article counts by category
     @GetMapping("/count/category/{category}")
     public ResponseEntity<Long> getArticleCountByCategory(@PathVariable String category) {
         try {

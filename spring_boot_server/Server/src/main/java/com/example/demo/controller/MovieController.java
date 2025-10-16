@@ -31,6 +31,7 @@ public class MovieController {
     @Autowired
     private MovieCinemaService movieCinemaService;
 
+    // Get all movies
     @GetMapping
     public ResponseEntity<List<Movie>> getAllMovies() {
         try {
@@ -41,6 +42,7 @@ public class MovieController {
         }
     }
 
+    // Get movie by ID
     @GetMapping("/{id}")
     public ResponseEntity<Movie> getMovieById(@PathVariable String id) {
         try {
@@ -55,6 +57,7 @@ public class MovieController {
         }
     }
 
+    //Get movie by TMDB ID
     @PostMapping
     public ResponseEntity<Movie> createMovie(@RequestBody Movie movie) {
         try {
@@ -69,13 +72,14 @@ public class MovieController {
         }
     }
 
+    // update movie
     @PutMapping("/{id}")
     public ResponseEntity<Movie> updateMovie(@PathVariable String id, @RequestBody Movie movie) {
         try {
             if (!movieRepository.existsById(id)) {
                 return ResponseEntity.notFound().build();
             }
-            
+
             movie.setId(id);
             Movie updatedMovie = movieRepository.save(movie);
             return ResponseEntity.ok(updatedMovie);
@@ -84,6 +88,7 @@ public class MovieController {
         }
     }
 
+    // delete movie
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMovie(@PathVariable String id) {
         try {
@@ -134,7 +139,7 @@ public class MovieController {
                             }
                         }
                     }
-                    return movie.getGenre() != null && 
+                    return movie.getGenre() != null &&
                            movie.getGenre().toLowerCase().contains(genre.toLowerCase());
                 })
                 .toList();
@@ -143,6 +148,8 @@ public class MovieController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    // Get featured movies
     @GetMapping("/featured")
     public ResponseEntity<List<Movie>> getFeaturedMovies(@RequestParam(defaultValue = "7.0") double minRating) {
         try {
@@ -173,6 +180,8 @@ public class MovieController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    // Get movies by release year
     @GetMapping("/year/{year}")
     public ResponseEntity<List<Movie>> getMoviesByYear(@PathVariable String year) {
         try {
@@ -197,7 +206,7 @@ public class MovieController {
         }
     }
     
-    // Thêm phim vào rạp chiếu
+    // Add movie to cinema
     @PostMapping("/{movieId}/cinemas/{cinemaId}")
     public ResponseEntity<Movie> addMovieToCinema(@PathVariable String movieId, @PathVariable String cinemaId) {
         try {
@@ -214,7 +223,7 @@ public class MovieController {
         }
     }
     
-    // Xóa phim khỏi rạp chiếu
+    // Delete movie from cinema
     @DeleteMapping("/{movieId}/cinemas/{cinemaId}")
     public ResponseEntity<Movie> removeMovieFromCinema(@PathVariable String movieId, @PathVariable String cinemaId) {
         try {
@@ -231,7 +240,7 @@ public class MovieController {
         }
     }
     
-    // Lấy danh sách phim theo rạp chiếu
+    // Get movies by cinema ID
     @GetMapping("/cinema/{cinemaId}")
     public ResponseEntity<List<Movie>> getMoviesByCinema(@PathVariable String cinemaId) {
         try {

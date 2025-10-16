@@ -50,7 +50,7 @@ public class TicketController {
         return ticketRepository.findById(id);
     }
 
-    // Lấy vé theo user
+    // Get tickets by user ID
     @GetMapping("/user/{userId}")
     public List<Ticket> getTicketsByUser(@PathVariable String userId) {
         return ticketRepository.findByUserId(userId);
@@ -62,7 +62,7 @@ public class TicketController {
             ticket.setBookingTime(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
         }
         
-        // Auto tạo ticket number và QR code
+        // Auto create ticket number and QR code
         if (ticket.getTicketNumber() == null || ticket.getTicketNumber().isEmpty()) {
             ticket.setTicketNumber("TK" + System.currentTimeMillis());
         }
@@ -81,7 +81,7 @@ public class TicketController {
             ticket.setRefundable(true);
         }
         
-        // Lưu thông tin user vào ticket
+        // Save user info into ticket
         if (ticket.getUserId() != null) {
             Optional<com.example.demo.model.User> userOpt = userRepository.findById(ticket.getUserId());
             if (userOpt.isPresent()) {
@@ -94,7 +94,7 @@ public class TicketController {
         return ticketRepository.save(ticket);
     }
 
-    // Đặt vé
+    // Book a ticket
     @PostMapping("/book")
     public ResponseEntity<?> bookTicket(@RequestBody Ticket ticket) {
         try {
@@ -116,7 +116,7 @@ public class TicketController {
                 ticket.setBookingTime(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
             }
             
-            // Tự động tạo ticket number và QR code
+            // Auto create ticket number and QR code
             if (ticket.getTicketNumber() == null || ticket.getTicketNumber().isEmpty()) {
                 ticket.setTicketNumber("TK" + System.currentTimeMillis());
             }
@@ -136,7 +136,7 @@ public class TicketController {
                 ticket.setRefundable(true);
             }
             
-            // Lưu thông tin user vào ticket
+            // save user info into ticket
             if (ticket.getUserId() != null) {
                 Optional<com.example.demo.model.User> userOpt = userRepository.findById(ticket.getUserId());
                 if (userOpt.isPresent()) {
@@ -165,7 +165,7 @@ public class TicketController {
         ticketRepository.deleteById(id);
     }
 
-    // Hủy vé
+    // cancel a ticket
     @PutMapping("/{id}/cancel")
     public ResponseEntity<Ticket> cancelTicket(@PathVariable String id, @RequestParam(required = false) String reason) {
         Optional<Ticket> ticketOpt = ticketRepository.findById(id);
@@ -185,7 +185,7 @@ public class TicketController {
         return ResponseEntity.ok(ticketRepository.save(ticket));
     }
 
-    // Đánh dấu vé đã sử dụng
+    // Mark a ticket as used
     @PutMapping("/{id}/use")
     public ResponseEntity<Ticket> markTicketAsUsed(@PathVariable String id) {
         Optional<Ticket> ticketOpt = ticketRepository.findById(id);
@@ -204,19 +204,19 @@ public class TicketController {
         return ResponseEntity.ok(ticketRepository.save(ticket));
     }
 
-    // Lấy vé theo trạng thái
+    // Get tickets by status
     @GetMapping("/status/{status}")
     public List<Ticket> getTicketsByStatus(@PathVariable String status) {
         return ticketRepository.findByStatus(status);
     }
 
-    // Lấy vé theo showtime
+    // Get tickets by showtime ID
     @GetMapping("/showtime/{showtimeId}")
     public List<Ticket> getTicketsByShowtime(@PathVariable String showtimeId) {
         return ticketRepository.findByShowtimeId(showtimeId);
     }
 
-    // Tải vé dưới dạng PDF (placeholder - cần implement PDF generation)
+    // Download ticket as PDF
     @GetMapping("/{id}/download")
     public ResponseEntity<byte[]> downloadTicket(@PathVariable String id) {
         Optional<Ticket> ticketOpt = ticketRepository.findById(id);
@@ -225,8 +225,8 @@ public class TicketController {
         }
         
         Ticket ticket = ticketOpt.get();
-        
-        // Tạo PDF content (placeholder - cần implement thực tế)
+
+        // create a simple text-based PDF representation
         String pdfContent = generateTicketPDF(ticket);
         byte[] pdfBytes = pdfContent.getBytes();
         
@@ -239,10 +239,9 @@ public class TicketController {
                 .body(pdfBytes);
     }
 
-    // Xuất danh sách vé của user
+    // export tickets of a user to PDF or Excel
     @GetMapping("/user/{userId}/export")
-    public ResponseEntity<byte[]> exportUserTickets(@PathVariable String userId, 
-                                                   @RequestParam(defaultValue = "pdf") String format) {
+    public ResponseEntity<byte[]> exportUserTickets(@PathVariable String userId, @RequestParam(defaultValue = "pdf") String format) {
         List<Ticket> tickets = ticketRepository.findByUserId(userId);
         
         if (tickets.isEmpty()) {
@@ -272,7 +271,7 @@ public class TicketController {
                 .body(exportData);
     }
 
-    // Lấy thống kê vé của user
+    // Get statistics of tickets for a user
     @GetMapping("/user/{userId}/stats")
     public ResponseEntity<Object> getUserTicketStats(@PathVariable String userId) {
         List<Ticket> tickets = ticketRepository.findByUserId(userId);
@@ -298,7 +297,7 @@ public class TicketController {
         });
     }
 
-    // Lấy thông tin chi tiết vé với tất cả trường
+    // Get detailed info of a ticket
     @GetMapping("/{id}/details")
     public ResponseEntity<Ticket> getTicketDetails(@PathVariable String id) {
         Optional<Ticket> ticketOpt = ticketRepository.findById(id);
@@ -309,7 +308,7 @@ public class TicketController {
     }
 
 
-    // Lấy thông tin thanh toán của vé
+    // Get info related to payment of a ticket
     @GetMapping("/{id}/payment-info")
     public ResponseEntity<Object> getTicketPaymentInfo(@PathVariable String id) {
         Optional<Ticket> ticketOpt = ticketRepository.findById(id);
@@ -332,9 +331,7 @@ public class TicketController {
 
     // Hoàn tiền vé
     @PutMapping("/{id}/refund")
-    public ResponseEntity<Ticket> refundTicket(@PathVariable String id, 
-                                             @RequestParam double refundAmount,
-                                             @RequestParam String refundReason) {
+    public ResponseEntity<Ticket> refundTicket(@PathVariable String id, @RequestParam double refundAmount, @RequestParam String refundReason) {
         Optional<Ticket> ticketOpt = ticketRepository.findById(id);
         if (!ticketOpt.isPresent()) {
             return ResponseEntity.notFound().build();
@@ -356,7 +353,7 @@ public class TicketController {
         return ResponseEntity.ok(ticketRepository.save(ticket));
     }
 
-    // Lấy danh sách vé đã hoàn tiền
+    // Get all refunded tickets
     @GetMapping("/refunded")
     public List<Ticket> getRefundedTickets() {
         return ticketRepository.findAll().stream()
@@ -364,7 +361,7 @@ public class TicketController {
                 .collect(java.util.stream.Collectors.toList());
     }
 
-    // Lấy thống kê hoàn tiền của user
+    // Get statistics of refunded tickets for a user
     @GetMapping("/user/{userId}/refund-stats")
     public ResponseEntity<Object> getUserRefundStats(@PathVariable String userId) {
         List<Ticket> tickets = ticketRepository.findByUserId(userId);
@@ -384,10 +381,9 @@ public class TicketController {
         });
     }
 
-    // Cập nhật phương thức thanh toán
+    // update payment method of a ticket
     @PutMapping("/{id}/payment-method")
-    public ResponseEntity<Ticket> updatePaymentMethod(@PathVariable String id, 
-                                                    @RequestParam String paymentMethod) {
+    public ResponseEntity<Ticket> updatePaymentMethod(@PathVariable String id, @RequestParam String paymentMethod) {
         Optional<Ticket> ticketOpt = ticketRepository.findById(id);
         if (!ticketOpt.isPresent()) {
             return ResponseEntity.notFound().build();
@@ -399,7 +395,7 @@ public class TicketController {
         return ResponseEntity.ok(ticketRepository.save(ticket));
     }
 
-    // Lấy vé theo phương thức thanh toán
+    // Get tickets by payment method
     @GetMapping("/payment-method/{paymentMethod}")
     public List<Ticket> getTicketsByPaymentMethod(@PathVariable String paymentMethod) {
         return ticketRepository.findAll().stream()
@@ -407,7 +403,7 @@ public class TicketController {
                 .collect(java.util.stream.Collectors.toList());
     }
 
-    // Lấy vé theo địa chỉ rạp
+    // Get tickets by cinema address
     @GetMapping("/cinema-address/{address}")
     public List<Ticket> getTicketsByCinemaAddress(@PathVariable String address) {
         return ticketRepository.findAll().stream()
@@ -418,38 +414,38 @@ public class TicketController {
     // Helper methods
     private String generateTicketPDF(Ticket ticket) {
         StringBuilder pdf = new StringBuilder();
-        pdf.append("=== VÉ XEM PHIM ===\n");
-        pdf.append("Mã vé: ").append(ticket.getTicketNumber()).append("\n");
-        pdf.append("Phim: ").append(ticket.getMovieTitle()).append("\n");
-        pdf.append("Rạp: ").append(ticket.getCinemaName()).append("\n");
+        pdf.append("=== MOVIE TICKETS ===\n");
+        pdf.append("Ticket code: ").append(ticket.getTicketNumber()).append("\n");
+        pdf.append("Movie: ").append(ticket.getMovieTitle()).append("\n");
+        pdf.append("Cinema: ").append(ticket.getCinemaName()).append("\n");
         if (ticket.getCinemaAddress() != null && !ticket.getCinemaAddress().isEmpty()) {
-            pdf.append("Địa chỉ: ").append(ticket.getCinemaAddress()).append("\n");
+            pdf.append("Address: ").append(ticket.getCinemaAddress()).append("\n");
         }
-        pdf.append("Ngày: ").append(ticket.getShowDate()).append("\n");
-        pdf.append("Giờ: ").append(ticket.getShowTime()).append("\n");
-        pdf.append("Ghế: ").append(ticket.getSeatNumber()).append("\n");
-        pdf.append("Giá: ").append(ticket.getPrice()).append(" VND\n");
+        pdf.append("Day: ").append(ticket.getShowDate()).append("\n");
+        pdf.append("Hour: ").append(ticket.getShowTime()).append("\n");
+        pdf.append("Seat: ").append(ticket.getSeatNumber()).append("\n");
+        pdf.append("Price: ").append(ticket.getPrice()).append(" VND\n");
         pdf.append("Trạng thái: ").append(ticket.getStatus()).append("\n");
-        pdf.append("Phương thức thanh toán: ").append(ticket.getPaymentMethod() != null ? ticket.getPaymentMethod() : "N/A").append("\n");
+        pdf.append("Payment method: ").append(ticket.getPaymentMethod() != null ? ticket.getPaymentMethod() : "N/A").append("\n");
         pdf.append("QR Code: ").append(ticket.getQrCode()).append("\n");
         if (ticket.getCancelledAt() != null) {
-            pdf.append("Hủy lúc: ").append(ticket.getCancelledAt()).append("\n");
-            pdf.append("Lý do hủy: ").append(ticket.getCancellationReason()).append("\n");
+            pdf.append("Cancelled at: ").append(ticket.getCancelledAt()).append("\n");
+            pdf.append("Reason for cancellation: ").append(ticket.getCancellationReason()).append("\n");
         }
         if (ticket.getUsedAt() != null) {
-            pdf.append("Sử dụng lúc: ").append(ticket.getUsedAt()).append("\n");
+            pdf.append("Use at: ").append(ticket.getUsedAt()).append("\n");
         }
         if (ticket.getRefundedAt() != null) {
-            pdf.append("Hoàn tiền lúc: ").append(ticket.getRefundedAt()).append("\n");
-            pdf.append("Số tiền hoàn: ").append(ticket.getRefundAmount()).append(" VND\n");
-            pdf.append("Lý do hoàn tiền: ").append(ticket.getRefundReason()).append("\n");
+            pdf.append("Refund at: ").append(ticket.getRefundedAt()).append("\n");
+            pdf.append("Refund amount: ").append(ticket.getRefundAmount()).append(" VND\n");
+            pdf.append("Reason for refund: ").append(ticket.getRefundReason()).append("\n");
         }
         return pdf.toString();
     }
 
     private byte[] generateExcelExport(List<Ticket> tickets) {
         StringBuilder csv = new StringBuilder();
-        csv.append("Mã vé,Tên phim,Rạp chiếu,Địa chỉ rạp,Ngày chiếu,Giờ chiếu,Ghế,Giá,Trạng thái,Phương thức thanh toán,Thời gian hủy,Lý do hủy,Thời gian sử dụng,Thời gian hoàn tiền,Số tiền hoàn,Lý do hoàn tiền\n");
+        csv.append("Ticket code,Movie name,Cinema,Cinema address,Show date,Show time,Seat,Price,Status,Payment method,Cancellation time,Cancellation reason,Validity time,Refund time,Refund amount,Refund reason\n");
         for (Ticket ticket : tickets) {
             csv.append(ticket.getTicketNumber()).append(",");
             csv.append(ticket.getMovieTitle()).append(",");
@@ -473,34 +469,34 @@ public class TicketController {
 
     private byte[] generatePDFExport(List<Ticket> tickets) {
         StringBuilder pdf = new StringBuilder();
-        pdf.append("=== DANH SÁCH VÉ XEM PHIM ===\n\n");
+        pdf.append("=== Movie Ticket Lists ===\n\n");
         for (Ticket ticket : tickets) {
-            pdf.append("Mã vé: ").append(ticket.getTicketNumber()).append("\n");
-            pdf.append("Phim: ").append(ticket.getMovieTitle()).append("\n");
-            pdf.append("Rạp: ").append(ticket.getCinemaName()).append("\n");
+            pdf.append("Ticket code: ").append(ticket.getTicketNumber()).append("\n");
+            pdf.append("Movie: ").append(ticket.getMovieTitle()).append("\n");
+            pdf.append("Cinema: ").append(ticket.getCinemaName()).append("\n");
             if (ticket.getCinemaAddress() != null && !ticket.getCinemaAddress().isEmpty()) {
-                pdf.append("Địa chỉ: ").append(ticket.getCinemaAddress()).append("\n");
+                pdf.append("Address: ").append(ticket.getCinemaAddress()).append("\n");
             }
-            pdf.append("Ngày: ").append(ticket.getShowDate()).append(" - ").append(ticket.getShowTime()).append("\n");
-            pdf.append("Ghế: ").append(ticket.getSeatNumber()).append("\n");
-            pdf.append("Giá: ").append(ticket.getPrice()).append(" VND\n");
-            pdf.append("Trạng thái: ").append(ticket.getStatus()).append("\n");
-            pdf.append("Phương thức thanh toán: ").append(ticket.getPaymentMethod() != null ? ticket.getPaymentMethod() : "N/A").append("\n");
+            pdf.append("Day: ").append(ticket.getShowDate()).append(" - ").append(ticket.getShowTime()).append("\n");
+            pdf.append("Seat: ").append(ticket.getSeatNumber()).append("\n");
+            pdf.append("Price: ").append(ticket.getPrice()).append(" VND\n");
+            pdf.append("Status: ").append(ticket.getStatus()).append("\n");
+            pdf.append("Payment Method: ").append(ticket.getPaymentMethod() != null ? ticket.getPaymentMethod() : "N/A").append("\n");
             if (ticket.getCancelledAt() != null) {
-                pdf.append("Hủy lúc: ").append(ticket.getCancelledAt()).append(" - ").append(ticket.getCancellationReason()).append("\n");
+                pdf.append("Cancelled at: ").append(ticket.getCancelledAt()).append(" - ").append(ticket.getCancellationReason()).append("\n");
             }
             if (ticket.getUsedAt() != null) {
-                pdf.append("Sử dụng lúc: ").append(ticket.getUsedAt()).append("\n");
+                pdf.append("Use at: ").append(ticket.getUsedAt()).append("\n");
             }
             if (ticket.getRefundedAt() != null) {
-                pdf.append("Hoàn tiền lúc: ").append(ticket.getRefundedAt()).append(" - ").append(ticket.getRefundAmount()).append(" VND - ").append(ticket.getRefundReason()).append("\n");
+                pdf.append("Refund at: ").append(ticket.getRefundedAt()).append(" - ").append(ticket.getRefundAmount()).append(" VND - ").append(ticket.getRefundReason()).append("\n");
             }
             pdf.append("---\n\n");
         }
         return pdf.toString().getBytes();
     }
 
-    // Duyệt vé (chuyển từ pending sang confirmed)
+    // Approve a ticket (for admin)
     @PutMapping("/{id}/approve")
     public ResponseEntity<?> approveTicket(@PathVariable String id) {
         try {
@@ -511,19 +507,19 @@ public class TicketController {
             
             Ticket ticket = ticketOpt.get();
             if (!"pending".equals(ticket.getStatus())) {
-                return ResponseEntity.badRequest().body("Chỉ có thể duyệt vé đang chờ xác nhận");
+                return ResponseEntity.badRequest().body("Just pending tickets can be approved");
             }
             
-            // Cập nhật trạng thái vé
+            // Update ticket status to confirmed and payment status to paid
             ticket.setStatus("confirmed");
             ticket.setPaymentStatus("paid");
             Ticket updatedTicket = ticketRepository.save(ticket);
             try {
                 Notification notification = new Notification();
                 notification.setUserId(ticket.getUserId());
-                notification.setTitle("Vé đã được duyệt");
-                notification.setMessage("Vé " + (ticket.getTicketNumber() != null ? ticket.getTicketNumber() : ticket.getId()) + 
-                    " cho phim \"" + ticket.getMovieTitle() + "\" đã được admin duyệt và sẵn sàng sử dụng");
+                notification.setTitle("Ticket Approved");
+                notification.setMessage("Ticket " + (ticket.getTicketNumber() != null ? ticket.getTicketNumber() : ticket.getId()) +
+                    " for movie \"" + ticket.getMovieTitle() + "\" has been approved by admin and ready to use.");
                 notification.setType("ticket_approved");
                 notification.setRelatedType("ticket");
                 notification.setIsRead(false);

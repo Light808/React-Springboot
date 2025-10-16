@@ -29,6 +29,7 @@ public class ReviewController {
     @Autowired
     private ReviewRepository reviewRepository;
 
+    // Get all reviews
     @GetMapping
     public ResponseEntity<List<Review>> getAllReviews() {
         try {
@@ -39,6 +40,7 @@ public class ReviewController {
         }
     }
 
+    // Get review by ID
     @GetMapping("/{id}")
     public ResponseEntity<Review> getReviewById(@PathVariable String id) {
         try {
@@ -53,6 +55,7 @@ public class ReviewController {
         }
     }
 
+    // Get reviews by movie ID
     @GetMapping("/movie/{movieId}")
     public ResponseEntity<List<Review>> getReviewsByMovieId(@PathVariable String movieId) {
         try {
@@ -63,6 +66,7 @@ public class ReviewController {
         }
     }
 
+    // Get reviews by user ID
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Review>> getReviewsByUserId(@PathVariable String userId) {
         try {
@@ -73,6 +77,7 @@ public class ReviewController {
         }
     }
 
+    // Get reviews by movie ID and rating
     @GetMapping("/movie/{movieId}/rating/{rating}")
     public ResponseEntity<List<Review>> getReviewsByMovieIdAndRating(@PathVariable String movieId, @PathVariable Integer rating) {
         try {
@@ -83,6 +88,7 @@ public class ReviewController {
         }
     }
 
+    // Get review count by movie ID
     @GetMapping("/movie/{movieId}/count")
     public ResponseEntity<Long> getReviewCountByMovieId(@PathVariable String movieId) {
         try {
@@ -93,6 +99,7 @@ public class ReviewController {
         }
     }
 
+    // Get review count by movie ID and rating
     @GetMapping("/movie/{movieId}/rating/{rating}/count")
     public ResponseEntity<Long> getReviewCountByMovieIdAndRating(@PathVariable String movieId, @PathVariable Integer rating) {
         try {
@@ -103,6 +110,7 @@ public class ReviewController {
         }
     }
 
+    // Create a new review
     @PostMapping
     public ResponseEntity<Review> createReview(@RequestBody Review review) {
         try {
@@ -146,6 +154,7 @@ public class ReviewController {
         }
     }
 
+    // update a review
     @PutMapping("/{id}")
     public ResponseEntity<Review> updateReview(@PathVariable String id, @RequestBody Review review) {
         try {
@@ -166,6 +175,7 @@ public class ReviewController {
         }
     }
 
+    // like a review
     @PutMapping("/{id}/like")
     public ResponseEntity<Review> likeReview(@PathVariable String id) {
         try {
@@ -184,6 +194,7 @@ public class ReviewController {
         }
     }
 
+    // dislike a review
     @PutMapping("/{id}/dislike")
     public ResponseEntity<Review> dislikeReview(@PathVariable String id) {
         try {
@@ -202,6 +213,7 @@ public class ReviewController {
         }
     }
 
+    // Delete a review by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReview(@PathVariable String id) {
         try {

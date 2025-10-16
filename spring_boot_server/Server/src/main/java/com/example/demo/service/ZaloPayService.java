@@ -19,15 +19,14 @@ import lombok.RequiredArgsConstructor;
 public class ZaloPayService {
 	private final ZaloPayOrderRepository repo;
 
-	// For demo: synthesize a payUrl. Replace with real ZaloPay create API if needed.
+	// Helper methods to build URLs
 	private String buildPayUrl(String appTransId, long amount, String description) {
-		// Example web URL; in real integration, use ZaloPay response
 		String desc = URLEncoder.encode(description, StandardCharsets.UTF_8);
 		return "https://sbox.zalopay.vn/pay?app_trans_id=" + appTransId + "&amount=" + amount + "&desc=" + desc;
 	}
 
+	// Generate QR code URL from pay URL
 	private String buildQrUrl(String payUrl) {
-		// Generic QR image for the payUrl
 		String data = URLEncoder.encode(payUrl, StandardCharsets.UTF_8);
 		return "https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=" + data;
 	}

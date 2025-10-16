@@ -23,6 +23,7 @@ public class ZaloPayController {
 
 	private final ZaloPayService zaloPayService;
 
+	// Create a new ZaloPay order
 	@PostMapping("/create")
 	public ResponseEntity<CreateZaloPayResponse> create(
 		@RequestParam String user,
@@ -32,17 +33,20 @@ public class ZaloPayController {
 		return ResponseEntity.ok(zaloPayService.createOrder(user, amount, description));
 	}
 
+	// Query ZaloPay order status
 	@GetMapping("/query/{appTransId}")
 	public ResponseEntity<QueryZaloPayResponse> query(@PathVariable String appTransId) {
 		return ResponseEntity.ok(zaloPayService.queryOrder(appTransId));
 	}
 
+	// Mark ZaloPay order as paid
 	@PostMapping("/mark-paid")
 	public ResponseEntity<Void> markPaid(@RequestParam String appTransId) {
 		zaloPayService.markPaid(appTransId);
 		return ResponseEntity.ok().build();
 	}
 
+	// Mark ZaloPay order as expired
 	@PostMapping("/mark-expired")
 	public ResponseEntity<Void> markExpired(@RequestParam String appTransId) {
 		zaloPayService.markExpired(appTransId);

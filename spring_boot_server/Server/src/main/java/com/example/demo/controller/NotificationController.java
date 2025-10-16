@@ -27,42 +27,41 @@ public class NotificationController {
     @Autowired
     private NotificationRepository notificationRepository;
 
-    // Lấy tất cả thông báo
+    // Get all notifications
     @GetMapping
     public List<Notification> getAllNotifications() {
         return notificationRepository.findAll();
     }
 
-    // Lấy thông báo theo ID
+    // Get notification by ID
     @GetMapping("/{id}")
     public Optional<Notification> getNotificationById(@PathVariable String id) {
         return notificationRepository.findById(id);
     }
 
-    // Lấy thông báo của user
+    // Get notifications by user ID
     @GetMapping("/user/{userId}")
     public List<Notification> getNotificationsByUser(@PathVariable String userId) {
         return notificationRepository.findByUserIdOrderByCreatedAtDesc(userId);
     }
 
-    // Lấy thông báo chưa đọc của user
+    // Get unread notifications by user ID
     @GetMapping("/user/{userId}/unread")
     public List<Notification> getUnreadNotificationsByUser(@PathVariable String userId) {
         return notificationRepository.findByUserIdAndIsReadFalseOrderByCreatedAtDesc(userId);
     }
 
-    // Lấy số lượng thông báo chưa đọc
+    // Get count of unread notifications by user ID
     @GetMapping("/user/{userId}/count")
     public ResponseEntity<Long> getUnreadNotificationCount(@PathVariable String userId) {
         Long count = notificationRepository.countByUserIdAndIsReadFalse(userId);
         return ResponseEntity.ok(count);
     }
 
-    // Tạo thông báo mới
+    // Create a new notification
     @PostMapping
     public ResponseEntity<Notification> createNotification(@RequestBody Notification notification) {
         try {
-            // Set default values
             if (notification.getCreatedAt() == null) {
                 notification.setCreatedAt(LocalDateTime.now());
             }
@@ -78,7 +77,7 @@ public class NotificationController {
         }
     }
 
-    // Đánh dấu thông báo là đã đọc
+    // Mark a notification as read
     @PutMapping("/{id}/read")
     public ResponseEntity<Notification> markNotificationAsRead(@PathVariable String id) {
         try {
@@ -99,7 +98,7 @@ public class NotificationController {
         }
     }
 
-    // Đánh dấu tất cả thông báo của user là đã đọc
+    // Mark all notifications as read for a user
     @PutMapping("/user/{userId}/read-all")
     public ResponseEntity<String> markAllNotificationsAsRead(@PathVariable String userId) {
         try {
@@ -118,7 +117,7 @@ public class NotificationController {
         }
     }
 
-    // Xóa thông báo
+    // Delete a notification by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteNotification(@PathVariable String id) {
         try {
@@ -134,7 +133,7 @@ public class NotificationController {
         }
     }
 
-    // Xóa tất cả thông báo của user
+    // Delete all notifications for a user
     @DeleteMapping("/user/{userId}")
     public ResponseEntity<String> deleteAllNotificationsByUser(@PathVariable String userId) {
         try {

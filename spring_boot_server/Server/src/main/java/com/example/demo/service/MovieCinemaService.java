@@ -21,9 +21,7 @@ public class MovieCinemaService {
     @Autowired
     private CinemaRepository cinemaRepository;
     
-    /**
-     * Thêm phim vào rạp chiếu - đồng bộ hóa hai chiều
-     */
+    // Add other necessary services or repositories if needed
     @Transactional
     public boolean addMovieToCinema(String movieId, String cinemaId) {
         try {
@@ -34,11 +32,11 @@ public class MovieCinemaService {
                 Movie movie = movieOpt.get();
                 Cinema cinema = cinemaOpt.get();
                 
-                // Thêm cinemaId vào movie
+                // Add cinemaId to movie
                 movie.addCinema(cinemaId);
                 movieRepository.save(movie);
                 
-                // Thêm movieId vào cinema
+                // Add movieId to cinema
                 cinema.addMovie(movieId);
                 cinemaRepository.save(cinema);
                 
@@ -46,13 +44,11 @@ public class MovieCinemaService {
             }
             return false;
         } catch (Exception e) {
-            throw new RuntimeException("Lỗi khi thêm phim vào rạp chiếu: " + e.getMessage());
+            throw new RuntimeException("Error: " + e.getMessage());
         }
     }
     
-    /**
-     * Xóa phim khỏi rạp chiếu - đồng bộ hóa hai chiều
-     */
+    // Delete movie from cinema
     @Transactional
     public boolean removeMovieFromCinema(String movieId, String cinemaId) {
         try {
@@ -63,11 +59,11 @@ public class MovieCinemaService {
                 Movie movie = movieOpt.get();
                 Cinema cinema = cinemaOpt.get();
                 
-                // Xóa cinemaId khỏi movie
+                // Delete cinemaId  from movie
                 movie.removeCinema(cinemaId);
                 movieRepository.save(movie);
                 
-                // Xóa movieId khỏi cinema
+                // Delete movieId from cinema
                 cinema.removeMovie(movieId);
                 cinemaRepository.save(cinema);
                 
@@ -75,13 +71,11 @@ public class MovieCinemaService {
             }
             return false;
         } catch (Exception e) {
-            throw new RuntimeException("Lỗi khi xóa phim khỏi rạp chiếu: " + e.getMessage());
+            throw new RuntimeException("Error: " + e.getMessage());
         }
     }
     
-    /**
-     * Lấy danh sách phim theo rạp chiếu
-     */
+    // Get movies by cinema
     public List<Movie> getMoviesByCinema(String cinemaId) {
         try {
             List<Movie> allMovies = movieRepository.findAll();
@@ -89,24 +83,22 @@ public class MovieCinemaService {
                 .filter(movie -> movie.getCinemaIds() != null && movie.getCinemaIds().contains(cinemaId))
                 .toList();
         } catch (Exception e) {
-            throw new RuntimeException("Lỗi khi lấy danh sách phim theo rạp chiếu: " + e.getMessage());
+            throw new RuntimeException("Error: " + e.getMessage());
         }
     }
     
-    /**
-     * Lấy danh sách rạp chiếu theo phim
-     */
+    // Get cinemas by movie
+
     public List<Cinema> getCinemasByMovie(String movieId) {
         try {
             return cinemaRepository.findByMovieIdsContaining(movieId);
         } catch (Exception e) {
-            throw new RuntimeException("Lỗi khi lấy danh sách rạp chiếu theo phim: " + e.getMessage());
+            throw new RuntimeException("Error: " + e.getMessage());
         }
     }
     
-    /**
-     * Kiểm tra phim có trong rạp chiếu không
-     */
+    // Check if movie is in cinema
+
     public boolean isMovieInCinema(String movieId, String cinemaId) {
         try {
             Optional<Movie> movieOpt = movieRepository.findById(movieId);
@@ -116,7 +108,7 @@ public class MovieCinemaService {
             }
             return false;
         } catch (Exception e) {
-            throw new RuntimeException("Lỗi khi kiểm tra phim trong rạp chiếu: " + e.getMessage());
+            throw new RuntimeException("Error: " + e.getMessage());
         }
     }
 }
