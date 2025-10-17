@@ -3,8 +3,10 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Calendar, User, Eye, ArrowLeft, Share2, Bookmark, Tag } from 'lucide-react';
 import { getNewsById, getAllNews } from '../../../services/newsService';
 import styles from './NewsDetailPage.module.css'; 
+import { useTranslation } from 'react-i18next';
 
 const NewsDetailPage = () => {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
   const [article, setArticle] = useState(null);
@@ -33,8 +35,8 @@ const NewsDetailPage = () => {
       
       setError(null);
     } catch (err) {
-      console.error('Error fetching article:', err);
-      setError('Không thể tải bài viết');
+      console.error(t('Error fetching article:'), err);
+      setError(t('Không thể tải bài viết'));
     } finally {
       setLoading(false);
     }
@@ -60,12 +62,12 @@ const NewsDetailPage = () => {
       });
     } else {
       navigator.clipboard.writeText(window.location.href);
-      alert('Đã sao chép link vào clipboard');
+      alert(t('Đã sao chép link vào clipboard'));
     }
   };
 
   const handleBookmark = () => {
-    alert('Đã thêm vào danh sách đánh dấu');
+    alert(t('Đã thêm vào danh sách đánh dấu'));
   };
 
   if (loading) {
@@ -73,7 +75,7 @@ const NewsDetailPage = () => {
       <div className={`${styles['news-detail-page']}`}>
         <div className={`${styles['loading-container']}`}>
           <div className={`${styles['loading-spinner']}`}></div>
-          <p>Đang tải bài viết...</p>
+          <p>{t('Đang tải bài viết...')}</p>
         </div>
       </div>
     );
@@ -83,11 +85,11 @@ const NewsDetailPage = () => {
     return (
       <div className={`${styles['news-detail-page']}`}>
         <div className={`${styles['error-container']}`}>
-          <h3>Không tìm thấy bài viết</h3>
-          <p>{error || 'Bài viết không tồn tại hoặc đã bị xóa'}</p>
+          <h3>{t('Không tìm thấy bài viết')}</h3>
+          <p>{error || t('Bài viết không tồn tại hoặc đã bị xóa')}</p>
           <button onClick={() => navigate('/news')}>
             <ArrowLeft size={16} />
-            Quay lại tin tức
+            {t('Quay lại tin tức')}
           </button>
         </div>
       </div>
@@ -104,7 +106,7 @@ const NewsDetailPage = () => {
             onClick={() => navigate('/news')}
           >
             <ArrowLeft size={20} />
-            Quay lại tin tức
+            {t('Quay lại tin tức')}
           </button>
         </div>
 
@@ -118,7 +120,7 @@ const NewsDetailPage = () => {
             </div>
             <div className={`${styles['article-views']}`}>
               <Eye size={16} />
-              {article.views.toLocaleString()} lượt xem
+              {article.views.toLocaleString()} {t('lượt xem')}
             </div>
           </div>
 
@@ -138,7 +140,7 @@ const NewsDetailPage = () => {
               }}
             />
             {article.featured && (
-              <div className={`${styles['featured-badge']}`}>Nổi bật</div>
+              <div className={`${styles['featured-badge']}`}>{t('Nổi bật')}</div>
             )}
           </div>
 
@@ -165,16 +167,16 @@ const NewsDetailPage = () => {
           <div className={`${styles['article-footer']}`}>
             <div className={`${styles['article-author']}`}> 
               <User size={16} />
-              <span>Tác giả: {article.author}</span>
+              <span>{t('Tác giả:')} {article.author}</span>
             </div>
             <div className={`${styles['article-actions']}`}>
               <button className={`${styles['action-btn']}`} onClick={handleShare}>
                 <Share2 size={16} />
-                Chia sẻ
+                {t('Chia sẻ')}
               </button>
               <button className={`${styles['action-btn']}`} onClick={handleBookmark}>
                 <Bookmark size={16} />
-                Đánh dấu
+                {t('Đánh dấu')}
               </button>
             </div>
           </div>
@@ -183,7 +185,7 @@ const NewsDetailPage = () => {
         {/* Related articles */}
         {relatedArticles.length > 0 && (
           <section className={`${styles['related-articles']}`}>
-            <h3>Bài viết liên quan</h3>
+            <h3>{t('Bài viết liên quan')}</h3>
             <div className={`${styles['related-grid']}`}>
               {relatedArticles.map(relatedArticle => (
                 <div key={relatedArticle.id} className={`${styles['related-card']}`}>

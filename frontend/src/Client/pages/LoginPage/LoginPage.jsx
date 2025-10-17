@@ -291,7 +291,7 @@ const LoginPage = ({ onLogin }) => {
             <div className={`${styles['form-group']}`}>
               <label className={`${styles['form-label']}`}>
                 <Lock size={16} />
-                Xác nhận mật khẩu
+                {t('Xác nhận mật khẩu')}
               </label>
               <div className={`${styles['password-input']}`}>
                 <input
@@ -300,7 +300,7 @@ const LoginPage = ({ onLogin }) => {
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
                   className={`${styles['form-input']} ${errors.confirmPassword ? styles['error'] : ''}`}
-                  placeholder="Nhập lại mật khẩu"
+                  placeholder={t("Nhập lại mật khẩu")}
                 />
                 <button
                   type="button"
@@ -331,7 +331,7 @@ const LoginPage = ({ onLogin }) => {
             {isLoading ? (
               <div className={`${styles['loading-spinner']}`}></div>
             ) : (
-              isRegister ? 'Đăng ký' : 'Đăng nhập'
+              isRegister ? t('Đăng ký') : t('Đăng nhập')
             )}
           </button>
         </form>
@@ -343,8 +343,8 @@ const LoginPage = ({ onLogin }) => {
             onClick={toggleMode}
           >
             {isRegister 
-              ? 'Đã có tài khoản? Đăng nhập ngay'
-              : 'Chưa có tài khoản? Đăng ký ngay'
+              ? t('Đã có tài khoản? Đăng nhập ngay')
+              : t('Chưa có tài khoản? Đăng ký ngay')
             }
           </button>
         </div>

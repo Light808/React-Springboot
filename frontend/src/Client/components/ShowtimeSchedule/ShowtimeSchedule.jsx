@@ -5,9 +5,10 @@ import { MapPin, Clock, Calendar, Building2, Film, ChevronDown, ChevronRight } f
 import { getAllShowtimes } from '../../../services/showtimeService';
 import { getAllCinemas } from '../../../services/cinemaService';
 import styles from './ShowtimeSchedule.module.css';
-
+import { useTranslation } from 'react-i18next';
 const ShowtimeSchedule = ({ movieId, movieTitle }) => {
   const [showtimes, setShowtimes] = useState([]);
+  const [ t ] = useTranslation();
   const [cinemas, setCinemas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -44,7 +45,7 @@ const ShowtimeSchedule = ({ movieId, movieTitle }) => {
       }
     } catch (err) {
       console.error('Error fetching showtime data:', err);
-      setError('Không thể tải lịch chiếu');
+      setError('Error fetching showtime data');
     } finally {
       setLoading(false);
     }
@@ -257,8 +258,8 @@ const ShowtimeSchedule = ({ movieId, movieTitle }) => {
         {systemNames.length === 0 ? (
           <div className={styles.noShowtimes}>
             <Film size={48} />
-            <h3>Không có lịch chiếu</h3>
-            <p>Không có hệ thống rạp nào tại {selectedCity}</p>
+            <h3>{t('Không có lịch chiếu')}</h3>
+            <p>{t('Không có hệ thống rạp nào tại')} {selectedCity}</p>
           </div>
         ) : (
           <div className={styles.cinemaSystemsList}>
@@ -313,7 +314,7 @@ const ShowtimeSchedule = ({ movieId, movieTitle }) => {
                                       >
                                         <div className={styles.showtimeTime}>{formatTime(showtime.startTime)}</div>
                                         <div className={styles.showtimeRoom}>{showtime.room}</div>
-                                        <div className={styles.showtimePrice}>{showtime.price ? `${showtime.price.toLocaleString('vi-VN')}đ` : 'Liên hệ'}</div>
+                                        <div className={styles.showtimePrice}>{showtime.price ? `${showtime.price.toLocaleString('vi-VN')}đ` : t('Liên hệ')}</div>
                                       </button>
                                     ))}
                                   </div>

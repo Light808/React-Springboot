@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { X, Settings } from 'lucide-react';
 import { changePassword } from '../../../services/userService';
 import './UserProfile.css';
+import { useTranslation } from 'react-i18next';
 
 const UserSettingsModal = ({ isOpen, onClose }) => {
+  const { t } = useTranslation();
   const [pwdForm, setPwdForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
   const [changingPwd, setChangingPwd] = useState(false);
   const [pwdError, setPwdError] = useState('');

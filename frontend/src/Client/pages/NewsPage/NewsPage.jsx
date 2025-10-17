@@ -4,8 +4,10 @@ import { Link } from 'react-router-dom';
 import { Calendar, User, Eye, Search, Filter, Clock, Tag } from 'lucide-react';
 import { getAllNews, getNewsCategories } from '../../../services/newsService';
 import styles from './NewsPage.module.css';
+import { useTranslation } from 'react-i18next';
 
 const NewsPage = () => {
+  const { t } = useTranslation();
   const [articles, setArticles] = useState([]);
   const [filteredArticles, setFilteredArticles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -31,8 +33,8 @@ const NewsPage = () => {
       setArticles(data);
       setError(null);
     } catch (err) {
-      console.error('Error fetching news:', err);
-      setError('Không thể tải tin tức');
+      console.error(t('Error fetching news:'), err);
+      setError(t('Không thể tải tin tức'));
     } finally {
       setLoading(false);
     }
@@ -43,7 +45,7 @@ const NewsPage = () => {
       const data = await getNewsCategories();
       setCategories(data);
     } catch (err) {
-      console.error('Error fetching categories:', err);
+      console.error(t('Error fetching categories:'), err);
     }
   };
 
@@ -139,7 +141,7 @@ const NewsPage = () => {
       <div className={ `${styles['news-page']}`}> 
         <div className={ `${styles['loading-container']}`}>
           <div className={ `${styles['loading-spinner']}`}></div>
-          <p>Đang tải tin tức...</p>
+          <p>{t('Đang tải tin tức...')}</p>
         </div>
       </div>
     );
@@ -150,7 +152,7 @@ const NewsPage = () => {
       <div className={ `${styles['news-page']}`}>
         <div className={ `${styles['error-container']}`}>
           <p>{error}</p>
-          <button onClick={fetchNews} className={ `${styles['retry-btn']}`}>Thử lại</button>
+          <button onClick={fetchNews} className={ `${styles['retry-btn']}`}>{t('Thử lại')}</button>
         </div>
       </div>
     );
@@ -160,8 +162,8 @@ const NewsPage = () => {
     <div className={ `${styles['news-page']}`}>
       <div className={ `${styles['news-container']}`}>
         <div className={ `${styles['news-header']}`}>
-          <h1>Tin Tức CGV HAK</h1>
-          <p>Cập nhật những tin tức mới nhất về phim ảnh, rạp chiếu và ưu đãi</p>
+          <h1>{t('Tin Tức CGV HAK')}</h1>
+          <p>{t('Cập nhật những tin tức mới nhất về phim ảnh, rạp chiếu và ưu đãi')}</p>
         </div>
 
         {/* Filters */}
@@ -170,7 +172,7 @@ const NewsPage = () => {
             <Search size={20} />
             <input
               type="text"
-              placeholder="Tìm kiếm tin tức..."
+              placeholder={t('Tìm kiếm tin tức...')}
               value={searchQuery}
               onChange={handleSearch}
             />
@@ -180,7 +182,7 @@ const NewsPage = () => {
             <div className={ `${styles['filter-group']}`}>
               <Filter size={16} />
               <select value={selectedCategory} onChange={handleCategoryChange}>
-                <option value="all">Tất cả danh mục</option>
+                <option value="all">{t('Tất cả danh mục')}</option>
                 {categories.map(category => (
                   <option key={category} value={category}>{category}</option>
                 ))}

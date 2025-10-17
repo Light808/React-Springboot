@@ -6,8 +6,10 @@ import { X, User, CreditCard, CheckCircle } from 'lucide-react';
 import { getSeatsByShowtime, bookSeat } from '../../services/seatService';
 import { bookTicket } from '../../services/ticketService';
 import './SeatSelectionModal.css';
+import { useTranslation } from 'react-i18next';
 
 const SeatSelectionModal = ({ isOpen, onClose, showtime, movie, userId }) => {
+  const { t } = useTranslation();
   const [seats, setSeats] = useState([]);
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -29,7 +31,7 @@ const SeatSelectionModal = ({ isOpen, onClose, showtime, movie, userId }) => {
       setSeats(seatsData);
     } catch (error) {
       console.error('Error fetching seats:', error);
-      setMessage('Không thể tải danh sách ghế');
+      setMessage(t('Không thể tải danh sách ghế'));
     } finally {
       setLoading(false);
     }
@@ -50,7 +52,7 @@ const SeatSelectionModal = ({ isOpen, onClose, showtime, movie, userId }) => {
 
   const handleBooking = async () => {
     if (selectedSeats.length === 0) {
-      setMessage('Vui lòng chọn ít nhất một ghế');
+      setMessage(t('Vui lòng chọn ít nhất một ghế'));
       return;
     }
 
@@ -63,7 +65,7 @@ const SeatSelectionModal = ({ isOpen, onClose, showtime, movie, userId }) => {
         try {
           await bookSeat(seat.id, userId);
         } catch (error) {
-          setMessage(`Ghế ${seat.seatNumber} đã được đặt bởi người khác. Vui lòng chọn ghế khác.`);
+          setMessage(t('Ghế {{seatNumber}} đã được đặt bởi người khác. Vui lòng chọn ghế khác.', { seatNumber: seat.seatNumber }));
           setBooking(false);
           return;
         }
@@ -106,10 +108,10 @@ const SeatSelectionModal = ({ isOpen, onClose, showtime, movie, userId }) => {
       };
       await bookTicket(ticketData);
       setStep(3);
-      setMessage('Đặt vé thành công!');
+      setMessage(t('Đặt vé thành công!'));
     } catch (error) {
       console.error('Error booking tickets:', error);
-      setMessage('Đặt vé thất bại. Vui lòng thử lại.');
+      setMessage(t('Đặt vé thất bại. Vui lòng thử lại.'));
     } finally {
       setBooking(false);
     }
@@ -167,7 +169,7 @@ const SeatSelectionModal = ({ isOpen, onClose, showtime, movie, userId }) => {
             <div className="showtime-info">
               <span>{formatDate(showtime?.startTime || showtime?.showDate)}</span>
               <span>{formatTime(showtime?.startTime || showtime?.time)}</span>
-              <span>Phòng {showtime?.room || '1'}</span>
+              <span>{t('Phòng')} {showtime?.room || '1'}</span>
             </div>
           </div>
           <button className="close-btn" onClick={onClose}>
@@ -178,12 +180,12 @@ const SeatSelectionModal = ({ isOpen, onClose, showtime, movie, userId }) => {
         {step === 1 && (
           <div className="seat-selection-content">
             <div className="screen-indicator">
-              <div className="screen">Màn hình</div>
+              <div className="screen">{t('Màn hình')}</div>
             </div>
 
             <div className="seat-map">
               {loading ? (
-                <div className="loading">Đang tải sơ đồ ghế...</div>
+                <div className="loading">{t('Đang tải sơ đồ ghế...')}</div>
               ) : (
                 <div className="seats-grid">
                   {seats.map(seat => {
@@ -200,7 +202,7 @@ const SeatSelectionModal = ({ isOpen, onClose, showtime, movie, userId }) => {
                         style={inlineStyle}
                         disabled={isActuallyBooked}
                         onClick={() => handleSeatClick(seat)}
-                        title={isActuallyBooked ? `Đã được đặt bởi ${seat.bookedBy || 'người khác'}` : ''}
+                      title={isActuallyBooked ? t('Đã được đặt bởi {{name}}', { name: seat.bookedBy || 'người khác' }) : ''}
                       >
                         {isActuallyBooked ? (
                           <span style={{ color: '#ef4444', fontSize: '14px', fontWeight: 'bold' }}>✕</span>
@@ -217,25 +219,25 @@ const SeatSelectionModal = ({ isOpen, onClose, showtime, movie, userId }) => {
             <div className="seat-legend">
               <div className="legend-item">
                 <div className="seat-sample available"></div>
-                <span>Ghế trống</span>
+                <span>{t('Ghế trống')}</span>
               </div>
               <div className="legend-item">
                 <div className="seat-sample selected"></div>
-                <span>Đã chọn</span>
+                <span>{t('Đã chọn')}</span>
               </div>
               <div className="legend-item">
                 <div className="seat-sample booked">
                   <span style={{ color: '#ef4444', fontSize: '12px', fontWeight: 'bold' }}>✕</span>
                 </div>
-                <span>Đã đặt</span>
+                <span>{t('Đã đặt')}</span>
               </div>
             </div>
 
             {selectedSeats.length > 0 && (
               <div className="selected-seats-info">
-                <h3>Ghế đã chọn: {selectedSeats.map(s => s.seatNumber).join(', ')}</h3>
+                <h3>{t('Ghế đã chọn:')} {selectedSeats.map(s => s.seatNumber).join(', ')}</h3>
                 <div className="price-info">
-                  <span>Tổng cộng: {formatPrice(getTotalPrice())}</span>
+                  <span>{t('Tổng cộng:')} {formatPrice(getTotalPrice())}</span>
                 </div>
                 <button 
                   className="continue-btn" 
@@ -244,7 +246,7 @@ const SeatSelectionModal = ({ isOpen, onClose, showtime, movie, userId }) => {
                     window.location.href = `/combo-selection?showtime=${encodeURIComponent(JSON.stringify(showtime))}&movie=${encodeURIComponent(JSON.stringify(movie))}&seats=${encodeURIComponent(JSON.stringify(selectedSeats))}&user=${encodeURIComponent(JSON.stringify({id: userId}))}`;
                   }}
                 >
-                  Đặt vé
+                  {t('Đặt vé')}
                 </button>
               </div>
             )}
@@ -256,28 +258,28 @@ const SeatSelectionModal = ({ isOpen, onClose, showtime, movie, userId }) => {
         {/* Payment step removed - now handled in ComboSelectionPage */}
         {false && (
           <div className="payment-content">
-            <h3>Thông tin thanh toán</h3>
+            <h3>{t('Thông tin thanh toán')}</h3>
             <div className="booking-summary">
               <div className="summary-item">
-                <span>Phim:</span>
+                <span>{t('Phim:')}</span>
                 <span>{movie?.title || movie?.name}</span>
               </div>
               <div className="summary-item">
-                <span>Suất chiếu:</span>
+                <span>{t('Suất chiếu:')}</span>
                 <span>{formatDate(showtime?.startTime)} - {formatTime(showtime?.startTime)}</span>
               </div>
               <div className="summary-item">
-                <span>Ghế:</span>
+                <span>{t('Ghế:')}</span>
                 <span>{selectedSeats.map(s => s.seatNumber).join(', ')}</span>
               </div>
               <div className="summary-item total">
-                <span>Tổng cộng:</span>
+                <span>T{t('Tổng cộng:')}</span>
                 <span>{formatPrice(getTotalPrice())}</span>
               </div>
             </div>
 
             <div className="payment-methods">  
-              <h4>Phương thức thanh toán</h4>
+              <h4>{t('Phương thức thanh toán')}</h4>
               <div className="payment-options">  
                 <label className="payment-option">
                   <input 
@@ -292,8 +294,8 @@ const SeatSelectionModal = ({ isOpen, onClose, showtime, movie, userId }) => {
                       <img src="/payment-icons/cash-icon.png" alt="Cash" className="payment-icon-img" />
                     </div>
                     <div className="payment-details">
-                      <span className="payment-title">Thanh toán tại quầy</span>
-                      <span className="payment-desc">Thanh toán khi đến rạp</span>
+                      <span className="payment-title">{t('Thanh toán tại quầy')}</span>
+                      <span className="payment-desc">{t('Thanh toán khi đến rạp')}</span>
                     </div>
                   </div>
                 </label>
@@ -311,7 +313,7 @@ const SeatSelectionModal = ({ isOpen, onClose, showtime, movie, userId }) => {
                     </div>
                     <div className="payment-details">
                       <span className="payment-title">VietQR</span>
-                      <span className="payment-desc">Quét mã QR để thanh toán</span>
+                      <span className="payment-desc">{t('Quét mã QR để thanh toán')}</span>
                     </div>
                   </div>
                 </label>
@@ -328,8 +330,8 @@ const SeatSelectionModal = ({ isOpen, onClose, showtime, movie, userId }) => {
                       <img src="/payment-icons/momo-logo.png" alt="MoMo" className="payment-icon-img" />
                     </div>
                     <div className="payment-details">
-                      <span className="payment-title">Ví MoMo</span>
-                      <span className="payment-desc">Thanh toán qua ứng dụng MoMo</span>
+                      <span className="payment-title">{t('Ví MoMo')}</span>
+                      <span className="payment-desc">{t('Thanh toán qua ứng dụng MoMo')}</span>
                     </div>
                   </div>
                 </label>
@@ -347,7 +349,7 @@ const SeatSelectionModal = ({ isOpen, onClose, showtime, movie, userId }) => {
                     </div>
                     <div className="payment-details">
                       <span className="payment-title">ZaloPay</span>
-                      <span className="payment-desc">Thanh toán qua ZaloPay</span>
+                      <span className="payment-desc">{t('Thanh toán qua ZaloPay')}</span>
                     </div>
                   </div>
                 </label>
@@ -359,14 +361,14 @@ const SeatSelectionModal = ({ isOpen, onClose, showtime, movie, userId }) => {
                 className="back-btn"
                 onClick={() => setStep(1)}
               >
-                Quay lại
+                {t('Quay lại')}
               </button>
               <button 
                 className="book-btn"
                 onClick={handleBooking}
                 disabled={booking}
               >
-                {booking ? 'Đang xử lý...' : 'Xác nhận đặt vé'}
+                {booking ? t('Đang xử lý...') : t('Xác nhận đặt vé')}
               </button>
             </div>
 
@@ -380,8 +382,8 @@ const SeatSelectionModal = ({ isOpen, onClose, showtime, movie, userId }) => {
             <div className="success-icon">
               <CheckCircle size={64} color="#10b981" />
             </div>
-            <h3>Đặt vé thành công!</h3>
-            <p>Vé của bạn đã được xác nhận. Vui lòng đến rạp trước giờ chiếu 15 phút.</p>
+            <h3>{t('Đặt vé thành công!')}</h3>
+            <p>{t('Vé của bạn đã được xác nhận. Vui lòng đến rạp trước giờ chiếu 15 phút.')}</p>
             <div className="success-actions">
               <button 
                 className="view-tickets-btn"
@@ -390,13 +392,13 @@ const SeatSelectionModal = ({ isOpen, onClose, showtime, movie, userId }) => {
                   window.location.href = '/tickets';
                 }}
               >
-                Xem vé của tôi
+                {t('Xem vé của tôi')}
               </button>
               <button 
                 className="close-success-btn"
                 onClick={onClose}
               >
-                Đóng
+                {t('Đóng')}
               </button>
             </div>
           </div>

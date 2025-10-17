@@ -49,7 +49,7 @@ const Sidebar = ({ onSelectGenre, genres, selectedGenre }) => {
       <div className={`${'sidebar-section'}`}> 
         <h3 className={`${'sidebar-title'}`}>
           <Filter size={24} />
-          Bộ lọc
+          {t('Bộ lọc')}
         </h3>
       </div>
 
@@ -57,7 +57,7 @@ const Sidebar = ({ onSelectGenre, genres, selectedGenre }) => {
       <div className={`${'sidebar-section'}`}>
         <div className={`${'genre-header'}`}>
           <h4 className={`${'sidebar-title'}`}>
-            Thể loại ({selectedGenres.length})
+            {t('Thể loại')} ({selectedGenres.length})
           </h4>
           <button className={`${'add-genre-btn'}`}>
             <Plus size={16} />
