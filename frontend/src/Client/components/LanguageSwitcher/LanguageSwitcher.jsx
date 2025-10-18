@@ -7,24 +7,23 @@ const LanguageSwitcher = () => {
 
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
-    localStorage.setItem("language", lng); 
+    localStorage.setItem("language", lng);
+  };
+
+  const handleLanguageChange = (event) => {
+    changeLanguage(event.target.value);
   };
 
   return (
     <div className="lang-toggle">
-       <button
-        className={`lang-btn ${i18n.language === "en" ? "active" : ""}`}
-        onClick={() => changeLanguage("en")}
+      <select
+        className="lang-select"
+        value={i18n.language}
+        onChange={handleLanguageChange}
       >
-        EN
-      </button>
-      <button
-        className={`lang-btn ${i18n.language === "vi" ? "active" : ""}`}
-        onClick={() => changeLanguage("vi")}
-      >
-        VI
-      </button>
-     
+        <option value="en">EN</option>
+        <option value="vi">VI</option>
+      </select>
     </div>
   );
 };

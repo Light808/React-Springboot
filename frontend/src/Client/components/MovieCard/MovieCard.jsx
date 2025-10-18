@@ -205,7 +205,7 @@ const MovieCard = ({ movie, cinemaId, selectedDate }) => {
         {cinemaId ? (
           <div className="showtimes-section">
             {loading ? (
-              <div className="showtimes-loading">{t('Loading...')}</div> 
+              <div className="showtimes-loading">{t('Loading...')}</div>
             ) : showtimes.length > 0 ? (
               <div className="showtimes-by-format">
                 {(() => {

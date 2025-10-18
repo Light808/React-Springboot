@@ -26,6 +26,8 @@ import ChatBox from './Client/components/ChatBox/ChatBox';
 import PaymentSandbox from './Client/pages/PaymentSandbox/PaymentSandbox.jsx';
 import VietQRPayment from './Client/pages/VietQRPayment/VietQRPayment.jsx';
 import ZaloPayPayment from './Client/pages/ZaloPayPayment/ZaloPayPayment.jsx';
+import GiftCardsPage from './Client/pages/GiftCardsPage/GiftCardsPage';
+import AboutUsPage from './Client/pages/AboutUsPage/AboutUsPage';
 
 function ProtectedRoute({ children }) {
   return isAuthenticated() ? children : <Navigate to="/" replace />;
@@ -105,6 +107,8 @@ function RouteAwareLayout({ user, setUser, onLogout }) {
           <Route path="/payment/sandbox" element={<PaymentSandbox />} />
           <Route path="/payment/vietqr" element={<VietQRPayment />} />
           <Route path="/payment/zalopay" element={<ZaloPayPayment />} />
+          <Route path="/gift-cards" element={<GiftCardsPage />} />
+          <Route path="/about" element={<AboutUsPage />} />
 
           {/* Protected routes */}
           <Route
