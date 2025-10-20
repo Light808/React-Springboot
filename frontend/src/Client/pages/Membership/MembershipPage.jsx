@@ -31,39 +31,39 @@ const MembershipPage = () => {
 
   return (
     <div className="container" style={{ maxWidth: '960px', margin: '0 auto', padding: '1.5rem' }}>
-      <h1 style={{ margin: 0, fontSize: '1.5rem' }}>{t('Thành viên CGV')}</h1>
-      <p style={{ color: '#4b5563' }}>{t('Tích điểm khi mua vé/combos, lên hạng để nhận ưu đãi độc quyền.')}</p>
+      <h1 style={{ margin: 0, fontSize: '1.5rem' }}>{t('CGVMember')}</h1>
+      <p style={{ color: '#4b5563' }}>{t('Earn points when buying tickets/combos, level up to unlock exclusive benefits.')}</p>
 
       {/* info */}
       <section style={{ background: '#f8fafc', border: '1px solid #e5e7eb', borderRadius: 8, padding: '1rem', marginTop: '1rem' }}>
-        <h2 style={{ marginTop: 0, fontSize: '1.125rem' }}>1. {t('Thông tin tài khoản thành viên')}</h2>
+        <h2 style={{ marginTop: 0, fontSize: '1.125rem' }}>1. {t('Member account information')}</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '0.75rem' }}>
           <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 8, padding: '0.75rem' }}>
-            <strong>{t('Tên')}</strong>
+            <strong>{t('Name')}</strong>
             <div>{overview.name}</div>
           </div>
           <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 8, padding: '0.75rem' }}>
-            <strong>{t('Hạng thẻ')}</strong>
+            <strong>{t('Membership tier')}</strong>
             <div>{overview.tier}</div>
           </div>
           <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 8, padding: '0.75rem' }}>
-            <strong>{t('Điểm tích lũy')}</strong>
+            <strong>{t('Accumulated points')}</strong>
             <div>{Number(overview.points || 0).toLocaleString('vi-VN')}</div>
           </div>
           <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 8, padding: '0.75rem' }}>
-            <strong>{t('Khuyến mãi theo hạng')}</strong>
-           <div>  {overview.promotions?.[0] || t('Ưu đãi giảm giá và combo theo hạng {{tier}}', { tier: overview.tier })}</div>
-          </div>
+            <strong>{t('Tier-based promotions')}</strong>
+          <div>  {overview.promotions?.[0] || t('Discounts and combos for {{tier}} tier', { tier: overview.tier })}</div>
         </div>
+      </div>
 
         <div style={{ marginTop: '0.75rem' }}>
-          <strong>{t('Lịch sử giao dịch')}</strong>
+          <strong>{t('Transaction history')}</strong>
           {loading ? (
-            <div>{t('Đang tải...')}</div>
+            <div>{t('Loading...')}</div>
           ) : (
             <ul style={{ margin: '0.5rem 0 0', paddingLeft: '1.25rem', color: '#374151', lineHeight: 1.8 }}>
               {transactions.length === 0 ? (
-                <li>{t('Chưa có giao dịch')}</li>
+                <li>{t('No transactions yet')}</li>
               ) : (
                 transactions.slice(0, 5).map((tx, idx) => (
                   <li key={idx}>{tx.type} - {Number(tx.amount || 0).toLocaleString('vi-VN')}đ - {new Date(tx.time).toLocaleString('vi-VN')}</li>
@@ -76,33 +76,33 @@ const MembershipPage = () => {
 
       {/* tier system */}
       <section style={{ border: '1px solid #e5e7eb', borderRadius: 8, padding: '1rem', marginTop: '1rem' }}>
-        <h2 style={{ marginTop: 0, fontSize: '1.125rem' }}>2. {t('Hệ thống hạng thẻ')}</h2>
-        <p style={{ margin: '0 0 0.5rem 0', color: '#4b5563' }}>{t('Mô tả và điều kiện đạt hạng trong năm:')}</p>
+        <h2 style={{ marginTop: 0, fontSize: '1.125rem' }}>2. {t('Membership tier system')}</h2>
+        <p style={{ margin: '0 0 0.5rem 0', color: '#4b5563' }}>{t('Description and conditions to reach tier within the year:')}</p>
         <ul style={{ margin: 0, paddingLeft: '1.25rem', color: '#374151', lineHeight: 1.8 }}>
-          <li><strong>Member</strong>: {t('Tổng chi tiêu < 1.000.000đ / năm hoặc < 12 vé; ưu đãi cơ bản.')}</li>
-          <li><strong>VIP</strong>: {t('1.000.000–3.000.000đ/năm hoặc 12–30 vé; ưu đãi tăng 1.2x, combo giảm giá.')}</li>
-          <li><strong>VVIP</strong>: {t('> 3.000.000đ/năm hoặc > 30 vé; ưu đãi 1.5x, suất chiếu đặc biệt, ưu tiên sự kiện.')}</li>
+          <li><strong>Member</strong>: {t('Total spending < 1,000,000đ/year or < 12 tickets; basic benefits.')}</li>
+          <li><strong>VIP</strong>: {t('1,000,000–3,000,000đ/year or 12–30 tickets; 1.2x benefits, discounted combos.')}</li>
+          <li><strong>VVIP</strong>: {t('> 3,000,000đ/year or > 30 tickets; 1.5x benefits, special screenings, event priority.')}</li>
         </ul>
       </section>
 
       {/* benefits */}
       <section style={{ border: '1px solid #e5e7eb', borderRadius: 8, padding: '1rem', marginTop: '1rem' }}>
-        <h2 style={{ marginTop: 0, fontSize: '1.125rem' }}>3. {t('Ưu đãi và khuyến mãi dành riêng')}</h2>
+        <h2 style={{ marginTop: 0, fontSize: '1.125rem' }}>3. {t('Exclusive offers and promotions')}</h2>
         <ul style={{ margin: 0, paddingLeft: '1.25rem', color: '#374151', lineHeight: 1.8 }}>
-          <li>Voucher/coupon {t('giảm giá vé theo hạng.')}</li>
-          <li>Combo {t('bắp nước ưu đãi dành riêng cho hội viên.')}</li>
-          <li>{t('Chương trình Members Day, Sinh nhật thành viên.')}</li>
-          <li>{t('Ưu đãi đối tác (ngân hàng, ví điện tử...).')}</li>
+          <li>Voucher/coupon {t('ticket discounts by tier.')}</li>
+          <li>Combo {t('exclusive popcorn & drink deals for members.')}</li>
+          <li>{t('Members Day program, birthday perks.')}</li>
+          <li>{t('Partner offers (banks, e-wallets,...')}</li>
         </ul>
       </section>
 
       {/* points */}
       <section style={{ border: '1px solid #e5e7eb', borderRadius: 8, padding: '1rem', marginTop: '1rem' }}>
-        <h2 style={{ marginTop: 0, fontSize: '1.125rem' }}>4. {t('Chính sách tích & sử dụng điểm')}</h2>
+        <h2 style={{ marginTop: 0, fontSize: '1.125rem' }}>4. {t('Point accumulation & usage policy')}</h2>
         <ul style={{ margin: 0, paddingLeft: '1.25rem', color: '#374151', lineHeight: 1.8 }}>
-          <li>{t('Tích 5–10% giá trị hóa đơn vào điểm thưởng.')}</li>
-          <li>{t('Điểm dùng để đổi vé, combo, voucher.')}</li>
-          <li>{t('Điểm có thời hạn sử dụng; vui lòng theo dõi trong tài khoản.')}</li>
+          <li>{t('Earn 5–10% of bill value as reward points.')}</li>
+          <li>{t('Points can be redeemed for tickets, combos, vouchers.')}</li>
+          <li>{t('Points have expiration dates; please check your account.')}</li>
         </ul>
       </section>
 
@@ -110,8 +110,8 @@ const MembershipPage = () => {
       <section style={{ border: '1px solid #e5e7eb', borderRadius: 8, padding: '1rem', marginTop: '1rem' }}>
         <h2 style={{ marginTop: 0, fontSize: '1.125rem' }}>5. Tin tức & sự kiện</h2>
         <ul style={{ margin: 0, paddingLeft: '1.25rem', color: '#374151', lineHeight: 1.8 }}>
-          <li>{t('Sự kiện dành riêng cho hội viên: sneak show, suất chiếu sớm.')}</li>
-          <li>{t('Hoạt động tri ân thành viên định kỳ.')}</li>
+          <li>{t('Member-only events: sneak previews, early screenings.')}</li>
+          <li>{t('Regular member appreciation activities.')}</li>
         </ul>
       </section>
     </div>

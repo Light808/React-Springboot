@@ -100,7 +100,7 @@ const MovieDetailPage = () => {
       setCommunityReviews(transformedReviews);
     } catch (error) {
       console.error(t('Error fetching community reviews:'), error);
-      setReviewsError(t('Không thể tải đánh giá từ cộng đồng'));
+      setReviewsError(t('Unable to load community reviews'));
     } finally {
       setReviewsLoading(false);
     }
@@ -146,7 +146,7 @@ const MovieDetailPage = () => {
         setMovie(movieData);
       } catch (err) {
         console.error(t('Error fetching movie:'), err);
-        setError(t('Không thể tải thông tin phim. Vui lòng thử lại sau.'));
+        setError(t('Unable to load movie information. Please try again later.'));
       } finally {
         setLoading(false);
       }
@@ -169,7 +169,7 @@ const MovieDetailPage = () => {
         setRelatedArticles(articles);
       } catch (err) {
         console.error(t('Error fetching related articles:'), err);
-        setArticlesError(t('Không thể tải bài viết liên quan'));
+        setArticlesError(t('Unable to load related articles'));
         setRelatedArticles([]);
       } finally {
         setArticlesLoading(false);
@@ -183,11 +183,11 @@ const MovieDetailPage = () => {
   }, [movieId]);
 
   const tabs = [
-    { id: 'info', label: 'Thông tin phim' },
-    { id: 'showtimes', label: 'Lịch chiếu' },
-    { id: 'reviews', label: 'Đánh giá' },
-    { id: 'news', label: 'Tin tức' },
-    { id: 'booking', label: 'Mua vé' }
+    { id: 'info', label: t('Movie info: ') },
+    { id: 'showtimes', label: t('Showtime') },
+    { id: 'reviews', label: t('Movie review: ') },
+    { id: 'news', label: t('News: ') },
+    { id: 'booking', label: t('Buy ticket') }
   ];
 
   if (loading) {
@@ -195,7 +195,7 @@ const MovieDetailPage = () => {
       <div className={`${styles['movie-detail-page']}`}>
         <div className={`${styles['loading-container']}`}>
           <div className={`${styles['loading-spinner']}`}></div>
-          <p>{t('Đang tải thông tin phim...')}</p>
+          <p>{t('Loading movie information...')}</p>
         </div>
       </div>
     );

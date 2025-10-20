@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import React, { useState, useEffect, useMemo } from 'react';
 import { X, Upload, Plus, X as XIcon } from 'lucide-react';
 import styles from './CreateCinemaModal.module.css';
@@ -102,7 +103,7 @@ const EditCinemaModal = ({ cinema, onClose, onCinemaUpdated }) => {
       newErrors.email = 'Email không hợp lệ';
     }
 
-    if (formData.phone && !/^[\d\s\-\+\(\)]+$/.test(formData.phone)) {
+    if (formData.phone && !/^[\d\s\-\+ (\)]+$/.test(formData.phone)) {
       newErrors.phone = 'Số điện thoại không hợp lệ';
     }
 

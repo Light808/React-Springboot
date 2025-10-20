@@ -1,6 +1,6 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import HeroSection from '../../components/HeroSection/HeroSection';
+import MovieCarousel from '../../components/MovieCarousel/MovieCarousel';
 import FeaturedMovies from '../../components/FeaturedMovies/FeaturedMovies';
 import { getMovies } from '../../../services/movieService';
 import './Homepage.css';
@@ -48,8 +48,8 @@ const Homepage = () => {
 
   if (loading) {
     return (
-      <div className="homepage">  
-        <div className="loading-container"> 
+      <div className="homepage">
+        <div className="loading-container">
           <div className="loading-spinner"></div>
           <p>{t('Loadinghomepage')}</p>
         </div>
@@ -72,6 +72,7 @@ const Homepage = () => {
     <div className="homepage">
       <main className="main-content">
         <HeroSection />
+        <MovieCarousel movies={featuredMovies} />
         <div className="content-wrapper" style={{ maxWidth: 1200, margin: '0 auto' }}>
           <div className="movie-tabs">
             {tabs.map(tab => (

@@ -1,25 +1,25 @@
 /* About Us Page Styles */
-.about-us-page {
+.au-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
   color: #f8fafc;
   padding: 2rem 0;
 }
 
-.about-us-container {
+.au-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 2rem;
 }
 
 /* Hero Section */
-.about-us-hero {
+.au-hero {
   text-align: center;
   margin-bottom: 4rem;
   padding: 3rem 0;
 }
 
-.about-us-title {
+.au-title {
   font-size: 3rem;
   font-weight: 800;
   margin-bottom: 1rem;
@@ -29,7 +29,7 @@
   background-clip: text;
 }
 
-.about-us-subtitle {
+.au-subtitle {
   font-size: 1.2rem;
   color: #cbd5e1;
   max-width: 800px;
@@ -38,7 +38,7 @@
 }
 
 /* Section Titles */
-.section-title {
+.au-section-title {
   font-size: 2rem;
   font-weight: 700;
   text-align: center;
@@ -47,7 +47,7 @@
   position: relative;
 }
 
-.section-title::after {
+.au-section-title::after {
   content: '';
   position: absolute;
   bottom: -8px;
@@ -60,7 +60,7 @@
 }
 
 /* Mission Section */
-.mission-section {
+.au-mission-section {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 3rem;
@@ -72,18 +72,19 @@
   border-radius: 12px;
 }
 
-.mission-content h2 {
+.au-mission-content h2 {
   text-align: left;
   margin-bottom: 1.5rem;
+  text-align: center;
 }
 
-.mission-text {
+.au-mission-text {
   font-size: 1.1rem;
   line-height: 1.7;
   color: #cbd5e1;
 }
 
-.mission-image img {
+.au-mission-image img {
   width: 100%;
   height: 300px;
   object-fit: cover;
@@ -91,18 +92,18 @@
 }
 
 /* Values Section */
-.values-section {
+.au-values-section {
   margin-bottom: 4rem;
 }
 
-.values-grid {
+.au-values-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 2rem;
   margin-top: 2rem;
 }
 
-.value-card {
+.au-value-card {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
@@ -111,41 +112,41 @@
   transition: all 0.3s ease;
 }
 
-.value-card:hover {
+.au-value-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 30px rgba(220, 38, 38, 0.2);
   border-color: rgba(220, 38, 38, 0.3);
 }
 
-.value-icon {
+.au-value-icon {
   font-size: 3rem;
   margin-bottom: 1rem;
 }
 
-.value-title {
+.au-value-title {
   font-size: 1.3rem;
   font-weight: 700;
   margin-bottom: 0.8rem;
   color: #f8fafc;
 }
 
-.value-description {
+.au-value-description {
   color: #cbd5e1;
   line-height: 1.5;
 }
 
 /* Timeline Section */
-.timeline-section {
+.au-timeline-section {
   margin-bottom: 4rem;
 }
 
-.timeline {
+.au-timeline {
   position: relative;
   max-width: 800px;
   margin: 2rem auto 0;
 }
 
-.timeline::before {
+.au-timeline::before {
   content: '';
   position: absolute;
   left: 30px;
@@ -155,13 +156,13 @@
   background: linear-gradient(180deg, #dc2626, #f97316);
 }
 
-.timeline-item {
+.au-timeline-item {
   position: relative;
   margin-bottom: 2rem;
   padding-left: 80px;
 }
 
-.timeline-marker {
+.au-timeline-marker {
   position: absolute;
   left: 20px;
   top: 10px;
@@ -172,7 +173,7 @@
   border: 4px solid #1e293b;
 }
 
-.timeline-content {
+.au-timeline-content {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
@@ -180,44 +181,44 @@
   transition: all 0.3s ease;
 }
 
-.timeline-content:hover {
+.au-timeline-content:hover {
   transform: translateX(10px);
   box-shadow: 0 8px 25px rgba(220, 38, 38, 0.15);
   border-color: rgba(220, 38, 38, 0.3);
 }
 
-.timeline-year {
+.au-timeline-year {
   font-size: 1.2rem;
   font-weight: 700;
   color: #dc2626;
   margin-bottom: 0.5rem;
 }
 
-.timeline-title {
+.au-timeline-title {
   font-size: 1.3rem;
   font-weight: 700;
   margin-bottom: 0.8rem;
   color: #f8fafc;
 }
 
-.timeline-description {
+.au-timeline-description {
   color: #cbd5e1;
   line-height: 1.5;
 }
 
 /* Team Section */
-.team-section {
+.au-team-section {
   margin-bottom: 4rem;
 }
 
-.team-grid {
+.au-team-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
   margin-top: 2rem;
 }
 
-.team-member {
+.au-team-member {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
@@ -226,13 +227,13 @@
   transition: all 0.3s ease;
 }
 
-.team-member:hover {
+.au-team-member:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 30px rgba(220, 38, 38, 0.2);
   border-color: rgba(220, 38, 38, 0.3);
 }
 
-.member-photo {
+.au-member-photo {
   width: 120px;
   height: 120px;
   margin: 0 auto 1rem;
@@ -241,48 +242,48 @@
   border: 3px solid rgba(220, 38, 38, 0.3);
 }
 
-.member-photo img {
+.au-member-photo img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.member-name {
+.au-member-name {
   font-size: 1.3rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
   color: #f8fafc;
 }
 
-.member-position {
+.au-member-position {
   font-size: 1rem;
   color: #dc2626;
   font-weight: 600;
   margin-bottom: 0.8rem;
 }
 
-.member-bio {
+.au-member-bio {
   color: #cbd5e1;
   line-height: 1.5;
   font-size: 0.9rem;
 }
 
 /* Contact Section */
-.contact-section {
+.au-contact-section {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 2rem;
 }
 
-.contact-info {
+.au-contact-info {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
   margin-top: 2rem;
 }
 
-.contact-item {
+.au-contact-item {
   display: flex;
   align-items: flex-start;
   gap: 1rem;
@@ -293,13 +294,13 @@
   transition: all 0.3s ease;
 }
 
-.contact-item:hover {
+.au-contact-item:hover {
   transform: translateY(-3px);
   box-shadow: 0 8px 25px rgba(220, 38, 38, 0.15);
   border-color: rgba(220, 38, 38, 0.3);
 }
 
-.contact-icon {
+.au-contact-icon {
   font-size: 1.5rem;
   width: 40px;
   height: 40px;
@@ -311,82 +312,82 @@
   flex-shrink: 0;
 }
 
-.contact-details h3 {
+.au-contact-details h3 {
   font-size: 1.2rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
   color: #f8fafc;
 }
 
-.contact-details p {
+.au-contact-details p {
   color: #cbd5e1;
   line-height: 1.5;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .about-us-container {
+  .au-container {
     padding: 0 1rem;
   }
   
-  .about-us-title {
+  .au-title {
     font-size: 2.5rem;
   }
   
-  .about-us-subtitle {
+  .au-subtitle {
     font-size: 1.1rem;
   }
   
-  .mission-section {
+  .au-mission-section {
     grid-template-columns: 1fr;
     gap: 2rem;
   }
   
-  .mission-content h2 {
+  .au-mission-content h2 {
     text-align: center;
   }
   
-  .values-grid {
+  .au-values-grid {
     grid-template-columns: 1fr;
   }
   
-  .team-grid {
+  .au-team-grid {
     grid-template-columns: 1fr;
   }
   
-  .contact-info {
+  .au-contact-info {
     grid-template-columns: 1fr;
   }
   
-  .timeline::before {
+  .au-timeline::before {
     left: 15px;
   }
   
-  .timeline-item {
+  .au-timeline-item {
     padding-left: 50px;
   }
   
-  .timeline-marker {
+  .au-timeline-marker {
     left: 5px;
   }
 }
 
 @media (max-width: 480px) {
-  .about-us-title {
+  .au-title {
     font-size: 2rem;
   }
   
-  .value-card,
-  .team-member {
+  .au-value-card,
+  .au-team-member {
     padding: 1.5rem;
   }
   
-  .contact-item {
+  .au-contact-item {
     flex-direction: column;
     text-align: center;
   }
   
-  .timeline-content {
+  .au-timeline-content {
     padding: 1rem;
   }
 }

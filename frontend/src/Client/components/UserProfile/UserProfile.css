@@ -96,7 +96,7 @@ body .user-profile.popup {
   color: #1f2937;
 }
 
-.close-btn {
+.exit-btn {
   background: none;
   border: none;
   cursor: pointer;
@@ -109,7 +109,7 @@ body .user-profile.popup {
   justify-content: center;
 }
 
-.close-btn:hover {
+.exit-btn:hover {
   background: #e2e8f0;
   color: #374151;
 }

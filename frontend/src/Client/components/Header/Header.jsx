@@ -260,7 +260,7 @@ const Header = ({ user, setUser, onLogout }) => {
 
   useEffect(() => {
     const fetchNotifications = async () => {
-      if (showNotifications && user?.id) {
+      if (user?.id) {
         try {
           setNotificationLoading(true);
           const data = await getNotificationsByUser(user.id);
@@ -274,7 +274,22 @@ const Header = ({ user, setUser, onLogout }) => {
     };
 
     fetchNotifications();
-  }, [showNotifications, user?.id]);
+    
+    // Poll for new notifications every 10 seconds when user is logged in
+    const interval = setInterval(fetchNotifications, 10000);
+    
+    // Listen for custom notification events
+    const handleNotificationUpdate = () => {
+      fetchNotifications();
+    };
+    
+    window.addEventListener('notificationUpdated', handleNotificationUpdate);
+    
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('notificationUpdated', handleNotificationUpdate);
+    };
+  }, [user?.id]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -796,12 +811,10 @@ const Header = ({ user, setUser, onLogout }) => {
                               </div>
                               <div className="notification-details">
                                 <h4 className="notification-title">
-                                  {notification.type === 'ticket_approved' ? 'Ticket approved' : notification.title}
+                                  {notification.title}
                                 </h4>
                                 <p className="notification-message">
-                                  {notification.type === 'ticket_approved'
-                                    ? 'Your ticket has been approved .'
-                                    : notification.message}
+                                  {notification.message}
                                 </p>
                                 <span className="notification-time">
                                   {formatDate(notification.createdAt)}

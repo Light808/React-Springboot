@@ -22,17 +22,17 @@ const ReviewForm = ({ movieId, onReviewAdded }) => {
     e.preventDefault();
     
     if (!userName.trim()) {
-      setError(t('Vui lòng nhập tên của bạn'));
+      setError(t('Please enter your name'));
       return;
     }
     
     if (rating === 0) {
-      setError(t('Vui lòng chọn điểm đánh giá'));
+      setError(t('Please select a rating'));
       return;
     }
     
     if (!comment.trim()) {
-      setError(t('Vui lòng nhập bình luận'));
+      setError(t('Please enter your comment'));
       return;
     }
 
@@ -40,23 +40,21 @@ const ReviewForm = ({ movieId, onReviewAdded }) => {
     setError('');
     setSuccess('');
 
-         try {
-       const reviewData = {
-         movieId: movieId,
-         userId: userName.trim(),
-         userName: userName.trim(),
-         rating: rating,
-         comment: comment.trim(),
-         likes: 0,
-         dislikes: 0
-       };
-
-      console.log('Submitting review:', reviewData);
+    try {
+      const reviewData = {
+        movieId: movieId,
+        userId: userName.trim(),
+        userName: userName.trim(),
+        rating: rating,
+        comment: comment.trim(),
+        likes: 0,
+        dislikes: 0
+      };
       
       const newReview = await createReview(reviewData);
       console.log('Review created successfully:', newReview);
       
-      setSuccess(t('Đánh giá của bạn đã được gửi thành công!'));
+      setSuccess(t('Your review has been submitted successfully!'));
       setRating(0);
       setComment('');
       setUserName('');
@@ -67,20 +65,20 @@ const ReviewForm = ({ movieId, onReviewAdded }) => {
         }, 2000);
       }    
     } catch (error) {
-      setError(t('Có lỗi xảy ra khi gửi đánh giá. Vui lòng thử lại.'));
+      setError(t('An error occurred while submitting your review. Please try again.'));
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className={`${styles['review-form-container']}`}> 
-      <h3 className={`${styles['review-form-title']}`}>{t('Viết đánh giá của bạn')}</h3>
+    <div className={`${styles['review-form-container']}`}>
+      <h3 className={`${styles['review-form-title']}`}>{t('Write your review ')}</h3>
       
       <form onSubmit={handleSubmit} className={`${styles['review-form']}`}>
         <div className={`${styles['form-group']}`}>
           <label htmlFor="userName" className={`${styles['form-label']}`}>
-            Tên của bạn *
+            {t('Your name')} *
           </label>
           <input
             type="text"
@@ -88,16 +86,16 @@ const ReviewForm = ({ movieId, onReviewAdded }) => {
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
             className={`${styles['form-input']}`}
-            placeholder={t("Nhập tên của bạn")}
+            placeholder={t("Enter your name")}
             maxLength={50}
           />
         </div>
 
         <div className={`${styles['form-group']}`}>
-          <label className={`${styles['form-label']}`}> 
-            Điểm đánh giá *
+          <label className={`${styles['form-label']}`}>
+            {t('Rating score')} *
           </label>
-          <div className={`${styles['rating-container']}`}> 
+          <div className={`${styles['rating-container']}`}>
             {[1, 2, 3, 4, 5].map((star) => (
               <button
                 key={star}
@@ -110,26 +108,26 @@ const ReviewForm = ({ movieId, onReviewAdded }) => {
               </button>
             ))}
             <span className={`${styles['rating-text']}`}>
-              {rating > 0 ? `${rating}/5 star` : t('Chọn điểm đánh giá')}
+              {rating > 0 ? `${rating}/5 star` : t('Select review score')}
             </span>
           </div>
         </div>
 
         <div className={`${styles['form-group']}`}>
           <label htmlFor="comment" className={`${styles['form-label']}`}>
-            {t('Bình luận')} *
+            {t('Comment')} *
           </label>
           <textarea
             id="comment"
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             className={`${styles['form-textarea']}`}
-            placeholder= {t("Chia sẻ suy nghĩ của bạn về bộ phim này...")}
+            placeholder= {t("Share your thoughts about this movie...")}
             rows={4}
             maxLength={500}
           />
           <div className={`${styles['character-count']}`}>
-            {comment.length}/{t('500 ký tự')}
+            {comment.length}/{t('500 characters max')}
           </div>
         </div>
 
@@ -153,12 +151,12 @@ const ReviewForm = ({ movieId, onReviewAdded }) => {
           {isSubmitting ? (
             <>
               <div className={`${styles['loading-spinner']}`}></div>
-              {t('Đang gửi...')}
+              {t('Sending...')}
             </>
           ) : (
             <>
               <Send size={16} />
-              {t('Gửi đánh giá')}
+              {t('Submit a review')}
             </>
           )}
         </button>
