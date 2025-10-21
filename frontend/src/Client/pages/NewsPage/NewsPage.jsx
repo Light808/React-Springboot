@@ -34,7 +34,7 @@ const NewsPage = () => {
       setError(null);
     } catch (err) {
       console.error(t('Error fetching news:'), err);
-      setError(t('Không thể tải tin tức'));
+      setError(t('Unable to load news'));
     } finally {
       setLoading(false);
     }
@@ -141,7 +141,7 @@ const NewsPage = () => {
       <div className={ `${styles['news-page']}`}> 
         <div className={ `${styles['loading-container']}`}>
           <div className={ `${styles['loading-spinner']}`}></div>
-          <p>{t('Đang tải tin tức...')}</p>
+          <p>{t('Loading news...')}</p>
         </div>
       </div>
     );
@@ -162,7 +162,7 @@ const NewsPage = () => {
     <div className={ `${styles['news-page']}`}>
       <div className={ `${styles['news-container']}`}>
         <div className={ `${styles['news-header']}`}>
-          <h1>{t('Tin Tức CGV HAK')}</h1>
+          <h1>{t('CGV HAK News')}</h1>
           <p>{t('Cập nhật những tin tức mới nhất về phim ảnh, rạp chiếu và ưu đãi')}</p>
         </div>
 
@@ -192,10 +192,10 @@ const NewsPage = () => {
               <div className={ `${styles['filter-group']}`}>  
               <Clock size={16} />
               <select value={sortBy} onChange={handleSortChange}>
-                <option value="newest">Mới nhất</option>
-                <option value="oldest">Cũ nhất</option>
-                <option value="most_viewed">Xem nhiều nhất</option>
-                <option value="title">Theo tên</option>
+                <option value="newest">{t('Mới nhất')}</option>
+                <option value="oldest">{t('Cũ nhất')}</option>
+                <option value="most_viewed">{t('Xem nhiều nhất')}</option>
+                <option value="title">{t('Theo tên')}</option>
               </select>
             </div>
           </div>
@@ -203,7 +203,7 @@ const NewsPage = () => {
 
         {/* Results count */}
         <div className={ `${styles['news-results']}`}>
-          <p>Tìm thấy {filteredArticles.length} bài viết</p>
+          <p>{t('Tìm thấy')} {filteredArticles.length} {t('bài viết')}</p>
         </div>
 
         {/* Articles Grid */}
