@@ -1,25 +1,25 @@
 /* Gift Cards Page Styles */
-.gift-cards-page {
+.gc-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
   color: #f8fafc;
   padding: 2rem 0;
 }
 
-.gift-cards-container {
+.gc-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 2rem;
 }
 
 /* Hero Section */
-.gift-cards-hero {
+.gc-hero {
   text-align: center;
   margin-bottom: 4rem;
   padding: 3rem 0;
 }
 
-.gift-cards-title {
+.gc-title {
   font-size: 3rem;
   font-weight: 800;
   margin-bottom: 1rem;
@@ -29,7 +29,7 @@
   background-clip: text;
 }
 
-.gift-cards-subtitle {
+.gc-subtitle {
   font-size: 1.2rem;
   color: #cbd5e1;
   max-width: 600px;
@@ -38,14 +38,14 @@
 }
 
 /* Features Section */
-.gift-cards-features {
+.gc-features {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 2rem;
   margin-bottom: 4rem;
 }
 
-.feature-card {
+.gc-feature-card {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
@@ -54,35 +54,35 @@
   transition: all 0.3s ease;
 }
 
-.feature-card:hover {
+.gc-feature-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 30px rgba(220, 38, 38, 0.2);
   border-color: rgba(220, 38, 38, 0.3);
 }
 
-.feature-icon {
+.gc-feature-icon {
   font-size: 3rem;
   margin-bottom: 1rem;
 }
 
-.feature-card h3 {
+.gc-feature-card h3 {
   font-size: 1.3rem;
   font-weight: 700;
   margin-bottom: 0.8rem;
   color: #f8fafc;
 }
 
-.feature-card p {
+.gc-feature-card p {
   color: #cbd5e1;
   line-height: 1.5;
 }
 
 /* Gift Cards Grid */
-.gift-cards-grid {
+.gc-grid {
   margin-bottom: 4rem;
 }
 
-.section-title {
+.gc-section-title {
   font-size: 2rem;
   font-weight: 700;
   text-align: center;
@@ -91,7 +91,7 @@
   position: relative;
 }
 
-.section-title::after {
+.gc-section-title::after {
   content: '';
   position: absolute;
   bottom: -8px;
@@ -103,13 +103,13 @@
   border-radius: 2px;
 }
 
-.cards-grid {
+.gc-cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
 }
 
-.gift-card {
+.gc-card {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
@@ -118,30 +118,30 @@
   position: relative;
 }
 
-.gift-card:hover {
+.gc-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 15px 35px rgba(220, 38, 38, 0.2);
   border-color: rgba(220, 38, 38, 0.3);
 }
 
-.card-image {
+.gc-card-image {
   position: relative;
   overflow: hidden;
   height: 200px;
 }
 
-.card-image img {
+.gc-card-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.3s ease;
 }
 
-.gift-card:hover .card-image img {
+.gc-card:hover .gc-card-image img {
   transform: scale(1.05);
 }
 
-.card-overlay {
+.gc-card-overlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -155,11 +155,11 @@
   transition: opacity 0.3s ease;
 }
 
-.gift-card:hover .card-overlay {
+.gc-card:hover .gc-card-overlay {
   opacity: 1;
 }
 
-.buy-button {
+.gc-buy-button {
   background: linear-gradient(135deg, #dc2626, #f97316);
   color: white;
   border: none;
@@ -170,48 +170,48 @@
   transition: all 0.3s ease;
 }
 
-.buy-button:hover {
+.gc-buy-button:hover {
   transform: scale(1.05);
   box-shadow: 0 5px 15px rgba(220, 38, 38, 0.4);
 }
 
-.card-content {
+.gc-card-content {
   padding: 1.5rem;
 }
 
-.card-name {
+.gc-card-name {
   font-size: 1.2rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
   color: #f8fafc;
 }
 
-.card-price {
+.gc-card-price {
   font-size: 1.5rem;
   font-weight: 800;
   color: #dc2626;
   margin-bottom: 0.8rem;
 }
 
-.card-description {
+.gc-card-description {
   color: #cbd5e1;
   line-height: 1.5;
   font-size: 0.9rem;
 }
 
 /* How to Use Section */
-.how-to-use {
+.gc-how-to-use {
   margin-bottom: 4rem;
 }
 
-.steps {
+.gc-steps {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
   margin-top: 2rem;
 }
 
-.step {
+.gc-step {
   display: flex;
   align-items: flex-start;
   gap: 1rem;
@@ -222,13 +222,13 @@
   transition: all 0.3s ease;
 }
 
-.step:hover {
+.gc-step:hover {
   transform: translateY(-3px);
   box-shadow: 0 8px 25px rgba(220, 38, 38, 0.15);
   border-color: rgba(220, 38, 38, 0.3);
 }
 
-.step-number {
+.gc-step-number {
   width: 40px;
   height: 40px;
   background: linear-gradient(135deg, #dc2626, #f97316);
@@ -242,33 +242,33 @@
   flex-shrink: 0;
 }
 
-.step-content h3 {
+.gc-step-content h3 {
   font-size: 1.2rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
   color: #f8fafc;
 }
 
-.step-content p {
+.gc-step-content p {
   color: #cbd5e1;
   line-height: 1.5;
 }
 
 /* Terms Section */
-.terms-section {
+.gc-terms-section {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 2rem;
 }
 
-.terms-content ul {
+.gc-terms-content ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.terms-content li {
+.gc-terms-content li {
   padding: 0.8rem 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   color: #cbd5e1;
@@ -276,11 +276,11 @@
   padding-left: 1.5rem;
 }
 
-.terms-content li:last-child {
+.gc-terms-content li:last-child {
   border-bottom: none;
 }
 
-.terms-content li::before {
+.gc-terms-content li::before {
   content: '✓';
   position: absolute;
   left: 0;
@@ -290,50 +290,50 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .gift-cards-container {
+  .gc-container {
     padding: 0 1rem;
   }
   
-  .gift-cards-title {
+  .gc-title {
     font-size: 2.5rem;
   }
   
-  .gift-cards-subtitle {
+  .gc-subtitle {
     font-size: 1.1rem;
   }
   
-  .gift-cards-features {
+  .gc-features {
     grid-template-columns: 1fr;
   }
   
-  .cards-grid {
+  .gc-cards-grid {
     grid-template-columns: 1fr;
   }
   
-  .steps {
+  .gc-steps {
     grid-template-columns: 1fr;
   }
   
-  .step {
+  .gc-step {
     flex-direction: column;
     text-align: center;
   }
 }
 
 @media (max-width: 480px) {
-  .gift-cards-title {
+  .gc-title {
     font-size: 2rem;
   }
   
-  .feature-card {
+  .gc-feature-card {
     padding: 1.5rem;
   }
   
-  .card-content {
+  .gc-card-content {
     padding: 1rem;
   }
   
-  .terms-section {
+  .gc-terms-section {
     padding: 1.5rem;
   }
 }

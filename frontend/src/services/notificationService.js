@@ -7,7 +7,14 @@ export async function getNotificationsByUser(userId) {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    return await response.json();
+    const notifications = await response.json();
+    
+    // Trigger custom event for real-time updates
+    window.dispatchEvent(new CustomEvent('notificationUpdated', {
+      detail: { userId, notifications }
+    }));
+    
+    return notifications;
   } catch (error) {
     console.error('Error fetching notifications:', error);
     throw error;
@@ -158,4 +165,11 @@ export function createTicketCancelledNotification(userId, movieTitle, ticketNumb
     isRead: false,
     relatedType: 'ticket'
   };
+}
+
+// Trigger notification update event
+export function triggerNotificationUpdate(userId) {
+  window.dispatchEvent(new CustomEvent('notificationUpdated', {
+    detail: { userId }
+  }));
 }

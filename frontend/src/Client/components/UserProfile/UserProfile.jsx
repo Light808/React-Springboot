@@ -20,11 +20,10 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
     totalSpent: 0,
     totalPoints: 0
   });
+  const [_walletBalance, setWalletBalance] = useState(0);
 
   useEffect(() => {
-    // initialOpenSettings no longer used (settings moved to separate modal)
   }, [initialOpenSettings]);
-   // Listen to sandbox wallet updates
   useEffect(() => {
     const onWalletUpdated = (e) => {
       if (e && e.detail && typeof e.detail.balance === 'number') {
@@ -51,55 +50,55 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
   {
     key: 'home',
     icon: Home,
-    title: t('Trang Chủ'),
+    title: t('Home'),
     color: '#3b82f6',
-    description: t('Khám phá phim đang chiếu, lịch chiếu theo rạp và đặt vé nhanh chóng.'),
-    ctaText: t('Xem lịch chiếu'),
+    description: t('Discover now-showing movies, cinema schedules, and book tickets easily.'),
+    ctaText: t('View showtimes'),
     ctaHref: '/'
   },
   {
     key: 'member',
     icon: User,
-    title: t('Thành viên CGV'),
+    title: t('CGV Member'),
     color: '#3b82f6',
-    description: t('Tích điểm, lên hạng thành viên để nhận ưu đãi độc quyền và quà tặng.'),
-    ctaText: t('Tìm hiểu hạng thành viên'),
+    description: t('Earn points, level up membership to receive exclusive offers and gifts.'),
+    ctaText: t('Learn about membership tiers'),
     ctaHref: '/membership'
   },
   {
     key: 'cinemas',
     icon: Info,
-    title: t('Rạp CGV'),
+    title: t('CGV Cinemas'),
     color: '#3b82f6',
-    description: t('Tìm rạp gần bạn, xem thông tin chi tiết và dịch vụ đi kèm.'),
-    ctaText: t('Tìm rạp'),
+    description: t('Find nearby cinemas, view details and available services.'),
+    ctaText: t('Find cinemas'),
     ctaHref: '/#cinemas'
   },
   {
     key: 'special',
     icon: Star,
-    title: t('Rạp Đặc Biệt'),
+    title: t('Special Cinemas'),
     color: '#3b82f6',
-    description: t('Trải nghiệm IMAX, 4DX, GOLD CLASS và nhiều định dạng cao cấp.'),
-    ctaText: t('Khám phá rạp đặc biệt'),
+    description: t('Experience IMAX, 4DX, GOLD CLASS and other premium formats.'),
+    ctaText: t('Explore special cinemas'),
     ctaHref: '/#special'
   },
   {
     key: 'news',
     icon: Gift,
-    title: t('Tin mới & Ưu đãi'),
+    title: t('News & Promotions'),
     color: '#3b82f6',
-    description: t('Cập nhật tin tức phim ảnh và các khuyến mãi hấp dẫn mỗi ngày.'),
-    ctaText: t('Xem ưu đãi'),
+    description: t('Stay updated with movie news and daily exciting promotions.'),
+    ctaText: t('View promotions'),
     ctaHref: '/news'
   },
   {
     key: 'tickets',
     icon: Ticket,
-    title: t('Vé của tôi'),
+    title: t('My Tickets'),
     color: '#3b82f6',
-    description: t('Quản lý vé đã mua, theo dõi lịch sử giao dịch và xuất vé điện tử.'),
-    ctaText: t('Xem vé'),
+    description: t('Manage purchased tickets, track transaction history, and access e-tickets.'),
+    ctaText: t('View tickets'),
     ctaHref: '/tickets'
   },
   {
@@ -107,8 +106,8 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
     icon: Store,
     title: t('CGV Store'),
     color: '#3b82f6',
-    description: t('Mua bắp nước, combo ưu đãi và quà lưu niệm chính hãng.'),
-    ctaText: t('Mua ngay'),
+    description: t('Buy popcorn, combo deals, and official merchandise.'),
+    ctaText: t('Buy now'),
     ctaHref: '/#store'
   },
   {
@@ -117,17 +116,17 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
     title: t('CGV eGift'),
     color: '#3b82f6',
     isNew: true,
-    description: t('Gửi quà xem phim tiện lợi cho người thân và bạn bè qua eGift.'),
-    ctaText: t('Mua eGift'),
+    description: t('Send movie gifts conveniently to loved ones via eGift.'),
+    ctaText: t('Buy eGift'),
     ctaHref: '/egift'
   },
   {
     key: 'redeem',
     icon: Award,
-    title: t('Đổi ưu đãi'),
+    title: t('Redeem Offers'),
     color: '#3b82f6',
-    description: t('Dùng điểm tích lũy để đổi vé, combo và quà tặng hấp dẫn.'),
-    ctaText: t('Đổi ngay'),
+    description: t('Use accumulated points to redeem tickets, combos, and exciting gifts.'),
+    ctaText: t('Redeem now'),
     ctaHref: '/#redeem'
   }
 ];
@@ -144,7 +143,7 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
     }
   }, [user]);
 
-  // Lắng nghe thay đổi trong localStorage
+  // Changes in userTickets in localStorage
   useEffect(() => {
     const handleStorageChange = (e) => {
       if (e.key === 'userTickets') {
@@ -157,11 +156,7 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
         calculateUserSpending();
       }
     };
-    
-    // Lắng nghe storage event từ các tab khác
     window.addEventListener('storage', handleStorageChange);
-    
-    // Lắng nghe custom event từ cùng tab
     window.addEventListener('userTicketsUpdated', handleCustomEvent);
     
     // Cleanup
@@ -173,7 +168,7 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
 
   const calculateUserSpending = () => {
     try {
-      // Lấy user hiện tại
+      // Get current user
       const currentUser = getCurrentUserSync();
       if (!currentUser) {
         setUserSpending({
@@ -183,22 +178,22 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
         return;
       }
 
-      // Lấy danh sách vé từ localStorage
+      // Get tickets from localStorage
       const tickets = JSON.parse(localStorage.getItem('userTickets') || '[]');
       
-      // Lọc vé của user hiện tại
-      const userTickets = tickets.filter(ticket => 
-        ticket.userId === currentUser.id || 
+      // Filter tickets belonging to current user
+      const userTickets = tickets.filter(ticket =>
+        ticket.userId === currentUser.id ||
         ticket.userId === currentUser.username ||
         ticket.userId === currentUser.email
       );
       
-      // Tính tổng chi tiêu
+      // Total spent calculation
       const totalSpent = userTickets.reduce((sum, ticket) => {
         return sum + (ticket.price || 0);
       }, 0);
       
-      // Tính điểm thưởng (1 điểm = 1000 VND)
+      // Calculate points (1 point per 1000 VND spent)
       const totalPoints = Math.floor(totalSpent / 1000);
       
       setUserSpending({
@@ -221,7 +216,7 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
     }).format(amount);
   };
 
-  // Function để refresh dữ liệu chi tiêu
+  // Refresh spending data
   // eslint-disable-next-line no-unused-vars
   const refreshSpendingData = () => {
     calculateUserSpending();
@@ -269,7 +264,7 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
       
       console.log('Loading from localStorage - avatarUrl:', currentUser.avatarUrl, 'customAvatar:', currentUser.customAvatar);
       
-      // Kiểm tra nếu có custom avatar
+      // Check customAvatar flag
       if (currentUser.customAvatar && currentUser.avatarUrl) {
         setAvatarUrl(currentUser.avatarUrl);
         setUploadedAvatar(currentUser.avatarUrl);
@@ -351,12 +346,12 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
       setAvatarUrl(initials);
       setUploadedAvatar(null);
       
-      // Cập nhật avatar trong localStorage
+      // Update localStorage
       const updatedUser = { ...user, avatarUrl: initials, customAvatar: false };
       localStorage.setItem('currentUser', JSON.stringify(updatedUser));
       setUser(updatedUser);
       
-      // Thông báo cho Header để cập nhật avatar
+      // Notify parent component
       if (onAvatarChange) {
         onAvatarChange(initials, updatedUser);
       }
@@ -418,7 +413,7 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
   const removeCustomAvatar = () => {
     setUploadedAvatar(null);
     
-    // Tạo initials giống Header
+    // Create initials avatar again
     const generateInitials = (name) => {
       if (!name) return 'U';
       const displayName = user.fullName || user.username;
@@ -432,12 +427,11 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
     const initials = generateInitials(user.fullName || user.username);
     setAvatarUrl(initials);
     
-    // Cập nhật localStorage
+    // Update localStorage
     const updatedUser = { ...user, avatarUrl: initials, customAvatar: false };
     localStorage.setItem('currentUser', JSON.stringify(updatedUser));
     setUser(updatedUser);
-    
-    // Thông báo cho Header
+
     if (onAvatarChange) {
       onAvatarChange(initials, updatedUser);
     }
@@ -478,17 +472,17 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
     
     // Validation
     if (!editedUser.username || editedUser.username.trim() === '') {
-      alert(t('Tên đăng nhập không được để trống!'));
+      alert(t('Username cannot be empty!'));
       return;
     }
     
     if (editedUser.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(editedUser.email)) {
-      alert(t('Email không hợp lệ!'));
+      alert(t('Invalid email address!'));
       return;
     }
     
     if (editedUser.phone && !/^[0-9]{10,11}$/.test(editedUser.phone.replace(/\s/g, ''))) {
-      alert(t('Số điện thoại không hợp lệ! (10-11 chữ số)'));
+      alert(t('Invalid phone number! (10–11 digits)'));
       return;
     }
     
@@ -501,17 +495,17 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
         phone: editedUser.phone?.trim() || ''
       };
       
-      // Gọi API để cập nhật database
+      // Update profile via service
       const updatedUser = await updateUserProfile(updateData);
       
-      // Cập nhật state local
+      // Update localStorage
       setUser(updatedUser);
       setEditedUser(updatedUser);
       setIsEditing(false);
-      alert(t('Cập nhật thông tin thành công!'));
+      alert(t('Profile updated successfully!'));
       
     } catch (error) {
-      alert(t('Cập nhật thông tin thất bại: ') + error.message);
+      alert(t('Failed to update profile: ') + error.message);
     } finally {
       setIsSaving(false);
     }
@@ -524,16 +518,16 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
       <div className="user-profile">
         <div className="profile-loading">
           <div className="loading-spinner"></div>
-          <p>Đang tải thông tin...</p>
+          <p>{t('Loading profile information...')}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div 
+    <div
       ref={popupRef}
-      className={`user-profile ${isPopup ? 'popup' : ''}`} 
+      className={`user-profile ${isPopup ? 'popup' : ''}`}
       onClick={isPopup ? (e) => {
         if (e.target === e.currentTarget) {
           handleCloseClick();
@@ -542,8 +536,8 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
     >
       <div>
         <div className="profile-header">
-          <h2>Hồ sơ cá nhân</h2>
-          <button className="close-btn" onClick={handleCloseClick} title="Đóng">
+          <h2>{t('Personal profile')}</h2>
+          <button className="exit-btn" onClick={handleCloseClick} title="Close">
             <X size={20} />
           </button>
         </div>
@@ -553,9 +547,9 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
           <div className="avatar-container">
             {avatarUrl ? (
               avatarUrl.startsWith('data:') || avatarUrl.startsWith('http') ? (
-                <img 
-                  src={avatarUrl} 
-                  alt="Avatar" 
+                <img
+                  src={avatarUrl}
+                  alt="Avatar"
                   className="profile-avatar"
                   onError={() => {
                     const generateInitials = (name) => {
@@ -585,10 +579,10 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
             
             {uploadedAvatar && (
               <div className="avatar-controls">
-                <button 
+                <button
                   className="remove-avatar-btn"
                   onClick={removeCustomAvatar}
-                  title={t("Xóa avatar tùy chỉnh")}
+                  title={t("Remove custom avatar")}
                 >
                   <X size={16} />
                 </button>
@@ -597,13 +591,13 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
           </div>
 
           <div className="avatar-actions">
-            <button 
-              className="upload-avatar-btn"  
+            <button
+              className="upload-avatar-btn"
               onClick={handleUploadClick}
               disabled={isUploading}
             >
               <Upload size={16} />
-              {isUploading ? t('Đang tải...') : t('Tải ảnh lên')}
+              {isUploading ? t('Loading...') : t('Upload image')}
             </button>
             
             <input
@@ -617,7 +611,7 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
         </div>
 
         {/* User Info */}
-        <div className="user-info"> 
+        <div className="user-info">
           <div className="user-badge">
             <h3 className="username">{user.fullName || user.username}</h3>
             <div className="member-badge">
@@ -628,7 +622,7 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
           
           <div className="user-details">
             <div className="detail-item">
-              <label>{t('Tên đăng nhập:')}</label>
+              <label>{t('Username:')}</label>
               {isEditing ? (
                 <input
                   type="text"
@@ -642,7 +636,7 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
             </div>
             
             <div className="detail-item">
-              <label>{t('Họ và tên:')}</label>
+              <label>{t('Full name:')}</label>
               {isEditing ? (
                 <input
                   type="text"
@@ -651,7 +645,7 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
                   className="edit-input"
                 />
               ) : (
-                <span>{user.fullName || t('Chưa cập nhật')}</span>
+                <span>{user.fullName || t('Not updated')}</span>
               )}
             </div>
             
@@ -665,12 +659,12 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
                   className="edit-input"
                 />
               ) : (
-                <span>{user.email || t('Chưa cập nhật')}</span>
+                <span>{user.email || t('Not updated')}</span>
               )}
             </div>
             
             <div className="detail-item">
-              <label>{t('Số điện thoại:')}</label>
+              <label>{t('Phone number:')}</label>
               {isEditing ? (
                 <input
                   type="tel"
@@ -679,12 +673,12 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
                   className="edit-input"
                 />
               ) : (
-                <span>{user.phone || t('Chưa cập nhật')}</span>
+                <span>{user.phone || t('Not updated')}</span>
               )}
             </div>
             
             <div className="detail-item">
-              <label>{t('Thành viên từ:')}</label>
+              <label>{t('Member since:')}</label>
               <span>{new Date(userStats.memberSince).toLocaleDateString('vi-VN')}</span>
             </div>
           </div>
@@ -692,18 +686,18 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
 
         {/* User Stats */}
         <div className="user-stats">
-          <h4>{t('Thống kê tài khoản')}</h4>
+          <h4>{t('Account statistics')}</h4>
           <div className="stats-grid">
             <div className="stat-item">
               <div className="stat-info">
-                <span className="stat-label">{t('Tổng Chi Tiêu 2025')}</span>
+                <span className="stat-label">{t('Total Spending 2025')}</span>
                 <span className="stat-number">{formatCurrency(userSpending.totalSpent)}</span>
               </div>
             </div>
             
             <div className="stat-item">
               <div className="stat-info">
-                <span className="stat-label">{t('Điểm Thưởng')}</span>
+                <span className="stat-label">{t('Reward Points')}</span>
                 <span className="stat-number">{userSpending.totalPoints}</span>
               </div>
             </div>
@@ -711,12 +705,12 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
           
           <div className="level-progress">
             <div className="progress-info">
-              <span>{t('Cấp độ tiếp theo: {{points}} điểm', { points: userStats.nextLevelPoints })}</span>
+              <span>{t('Next level: {{points}} points', { points: userStats.nextLevelPoints })}</span>
               <span>{userStats.points}/{(userStats.points + userStats.nextLevelPoints)}</span>
             </div>
             <div className="progress-bar">
-              <div 
-                className="progress-fill" 
+              <div
+                className="progress-fill"
                 data-width={`${(userStats.points / (userStats.points + userStats.nextLevelPoints)) * 100}%`}
               ></div>
             </div>
@@ -725,7 +719,7 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
 
         {/* Benefits Section */}
         <div className="benefits-section">
-          <h4>{t('Ưu đãi thành viên')}</h4>
+          <h4>{t('Member benefits')}</h4>
           <div className="benefits-grid">
             {benefits.map((benefit, index) => (
               <a 
@@ -762,26 +756,26 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
             <>
               <button className="action-btn edit-profile" onClick={handleEdit}>
                 <Settings size={18} />
-                <span>{t('Chỉnh sửa thông tin')}</span>
+                <span>{t('Edit profile')}</span>
               </button>
               
             </>
           ) : (
             <div className="edit-actions">
-              <button 
-                className="save-btn" 
+              <button
+                className="save-btn"
                 onClick={handleSave}
                 disabled={isSaving}
               >
-                {isSaving ? t('Đang lưu...') : t('Lưu thay đổi')}
+                {isSaving ? t('Saving...') : t('Save changes')}
               </button>
               
-              <button 
-                className="cancel-btn" 
+              <button
+                className="cancel-btn"
                 onClick={handleCancel}
                 disabled={isSaving}
               >
-                {t('Hủy')}
+                {t('Cancel')}
               </button>
             </div>
           )}

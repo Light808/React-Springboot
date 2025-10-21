@@ -144,7 +144,7 @@ const MovieCard = ({ movie, cinemaId, selectedDate }) => {
         hour: '2-digit',
         minute: '2-digit',
         hour12: false,
-        timeZone: 'Asia/Ho_Chi_Minh' 
+        timeZone: 'Asia/Ho_Chi_Minh'
       });
     } catch (error) {
       console.error('Error formatting time:', error, timeString);
@@ -165,8 +165,8 @@ const MovieCard = ({ movie, cinemaId, selectedDate }) => {
   return (
     <div className="movie-card">
       <div className="movie-card-image">
-        <img 
-          src={getImageUrl(movie)} 
+        <img
+          src={getImageUrl(movie)}
           alt={getTitle(movie)}
           onError={(e) => {
             e.target.src = '/default-movie.jpg';
@@ -175,7 +175,7 @@ const MovieCard = ({ movie, cinemaId, selectedDate }) => {
       </div>
       
       <div className="movie-card-content">
-        <h3 className="movie-title">{getTitle(movie)}</h3> 
+        <h3 className="movie-title">{getTitle(movie)}</h3>
         {getEnglishTitle(movie) && (
           <p className="movie-english-title">{getEnglishTitle(movie)}</p>
         )}

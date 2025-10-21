@@ -6,8 +6,10 @@ import { bookTicket } from '../../../services/ticketService';
 import { createNotification, createBookingSuccessNotification } from '../../../services/notificationService';
 import { createPaymentOrder, verifyPayment } from '../../../services/paymentService';
 import './VietQRPayment.css';
+import { useTranslation } from 'react-i18next';
 
-const VietQRPayment = () => {
+const VietQRPayment = () => { 
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const payload = location.state || {};
@@ -100,7 +102,7 @@ const VietQRPayment = () => {
     try {
       const amountVnd = resolveAmountVnd();
       if (!amountVnd || amountVnd <= 0) {
-        alert('Số tiền thanh toán không hợp lệ.');
+        alert('Invalid payment amount.');
         return;
       }
       const payload = {
@@ -194,8 +196,6 @@ const VietQRPayment = () => {
         }
       });
     } catch (error) {
-      console.error('Error finalizing booking:', error);
-      // fallback: still navigate to tickets so user can refresh their list
       navigate('/tickets', { replace: true });
     }
   };
@@ -208,9 +208,9 @@ const VietQRPayment = () => {
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text).then(() => {
-      alert('Đã sao chép vào clipboard!');
+      alert('Copied to clipboard!');
     }).catch(() => {
-      alert('Không thể sao chép. Vui lòng thử lại.');
+      alert('Could not copy. Please try again..');
     });
   };
 
@@ -222,10 +222,10 @@ const VietQRPayment = () => {
     return (
       <div className="vietqr-container">
         <div className="error-message">
-          <h2>Lỗi</h2>
-          <p>Không tìm thấy thông tin đặt vé. Vui lòng thử lại.</p>
+          <h2>{t('Error')}</h2>
+          <p>{t('No booking information found. Please try again')}.</p>
           <button onClick={() => navigate('/') } className="back-btn">
-            Về trang chủ
+            {t('Back')}
           </button>
         </div>
       </div>
@@ -237,32 +237,32 @@ const VietQRPayment = () => {
       <div className="vietqr-header">
         <button onClick={() => navigate(-1)} className="back-button">
           <ArrowLeft size={20} />
-          Quay lại
+          {t('Back')}
         </button>
-        <h1>Thanh toán VietQR</h1>
+        <h1>{t('VietQR Payment')}</h1>
       </div>
 
       <div className="vietqr-content">
         {/* Order Summary */}
         <div className="order-summary">
-          <h3>Thông tin đơn hàng</h3>
+          <h3>{t('Order information')}</h3>
           <div className="summary-item">
-            <span>Phim:</span>
+            <span>{t('Movie')}:</span>
             <strong>{ticketData.movieTitle}</strong>
           </div>
           <div className="summary-item">
-            <span>Ghế:</span>
+            <span>{t('Seat')}:</span>
             <strong>{ticketData.seatNumber}</strong>
           </div>
           <div className="summary-item">
-            <span>Suất chiếu:</span>
+            <span>{t('Showtime')}:</span>
             <strong>{new Date(ticketData.showTime).toLocaleString('vi-VN')}</strong>
           </div>
           <div className="summary-item total">
             <span>Tổng tiền:</span>
-            <strong>{new Intl.NumberFormat('vi-VN', { 
-              style: 'currency', 
-              currency: 'VND' 
+            <strong>{new Intl.NumberFormat('vi-VN', {
+              style: 'currency',
+              currency: 'VND'
             }).format(resolveAmountVnd())}</strong>
           </div>
         </div>

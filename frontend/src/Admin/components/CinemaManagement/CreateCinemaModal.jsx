@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import React, { useState } from 'react';
 import { X, Upload, Image as ImageIcon, Plus, X as XIcon } from 'lucide-react';
 import styles from './CreateCinemaModal.module.css';

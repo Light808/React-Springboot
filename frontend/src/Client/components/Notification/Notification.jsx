@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Bell, Check, Trash2, X, Clock, CheckCircle, AlertCircle, Info } from 'lucide-react';
-import { 
-  getNotificationsByUser, 
-  markNotificationAsRead, 
+import {
+  getNotificationsByUser,
+  markNotificationAsRead,
   markAllNotificationsAsRead,
   deleteNotification,
-  getUnreadNotificationCount 
+  getUnreadNotificationCount
 } from '../../../services/notificationService';
 import styles from './Notification.module.css';
 import { useTranslation } from 'react-i18next';
@@ -15,12 +15,24 @@ const Notification = ({ userId, onClose }) => {
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('all'); 
+  const [activeTab, setActiveTab] = useState('all');
 
   useEffect(() => {
     if (userId) {
       fetchNotifications();
       fetchUnreadCount();
+      
+      // Listen for notification updates
+      const handleNotificationUpdate = () => {
+        fetchNotifications();
+        fetchUnreadCount();
+      };
+      
+      window.addEventListener('notificationUpdated', handleNotificationUpdate);
+      
+      return () => {
+        window.removeEventListener('notificationUpdated', handleNotificationUpdate);
+      };
     }
   }, [userId]);
 
@@ -48,9 +60,9 @@ const Notification = ({ userId, onClose }) => {
   const handleMarkAsRead = async (notificationId) => {
     try {
       await markNotificationAsRead(notificationId);
-      setNotifications(prev => 
-        prev.map(notif => 
-          notif.id === notificationId 
+      setNotifications(prev =>
+        prev.map(notif =>
+          notif.id === notificationId
             ? { ...notif, isRead: true, readAt: new Date().toISOString() }
             : notif
         )
@@ -64,11 +76,11 @@ const Notification = ({ userId, onClose }) => {
   const handleMarkAllAsRead = async () => {
     try {
       await markAllNotificationsAsRead(userId);
-      setNotifications(prev => 
-        prev.map(notif => ({ 
-          ...notif, 
-          isRead: true, 
-          readAt: new Date().toISOString() 
+      setNotifications(prev =>
+        prev.map(notif => ({
+          ...notif,
+          isRead: true,
+          readAt: new Date().toISOString()
         }))
       );
       setUnreadCount(0);
@@ -123,7 +135,7 @@ const Notification = ({ userId, onClose }) => {
     });
   };
 
-  const filteredNotifications = activeTab === 'unread' 
+  const filteredNotifications = activeTab === 'unread'
     ? notifications.filter(notif => !notif.isRead)
     : notifications;
 
@@ -151,8 +163,8 @@ const Notification = ({ userId, onClose }) => {
               <span className={styles['unread-badge']}>{unreadCount}</span>
             )}
           </div>
-          <button 
-            className={styles['close-btn']} 
+          <button
+            className={styles['close-btn']}
             onClick={onClose}
           >
             <X size={20} />
@@ -160,13 +172,13 @@ const Notification = ({ userId, onClose }) => {
         </div>
 
         <div className={styles['notification-tabs']}>
-          <button 
+          <button
             className={`${styles['tab-btn']} ${activeTab === 'all' ? styles['tab-active'] : ''}`}
             onClick={() => setActiveTab('all')}
           >
             {t('All')} ({notifications.length})
           </button>
-          <button 
+          <button
             className={`${styles['tab-btn']} ${activeTab === 'unread' ? styles['tab-active'] : ''}`}
             onClick={() => setActiveTab('unread')}
           >
@@ -176,7 +188,7 @@ const Notification = ({ userId, onClose }) => {
 
         <div className={styles['notification-actions']}>
           {unreadCount > 0 && (
-            <button 
+            <button
               className={styles['mark-all-read-btn']}
               onClick={handleMarkAllAsRead}
             >
@@ -194,8 +206,8 @@ const Notification = ({ userId, onClose }) => {
             </div>
           ) : (
             filteredNotifications.map(notification => (
-              <div 
-                key={notification.id} 
+              <div
+                key={notification.id}
                 className={`${styles['notification-item']} ${!notification.isRead ? styles['unread'] : ''}`}
               >
                 <div className={styles['notification-content']}>
@@ -219,7 +231,7 @@ const Notification = ({ userId, onClose }) => {
                 </div>
                 <div className={styles['notification-actions-item']}>
                   {!notification.isRead && (
-                    <button 
+                    <button
                       className={styles['mark-read-btn']}
                       onClick={() => handleMarkAsRead(notification.id)}
                       title={t('Mark as read')}
@@ -227,7 +239,7 @@ const Notification = ({ userId, onClose }) => {
                       <Check size={14} />
                     </button>
                   )}
-                  <button 
+                  <button
                     className={styles['delete-btn']}
                     onClick={() => handleDeleteNotification(notification.id)}
                     title={t('Delete notification')}

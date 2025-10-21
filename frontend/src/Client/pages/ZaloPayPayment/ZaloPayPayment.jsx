@@ -5,8 +5,9 @@ import { createZaloPayOrder, queryZaloPayOrder } from '../../../services/zaloPay
 import { bookTicket } from '../../../services/ticketService';
 import './ZaloPayPayment.css';
 
+// Polling time intervals and timeout
 const POLL_INTERVAL_MS = 2500;
-const POLL_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
+const POLL_TIMEOUT_MS = 5 * 60 * 1000;
 
 const ZaloPayPayment = () => {
   const location = useLocation();
@@ -17,7 +18,7 @@ const ZaloPayPayment = () => {
   const [appTransId, setAppTransId] = useState('');
   const [payUrl, setPayUrl] = useState('');
   const [qrUrl, setQrUrl] = useState('');
-  const [status, setStatus] = useState('INITIAL'); // INITIAL | PENDING | PAID | EXPIRED | ERROR
+  const [status, setStatus] = useState('INITIAL'); 
   const [error, setError] = useState('');
   const [timeLeft, setTimeLeft] = useState(Math.floor(POLL_TIMEOUT_MS / 1000));
   const pollRef = useRef(null);
@@ -67,7 +68,8 @@ const ZaloPayPayment = () => {
           clearInterval(pollRef.current);
           clearTimeout(timeoutRef.current);
           setStatus('PAID');
-          // Create ticket only after paid
+
+          // Finalize booking
           try {
             await bookTicket({ ...ticketData, paymentMethod: 'zalopay', paymentStatus: 'paid', status: 'confirmed' });
             navigate('/tickets');
