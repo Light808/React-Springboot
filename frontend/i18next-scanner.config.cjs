@@ -11,6 +11,7 @@ module.exports = {
   options: {
     debug: false,
     removeUnusedKeys: false,
+    jsx: true,
     func: {
       list: ['t'], // find (t)
     },
