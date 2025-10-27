@@ -701,6 +701,13 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
                 <span className="stat-number">{userSpending.totalPoints}</span>
               </div>
             </div>
+            
+            <div className="stat-item">
+              <div className="stat-info">
+                <span className="stat-label">{t('Sandbox Wallet Balance')}</span>
+                <span className="stat-number">{formatCurrency(_walletBalance)}</span>
+              </div>
+            </div>
           </div>
           
           <div className="level-progress">

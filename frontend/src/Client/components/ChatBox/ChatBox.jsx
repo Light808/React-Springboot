@@ -58,7 +58,7 @@ const ChatBox = () => {
         <div className="chat-popup">
           <div className="chat-header">
             <MessageCircle size={20}/>
-            Trợ lý đặt vé phim
+            Chat Assistant
             <button onClick={() => setIsOpen(false)} className="close-btn">
               ×
             </button>

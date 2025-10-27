@@ -49,7 +49,6 @@ function PaymentManagement() {
     try {
       if (status === 'paid') {
         await markPaid(id);
-        // Notify client tabs to finalize booking immediately
         try {
           localStorage.setItem('paymentStatusUpdate', JSON.stringify({ orderId: id, status: 'paid', ts: Date.now() }));
           setTimeout(() => localStorage.removeItem('paymentStatusUpdate'), 50);

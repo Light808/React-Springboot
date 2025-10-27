@@ -206,18 +206,18 @@ const MovieDetailPage = () => {
       <div className={`${styles['movie-detail-page']}`}>
         <div className={`${styles['error-container']}`}>
           <h2>Lỗi</h2>
-          <p>{error || t('Không tìm thấy thông tin phim')}</p>
+          <p>{error || t('Movie information not found')}</p>
         </div>
       </div>
     );
   }
 
-  // Helper functions để xử lý các trường API khác nhau
+  // Helper functions to get movie details with fallbacks
   const getImageUrl = (movie) => {
     console.log('Movie data:', movie);
     let imageUrl = movie.posterUrl || movie.poster || movie.imageUrl || movie.image || '/default-movie.jpg';
     
-    // Xử lý CORS cho external URLs
+    // Solve relative URLs
     if (imageUrl.startsWith('http') && !imageUrl.includes('localhost')) {
       console.log('External image URL detected:', imageUrl);
     }

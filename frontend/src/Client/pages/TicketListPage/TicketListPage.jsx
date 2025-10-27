@@ -28,7 +28,7 @@ const TicketListPage = ({ userId }) => {
   const [showRefundModal, setShowRefundModal] = useState(false);
   const [refundAmount, setRefundAmount] = useState('');
   const [refundReason, setRefundReason] = useState('');
-  const [ setRefundStats] = useState(null);
+  const [refundStats, setRefundStats] = useState(null);
 
   useEffect(() => {
     const fetchTickets = async () => {

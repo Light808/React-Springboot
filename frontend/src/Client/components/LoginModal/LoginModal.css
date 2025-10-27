@@ -416,3 +416,147 @@
     font-size: 0.8rem;
   }
 }
+
+/* Google Login Styles */
+.google-login-container {
+  padding: 0 2rem 1rem 2rem;
+}
+
+.divider {
+  position: relative;
+  text-align: center;
+  margin: 1.5rem 0;
+}
+
+.divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #e2e8f0;
+}
+
+.divider-text {
+  background: white;
+  padding: 0 1rem;
+  color: #6b7280;
+  font-size: 0.875rem;
+  font-weight: 500;
+  position: relative;
+  z-index: 1;
+}
+
+.google-login-btn {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  background: white;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.google-login-btn:hover:not(:disabled) {
+  background: #f9fafb;
+  border-color: #9ca3af;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.google-login-btn:disabled {
+  background: #f3f4f6;
+  color: #9ca3af;
+  cursor: not-allowed;
+  border-color: #e5e7eb;
+}
+
+.google-icon {
+  flex-shrink: 0;
+}
+
+/* Responsive Google Login */
+@media (max-width: 768px) {
+  .google-login-container {
+    padding: 0 1.5rem 1rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .google-login-container {
+    padding: 0 1rem 1rem 1rem;
+  }
+  
+  .google-login-btn {
+    padding: 0.75rem 1rem;
+    font-size: 0.8rem;
+  }
+  
+  .divider-text {
+    font-size: 0.8rem;
+  }
+}
+
+/* Facebook Login Styles */
+.facebook-login-btn {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  background: white;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  margin-top: 0.75rem;
+}
+
+.facebook-login-btn:hover:not(:disabled) {
+  background: #f9fafb;
+  border-color: #1877F2;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.facebook-login-btn:disabled {
+  background: #f3f4f6;
+  color: #9ca3af;
+  cursor: not-allowed;
+  border-color: #e5e7eb;
+}
+
+.facebook-icon {
+  flex-shrink: 0;
+}
+
+.facebook-login-btn:hover:not(:disabled) .facebook-icon {
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
+}
+
+/* Responsive Facebook Login */
+@media (max-width: 768px) {
+  .facebook-login-btn {
+    padding: 0.75rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .facebook-login-btn {
+    padding: 0.75rem 1rem;
+    font-size: 0.8rem;
+  }
+}

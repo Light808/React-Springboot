@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { generateAIPersonAvatar } from './avatarService';
+import { googleLogin, initializeGoogleAuth, renderGoogleSignInButton } from './googleAuthService';
 
 const API_BASE_URL = 'http://localhost:8080/api';
 
@@ -356,5 +357,53 @@ export async function adminResetPassword(userId, newPassword) {
   } catch (error) {
     console.error('Admin reset password error:', error);
     throw new Error(error.message || 'Reset password failed. Please try again.');
+  }
+}
+
+// Google OAuth functions
+export async function loginWithGoogle() {
+  try {
+    await initializeGoogleAuth();
+    
+    // Trigger Google Sign-In
+    window.google.accounts.id.prompt();
+    
+    return new Promise((resolve, reject) => {
+      // Store resolve/reject for the callback
+      window.googleAuthCallback = { resolve, reject };
+    });
+  } catch (error) {
+    console.error('Google login initialization error:', error);
+    throw new Error('Failed to initialize Google login');
+  }
+}
+
+export async function handleGoogleLoginSuccess(user) {
+  try {
+    // Update last login time
+    await updateLastLogin(user.id);
+    return user;
+  } catch (error) {
+    console.warn('Could not update last login time:', error);
+    return user;
+  }
+}
+
+export function renderGoogleButton(elementId) {
+  try {
+    renderGoogleSignInButton(elementId, 
+      (user) => {
+        if (window.googleAuthCallback) {
+          window.googleAuthCallback.resolve(user);
+        }
+      },
+      (error) => {
+        if (window.googleAuthCallback) {
+          window.googleAuthCallback.reject(error);
+        }
+      }
+    );
+  } catch (error) {
+    console.error('Error rendering Google button:', error);
   }
 }

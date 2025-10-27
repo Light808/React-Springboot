@@ -1,11 +1,12 @@
 package com.example.demo.model;
 
+import java.time.LocalDateTime;
+
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.Data;
-import java.time.LocalDateTime;
 
 @Data
 @Document(collection = "users")
@@ -29,16 +30,42 @@ public class User {
     private String address;
     private String notes;
     
+    // OAuth fields
+    private String googleId;
+    private String facebookId;
+    private String provider; // "local", "google", or "facebook"
+    
     // Constructor
     public User() {
         this.createdAt = LocalDateTime.now();
     }
     
-    public User(String username, String password, String fullName, String email) {
+    public User(String username, String password, String fullName, String email, String provider) {
         this();
         this.username = username;
         this.password = password;
         this.fullName = fullName;
         this.email = email;
+        this.provider = provider;
+    }
+    
+    // Constructor for Google OAuth users
+    public User(String googleId, String fullName, String email) {
+        this();
+        this.googleId = googleId;
+        this.fullName = fullName;
+        this.email = email;
+        this.provider = "google";
+        this.username = email;
+    }
+    
+    // Constructor for Facebook OAuth users
+    public User(String facebookId, String fullName, String email, String provider) {
+        this();
+        this.facebookId = facebookId;
+        this.fullName = fullName;
+        this.email = email;
+        this.provider = provider;
+        this.username = email; 
     }
 }

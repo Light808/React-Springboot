@@ -28,6 +28,9 @@ import VietQRPayment from './Client/pages/VietQRPayment/VietQRPayment.jsx';
 import ZaloPayPayment from './Client/pages/ZaloPayPayment/ZaloPayPayment.jsx';
 import GiftCardsPage from './Client/pages/GiftCardsPage/GiftCardsPage';
 import AboutUsPage from './Client/pages/AboutUsPage/AboutUsPage';
+import HelpCenterPage from './Client/pages/HelpCenterPage/HelpCenterPage';
+import FAQPage from './Client/pages/FAQPage/FAQPage';
+import TechnicalSupportPage from './Client/pages/TechnicalSupportPage/TechnicalSupportPage';
 
 function ProtectedRoute({ children }) {
   return isAuthenticated() ? children : <Navigate to="/" replace />;
@@ -109,6 +112,9 @@ function RouteAwareLayout({ user, setUser, onLogout }) {
           <Route path="/payment/zalopay" element={<ZaloPayPayment />} />
           <Route path="/gift-cards" element={<GiftCardsPage />} />
           <Route path="/about" element={<AboutUsPage />} />
+          <Route path="/help" element={<HelpCenterPage />} />
+          <Route path="/faq" element={<FAQPage />} />
+          <Route path="/support" element={<TechnicalSupportPage />} />
 
           {/* Protected routes */}
           <Route
@@ -144,7 +150,7 @@ function RouteAwareLayout({ user, setUser, onLogout }) {
         </Routes>
       </main>
 
-      {/* Footer & ChatBox (ẩn trong admin) */}
+      {/* Footer & ChatBox (Hide on admin) */}
       {!location.pathname.startsWith('/admin') && <Footer />}
       {!location.pathname.startsWith('/admin') && <ChatBox />}
     </div>

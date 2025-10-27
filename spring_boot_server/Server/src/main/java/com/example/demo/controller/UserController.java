@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.service.FacebookOAuthService;
+import com.example.demo.service.GoogleOAuthConfigService;
+import com.example.demo.service.GoogleOAuthService;
 
 @RestController
 @RequestMapping("/api/users")
@@ -27,6 +30,15 @@ import com.example.demo.repository.UserRepository;
 public class UserController {
     @Autowired
     private UserRepository userRepository;
+    
+    @Autowired
+    private GoogleOAuthService googleOAuthService;
+    
+    @Autowired
+    private GoogleOAuthConfigService googleOAuthConfigService;
+    
+    @Autowired
+    private FacebookOAuthService facebookOAuthService;
 
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
@@ -344,6 +356,217 @@ public class UserController {
             updatedUser.setPassword(null);
             return ResponseEntity.ok(updatedUser);
             
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    
+    // Google OAuth login endpoint with token verification
+    @PostMapping("/google-login")
+    public ResponseEntity<User> googleLogin(@RequestBody Map<String, String> googleData) {
+        try {
+            String idToken = googleData.get("idToken");
+            
+            if (idToken == null || idToken.trim().isEmpty()) {
+                return ResponseEntity.badRequest().build();
+            }
+            
+            // Verify Google ID token
+            GoogleOAuthService.GoogleUserInfo googleUserInfo = googleOAuthService.verifyAndExtractUserInfo(idToken);
+            
+            if (googleUserInfo == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+            
+            String googleId = googleUserInfo.getGoogleId();
+            String email = googleUserInfo.getEmail();
+            String fullName = googleUserInfo.getName();
+            String profilePicture = googleUserInfo.getPictureUrl();
+            
+            // Check if user already exists with this Google ID
+            Optional<User> existingUser = userRepository.findByGoogleId(googleId);
+            if (existingUser.isPresent()) {
+                User user = existingUser.get();
+                user.setLastLoginAt(java.time.LocalDateTime.now());
+                userRepository.save(user);
+                user.setPassword(null);
+                return ResponseEntity.ok(user);
+            }
+            
+            // Check if user exists with same email but different provider
+            Optional<User> emailUser = userRepository.findByEmail(email);
+            if (emailUser.isPresent()) {
+                // Link Google account to existing user
+                User user = emailUser.get();
+                user.setGoogleId(googleId);
+                user.setProvider("google");
+                user.setLastLoginAt(java.time.LocalDateTime.now());
+                userRepository.save(user);
+                user.setPassword(null);
+                return ResponseEntity.ok(user);
+            }
+            
+            // Create new user with Google OAuth
+            User newUser = new User(googleId, fullName, email);
+            if (profilePicture != null && !profilePicture.isEmpty()) {
+                newUser.setAvatar(profilePicture);
+            }
+            newUser.setLastLoginAt(java.time.LocalDateTime.now());
+            
+            User savedUser = userRepository.save(newUser);
+            savedUser.setPassword(null);
+            return ResponseEntity.ok(savedUser);
+            
+        } catch (Exception e) {
+            System.err.println("Google login error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    
+    // Legacy Google OAuth login endpoint (for backward compatibility)
+    @PostMapping("/google-login-legacy")
+    public ResponseEntity<User> googleLoginLegacy(@RequestBody Map<String, String> googleData) {
+        try {
+            String googleId = googleData.get("googleId");
+            String email = googleData.get("email");
+            String fullName = googleData.get("fullName");
+            String profilePicture = googleData.get("profilePicture");
+            
+            if (googleId == null || email == null || fullName == null) {
+                return ResponseEntity.badRequest().build();
+            }
+            
+            // Check if user already exists with this Google ID
+            Optional<User> existingUser = userRepository.findByGoogleId(googleId);
+            if (existingUser.isPresent()) {
+                User user = existingUser.get();
+                user.setLastLoginAt(java.time.LocalDateTime.now());
+                userRepository.save(user);
+                user.setPassword(null);
+                return ResponseEntity.ok(user);
+            }
+            
+            // Check if user exists with same email but different provider
+            Optional<User> emailUser = userRepository.findByEmail(email);
+            if (emailUser.isPresent()) {
+                // Link Google account to existing user
+                User user = emailUser.get();
+                user.setGoogleId(googleId);
+                user.setProvider("google");
+                user.setLastLoginAt(java.time.LocalDateTime.now());
+                userRepository.save(user);
+                user.setPassword(null);
+                return ResponseEntity.ok(user);
+            }
+            
+            // Create new user with Google OAuth
+            User newUser = new User(googleId, fullName, email);
+            if (profilePicture != null && !profilePicture.isEmpty()) {
+                newUser.setAvatar(profilePicture);
+            }
+            newUser.setLastLoginAt(java.time.LocalDateTime.now());
+            
+            User savedUser = userRepository.save(newUser);
+            savedUser.setPassword(null);
+            return ResponseEntity.ok(savedUser);
+            
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    
+    // Check if Google ID exists
+    @GetMapping("/check-google-id")
+    public ResponseEntity<Boolean> checkGoogleId(@RequestParam String googleId) {
+        try {
+            boolean exists = userRepository.existsByGoogleId(googleId);
+            return ResponseEntity.ok(exists);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    
+    // Get Google OAuth configuration for frontend
+    @GetMapping("/google-oauth-config")
+    public ResponseEntity<Map<String, String>> getGoogleOAuthConfig() {
+        try {
+            Map<String, String> config = googleOAuthConfigService.getOAuthConfig();
+            return ResponseEntity.ok(config);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    
+    // Facebook OAuth login endpoint
+    @PostMapping("/facebook-login")
+    public ResponseEntity<User> facebookLogin(@RequestBody Map<String, String> facebookData) {
+        try {
+            String facebookId = facebookData.get("id");
+            String email = facebookData.get("email");
+            String fullName = facebookData.get("name");
+            String profilePicture = facebookData.get("picture");
+            
+            if (facebookId == null || fullName == null) {
+                return ResponseEntity.badRequest().build();
+            }
+            
+            // Check if user already exists with this Facebook ID
+            Optional<User> existingUser = userRepository.findByFacebookId(facebookId);
+            if (existingUser.isPresent()) {
+                User user = existingUser.get();
+                user.setLastLoginAt(java.time.LocalDateTime.now());
+                userRepository.save(user);
+                user.setPassword(null);
+                return ResponseEntity.ok(user);
+            }
+            
+            // Check if user exists with same email but different provider
+            Optional<User> emailUser = userRepository.findByEmail(email);
+            if (emailUser.isPresent()) {
+                // Link Facebook account to existing user
+                User user = emailUser.get();
+                user.setFacebookId(facebookId);
+                user.setProvider("facebook");
+                user.setLastLoginAt(java.time.LocalDateTime.now());
+                userRepository.save(user);
+                user.setPassword(null);
+                return ResponseEntity.ok(user);
+            }
+            
+            // Create new user with Facebook OAuth
+            User newUser = new User(facebookId, fullName, email, "facebook");
+            if (profilePicture != null && !profilePicture.isEmpty()) {
+                newUser.setAvatar(profilePicture);
+            }
+            newUser.setLastLoginAt(java.time.LocalDateTime.now());
+            
+            User savedUser = userRepository.save(newUser);
+            savedUser.setPassword(null);
+            return ResponseEntity.ok(savedUser);
+            
+        } catch (Exception e) {
+            System.err.println("Facebook login error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    
+    // Get Facebook OAuth configuration for frontend
+    @GetMapping("/facebook-oauth-config")
+    public ResponseEntity<Map<String, String>> getFacebookOAuthConfig() {
+        try {
+            Map<String, String> config = facebookOAuthService.getOAuthConfig();
+            return ResponseEntity.ok(config);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    
+    // Check if Facebook ID exists
+    @GetMapping("/check-facebook-id")
+    public ResponseEntity<Boolean> checkFacebookId(@RequestParam String facebookId) {
+        try {
+            boolean exists = userRepository.existsByFacebookId(facebookId);
+            return ResponseEntity.ok(exists);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

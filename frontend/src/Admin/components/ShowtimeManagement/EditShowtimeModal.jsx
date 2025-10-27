@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { X, Calendar, Clock, MapPin, Users, DollarSign } from 'lucide-react';
 import { updateShowtime, formatDateTimeForAPI } from '../../../services/showtimeService';

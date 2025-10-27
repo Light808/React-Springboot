@@ -348,7 +348,7 @@ body .user-profile.popup {
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 0.75rem;
   margin-bottom: 1rem;
 }
@@ -763,7 +763,7 @@ a:-webkit-any-link {
   }
   
   .stats-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: 0.5rem;
   }
   
@@ -788,6 +788,11 @@ a:-webkit-any-link {
   
   .username {
     font-size: 1.125rem;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
   }
   
   .profile-actions {

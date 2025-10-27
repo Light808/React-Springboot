@@ -11,8 +11,11 @@
     "i18n:extract": "i18next-scanner --config i18next-scanner.config.cjs"
   },
   "dependencies": {
+    "@google-cloud/local-auth": "^3.0.1",
+    "axios": "^1.12.2",
     "chart.js": "^4.5.0",
     "framer-motion": "^11.0.0",
+    "google-auth-library": "^10.4.2",
     "i18next": "^25.5.3",
     "jspdf": "^3.0.2",
     "lucide-react": "^0.400.0",

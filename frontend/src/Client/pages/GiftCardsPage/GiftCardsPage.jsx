@@ -10,14 +10,14 @@ const GiftCardsPage = () => {
       id: 1,
       name: "Galaxy Studio Gift Card - 100K",
       price: "100,000 VNĐ",
-      image: "https://via.placeholder.com/300x200/1e293b/dc2626?text=Gift+Card+100K",
+      image: "/images/giftcard100k.png",
       description: "Perfect for a movie night with friends or family"
     },
     {
       id: 2,
       name: "Galaxy Studio Gift Card - 200K",
       price: "200,000 VNĐ",
-      image: "https://via.placeholder.com/300x200/1e293b/dc2626?text=Gift+Card+200K",
+      image: "/images/giftcard200k.png",
       description: "Great for special occasions and celebrations"
     },
     {
