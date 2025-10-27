@@ -518,7 +518,6 @@
   "Get in Touch": "Liên hệ",
   "Headquarters": "Trụ sở chính",
   "Phone": "Điện thoại",
-<<<<<<< HEAD
   "Error" : "Lỗi",
   "No booking information found. Please try again." : "Không tìm thấy thông tin đặt vé. Vui lòng thử lại.",
   "Personal profile": "Hồ sơ cá nhân",
@@ -620,10 +619,7 @@
   "Chat with our technical team in real-time": "Trò chuyện với đội ngũ kỹ thuật của chúng tôi theo thời gian thực",
   "Comprehensive help articles and guides": "Bài viết trợ giúp và hướng dẫn toàn diện",
   "Frequently asked questions and answers": "Câu hỏi thường gặp và câu trả lời",
-  "Get in touch with our support team": "Liên hệ với đội ngũ hỗ trợ của chúng tôi"
-=======
-  "Error": "Lỗi",
-  "No booking information found. Please try again.": "Không tìm thấy thông tin đặt vé. Vui lòng thử lại.",
+  "Get in touch with our support team": "Liên hệ với đội ngũ hỗ trợ của chúng tôi",
   "News": "",
   "Membership": "",
   "8:00 AM - 12:00 PM": "",
@@ -703,23 +699,8 @@
   "Profile updated successfully!": "",
   "Failed to update profile: ": "",
   "Loading profile information...": "",
-  "Personal profile": "",
   "Remove custom avatar": "",
   "Upload image": "",
-  "Username:": "",
-  "Full name:": "",
-  "Not updated": "",
-  "Phone number:": "",
-  "Member since:": "",
-  "Account statistics": "",
-  "Total Spending 2025": "",
-  "Reward Points": "",
-  "Next level: {{points}} points": "",
-  "Member benefits": "",
-  "Edit profile": "",
-  "Saving...": "",
-  "Save changes": "",
-  "Cancel": "",
   "At HAK Studio Cinema, we are dedicated to providing exceptional entertainment experiences that bring people together. Our mission is to create magical moments through the power of cinema, offering state-of-the-art facilities, premium comfort, and unforgettable memories for every guest.": "",
   "Earn points when buying tickets/combos, level up to unlock exclusive benefits.": "",
   "Member account information": "",
@@ -766,5 +747,4 @@
   "No booking information found. Please try again": "",
   "VietQR Payment": "",
   "Order information": ""
->>>>>>> 7427c0946e4d74ffcb9c8f917b504de8cfbdcf01
 }
