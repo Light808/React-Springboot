@@ -1,7 +1,7 @@
 /* Technical Support Page */
 .technical-support-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: whitesmoke;
   padding: 2rem 0;
 }
 
@@ -26,7 +26,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(10, 10, 10, 0.8);
   text-decoration: none;
   font-size: 0.9rem;
   transition: color 0.3s ease;
@@ -41,12 +41,14 @@
   font-weight: 700;
   margin: 0 0 1rem 0;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  color: rgba(10, 10, 10, 0.8);
 }
 
 .technical-support-subtitle {
   font-size: 1.2rem;
   margin: 0;
   opacity: 0.9;
+  color: rgba(10, 10, 10, 0.521);
 }
 
 /* Search Section */
@@ -314,6 +316,7 @@
   padding: 1.5rem;
   backdrop-filter: blur(10px);
   transition: transform 0.3s ease;
+  border: 1px solid #292b2e75 ;
 }
 
 .requirement-card:hover {
@@ -324,7 +327,7 @@
   font-size: 1.2rem;
   font-weight: 600;
   margin: 0 0 1rem 0;
-  color: white;
+  color: rgb(0, 0, 0);
 }
 
 .requirement-list {
@@ -337,7 +340,7 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(0, 0, 0, 0.9);
   margin-bottom: 0.75rem;
   font-size: 0.95rem;
 }
@@ -354,7 +357,7 @@
 
 .contact-subtitle {
   text-align: center;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(8, 8, 8, 0.9);
   margin: 0 0 2rem 0;
   font-size: 1.1rem;
 }
@@ -374,6 +377,7 @@
   padding: 1.5rem;
   backdrop-filter: blur(10px);
   transition: transform 0.3s ease;
+  border: 1px solid #292b2e75 ;
 }
 
 .contact-card:hover {
@@ -399,17 +403,17 @@
   font-size: 1.2rem;
   font-weight: 600;
   margin: 0 0 0.5rem 0;
-  color: white;
+  color: rgb(14, 13, 13);
 }
 
 .contact-description {
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(14, 13, 13, 0.8);
   margin: 0 0 0.5rem 0;
   font-size: 0.9rem;
 }
 
 .contact-detail {
-  color: white;
+  color: rgb(14, 13, 13);
   font-weight: 500;
   margin: 0 0 0.5rem 0;
 }
@@ -421,12 +425,12 @@
 }
 
 .contact-availability {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgb(14, 13, 13);
   font-size: 0.8rem;
 }
 
 .contact-response {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(207, 42, 42, 0.863);
   font-size: 0.8rem;
 }
 

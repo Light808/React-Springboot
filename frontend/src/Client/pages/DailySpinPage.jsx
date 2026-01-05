@@ -33,7 +33,7 @@ const DailySpinPage = () => {
 
   const handleCheckIn = () => {
     if (!userId) {
-      alert('Vui lòng đăng nhập để điểm danh.');
+      alert(t('Please CheckIn'));
       navigate('/');
       return;
     }
@@ -41,18 +41,18 @@ const DailySpinPage = () => {
 
     const ok = checkInToday(userId);
     if (!ok) {
-      setMessage('Điểm danh thất bại, vui lòng thử lại.');
+      setMessage(t('CheckInFailed'));
       return;
     }
     setCheckedIn(true);
     const res = grantCheckInCoins(userId, 10);
     setCoins(res.coins);
-    setMessage(res.granted ? 'Điểm danh thành công! +10 xu' : 'Điểm danh thành công!');
+    setMessage(res.granted ? t('CheckInSuccess') : t('CheckInSuccess'));
   };
 
   const handleRedeem = (rewardId) => {
     if (!userId) {
-      alert('Vui lòng đăng nhập để đổi thưởng.');
+      alert(t('Please Redeem'));
       navigate('/');
       return;
     }
@@ -60,11 +60,11 @@ const DailySpinPage = () => {
     if (res.ok) {
       setCoins(res.coins);
       setRedeemHistory(getRedeemHistory(userId));
-      setMessage(`Đổi thưởng thành công: ${res.reward.label}`);
+      setMessage(t('RedeemSuccess') + res.reward.label);
     } else if (res.reason === 'insufficient') {
-      setMessage('Xu không đủ để đổi phần thưởng này.');
+      setMessage(t('InsufficientCoins'));
     } else {
-      setMessage('Không thể đổi thưởng. Vui lòng thử lại.');
+      setMessage(t('RedeemFailed'));
     }
   };
 

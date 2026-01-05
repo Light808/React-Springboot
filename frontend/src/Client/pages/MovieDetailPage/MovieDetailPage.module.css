@@ -1012,6 +1012,15 @@
   position: relative;
 }
 
+.user-avatar {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.user-avatar:hover {
+  transform: scale(1.1);
+}
+
 .user-avatar img {
   width: 40px;
   height: 40px;
@@ -1030,6 +1039,12 @@
   font-weight: 600;
   color: #111827;
   font-size: 0.95rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.user-name:hover {
+  color: #3b82f6;
 }
 
 .rating-time {

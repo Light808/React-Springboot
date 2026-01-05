@@ -1,7 +1,7 @@
 /* Help Center Page */
 .help-center-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: rgb(254, 255, 255);
   padding: 2rem 0;
 }
 
@@ -15,7 +15,7 @@
 .help-center-header {
   text-align: center;
   margin-bottom: 3rem;
-  color: white;
+  color: black;
 }
 
 .breadcrumb {
@@ -26,14 +26,14 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: black !important;
   text-decoration: none;
   font-size: 0.9rem;
   transition: color 0.3s ease;
 }
 
 .breadcrumb-link:hover {
-  color: white;
+  color: black;
 }
 
 .help-center-title {
@@ -92,7 +92,7 @@
   font-size: 2rem;
   font-weight: 600;
   margin: 0 0 1.5rem 0;
-  color: white;
+  color: black !important;
   text-align: center;
 }
 
@@ -110,10 +110,11 @@
   background: rgba(255, 255, 255, 0.1);
   border: 2px solid transparent;
   border-radius: 12px;
-  color: white;
+  color: black;
   cursor: pointer;
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
+  border: 1px solid #292b2e !important;
 }
 
 .category-card:hover {
@@ -128,15 +129,18 @@
 
 .category-icon {
   flex-shrink: 0;
+  color: black !important;
 }
 
 .category-name {
   flex: 1;
   font-weight: 500;
+  color: black !important;
 }
 
 .category-arrow {
   opacity: 0.7;
+  color: black !important;
 }
 
 /* Popular Section */
@@ -184,7 +188,7 @@
 
 .popular-badge {
   background: #10b981;
-  color: white;
+  color: black;
   padding: 0.25rem 0.75rem;
   border-radius: 20px;
   font-size: 0.75rem;
@@ -273,12 +277,7 @@
 .no-results {
   text-align: center;
   padding: 3rem;
-  color: white;
-}
-
-.no-results-icon {
-  margin-bottom: 1rem;
-  opacity: 0.7;
+  color: #2e2929 !important;
 }
 
 .no-results h3 {
@@ -298,7 +297,7 @@
 
 .contact-subtitle {
   text-align: center;
-  color: rgba(255, 255, 255, 0.9);
+  color: black;
   margin: 0 0 2rem 0;
   font-size: 1.1rem;
 }
@@ -343,23 +342,23 @@
   font-size: 1.2rem;
   font-weight: 600;
   margin: 0 0 0.5rem 0;
-  color: white;
+  color: black !important;
 }
 
 .contact-description {
-  color: rgba(255, 255, 255, 0.8);
+  color: black !important;
   margin: 0 0 0.5rem 0;
   font-size: 0.9rem;
 }
 
 .contact-detail {
-  color: white;
+  color: black !important;
   font-weight: 500;
   margin: 0 0 0.25rem 0;
 }
 
 .contact-availability {
-  color: rgba(255, 255, 255, 0.7);
+  color: black !important;
   font-size: 0.8rem;
   margin: 0;
 }
@@ -384,9 +383,10 @@
   border-radius: 12px;
   padding: 2rem;
   text-decoration: none;
-  color: white;
+  color: rgb(8, 8, 8) !important;
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
+  border: 1px solid #292b2e !important;
 }
 
 .resource-card:hover {

@@ -33,7 +33,6 @@ public class NewsController {
 
     private final NewsRepository newsRepository;
 
-    // Get all news with pagination, filtering, and search
     @GetMapping
     public ResponseEntity<Map<String, Object>> getAllNews(
             @RequestParam(defaultValue = "0") int page,

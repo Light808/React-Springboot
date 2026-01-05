@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Eye, Edit, Trash2, Plus, Search, RefreshCw, MapPin, Phone, Mail, Clock, Users, Star, Film } from 'lucide-react';
-import { getAllCinemas, getCinemaById, createCinema, updateCinema, deleteCinema, getCinemaMovieCounts } from '../../../services/cinemaService';
+import { getAllCinemas, createCinema, updateCinema, deleteCinema, getCinemaMovieCounts } from '../../../services/cinemaService';
 import useToast from '../../../Admin/hooks/useToast';
 import ToastContainer from '../Toast/ToastContainer';
 import CreateCinemaModal from './CreateCinemaModal';
@@ -8,8 +8,10 @@ import EditCinemaModal from './EditCinemaModal';
 import CinemaDetailsModal from './CinemaDetailsModal';
 import CinemaMoviesModal from './CinemaMoviesModal';
 import styles from './CinemaManagement.module.css';
+import { useTranslation } from 'react-i18next';
 
 const CinemaManagement = () => {
+  const { t } = useTranslation();
   const [cinemas, setCinemas] = useState([]);
   const [filteredCinemas, setFilteredCinemas] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -37,7 +39,7 @@ const CinemaManagement = () => {
       setMovieCounts(movieCountsData);
     } catch (error) {
       console.error('Error fetching cinemas:', error);
-      showError('Không thể tải danh sách rạp chiếu');
+      showError(t('Cannot load cinema list'));
     } finally {
       setLoading(false);
     }
@@ -54,7 +56,6 @@ const CinemaManagement = () => {
     return Array.from(set).sort();
   }, [cinemas]);
 
-  // Filter cinemas based on city and search term
   useEffect(() => {
     let filtered = cinemas;
     if (selectedCity) {
@@ -76,20 +77,18 @@ const CinemaManagement = () => {
       const newCinema = await createCinema(cinemaData);
       setCinemas(prev => [newCinema, ...prev]);
       setShowCreateModal(false);
-      showSuccess('Thêm rạp chiếu thành công!');
+      showSuccess(t('Add cinema successfully!'));
     } catch (error) {
       console.error('Error creating cinema:', error);
-      showError('Không thể thêm rạp chiếu. Vui lòng thử lại.');
+      showError(t('Cannot add cinema. Please try again.'));
     }
   };
 
   const handleUpdateCinema = async (cinemaData) => {
     try {
-      const { movies, movieIds, ...updateData } = cinemaData;
+      const { movies: _movies, movieIds: _movieIds, ...updateData } = cinemaData;
       
       const updatedCinema = await updateCinema(selectedCinema.id, updateData);
-      
-      // Giữ lại danh sách phim hiện có khi cập nhật state
       const currentMovies = cinemaMovies[selectedCinema.id] || selectedCinema.movies || [];
       const cinemaWithMovies = {
         ...updatedCinema,
@@ -102,22 +101,22 @@ const CinemaManagement = () => {
       ));
       setShowEditModal(false);
       setSelectedCinema(null);
-      showSuccess('Cập nhật rạp chiếu thành công!');
+      showSuccess(t('Update cinema successfully!'));
     } catch (error) {
       console.error('Error updating cinema:', error);
-      showError('Không thể cập nhật rạp chiếu. Vui lòng thử lại.');
+      showError(t('Cannot update cinema. Please try again.'));
     }
   };
 
   const handleDeleteCinema = async (cinemaId) => {
-    if (window.confirm('Bạn có chắc chắn muốn xóa rạp chiếu này?')) {
+    if (window.confirm(t('Are you sure you want to delete this cinema?'))) {
       try {
         await deleteCinema(cinemaId);
         setCinemas(prev => prev.filter(cinema => cinema.id !== cinemaId));
-        showSuccess('Xóa rạp chiếu thành công!');
+        showSuccess(t('Delete cinema successfully!'));
       } catch (error) {
         console.error('Error deleting cinema:', error);
-        showError('Không thể xóa rạp chiếu. Vui lòng thử lại.');
+        showError(t('Cannot delete cinema. Please try again.'));
       }
     }
   };
@@ -128,7 +127,6 @@ const CinemaManagement = () => {
   };
 
   const handleEditCinema = (cinema) => {
-    // Bao gồm movies từ state nếu có
     const cinemaWithMovies = {
       ...cinema,
       movies: cinemaMovies[cinema.id] || cinema.movies || [],
@@ -139,7 +137,6 @@ const CinemaManagement = () => {
   };
 
   const handleManageMovies = (cinema) => {
-    // Bao gồm movies từ state nếu có
     const cinemaWithMovies = {
       ...cinema,
       movies: cinemaMovies[cinema.id] || cinema.movies || [],
@@ -150,27 +147,26 @@ const CinemaManagement = () => {
   };
 
   const handleMoviesUpdated = (updatedMovies) => {
-    // Cập nhật movies trong state local
+    // Update cinema movies
     if (selectedCinema && updatedMovies) {
       setCinemaMovies(prev => ({
         ...prev,
         [selectedCinema.id]: updatedMovies
       }));
       
-      // Cập nhật movie counts
+      // Update movie counts
       setMovieCounts(prev => ({
         ...prev,
         [selectedCinema.id]: updatedMovies.length
       }));
       
-      // Cập nhật selectedCinema với movies mới
+      // Update selectedCinema with new movies
       setSelectedCinema(prev => ({
         ...prev,
         movies: updatedMovies,
         movieIds: updatedMovies.map(movie => movie.id)
       }));
     }
-    // Refresh cinemas data to get updated movie lists
     fetchCinemas();
   };
 
@@ -196,7 +192,7 @@ const CinemaManagement = () => {
     return (
       <div className={styles.loadingContainer}>
         <div className={styles.loadingSpinner}></div>
-        <p>Đang tải danh sách rạp chiếu...</p>
+        <p>{t('Loading cinema list...')}</p>
       </div>
     );
   }
@@ -205,8 +201,8 @@ const CinemaManagement = () => {
     <div className={styles.cinemaManagement}>
       <div className={styles.header}>
         <div className={styles.headerLeft}>
-          <h2>Quản lý rạp chiếu</h2>
-          <p>Tổng cộng: {filteredCinemas.length} rạp chiếu</p>
+          <h2>{t('Cinema Management')}</h2>
+          <p>{t('All')}: {filteredCinemas.length} {t('cinemas')}</p>
         </div>
         <div className={styles.headerRight}>
           <div className={styles.searchContainer}>
@@ -217,7 +213,7 @@ const CinemaManagement = () => {
               className={styles.searchInput}
               style={{ maxWidth: 240 }}
             >
-              <option value="">Tất cả thành phố</option>
+              <option value="">{t('All cities')}</option>
               {cityOptions.map(city => (
                 <option key={city} value={city}>{city}</option>
               ))}
@@ -227,7 +223,7 @@ const CinemaManagement = () => {
             <Search className={styles.searchIcon} size={20} />
             <input
               type="text"
-              placeholder="Tìm kiếm rạp chiếu..."
+              placeholder={t('Search cinemas...')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className={styles.searchInput}
@@ -238,7 +234,7 @@ const CinemaManagement = () => {
             className={styles.addButton}
           >
             <Plus size={20} />
-            Thêm rạp chiếu
+            {t('Add cinema')}
           </button>
           <button
             onClick={fetchCinemas}
@@ -306,15 +302,15 @@ const CinemaManagement = () => {
               <div className={styles.cinemaStats}>
                 <div className={styles.statItem}>
                   <Users size={16} />
-                  <span>{cinema.totalSeats || 0} ghế</span>
+                  <span>{cinema.totalSeats || 0} {t('seats')}</span>
                 </div>
                 <div className={styles.statItem}>
                   <Clock size={16} />
-                  <span>{cinema.totalRooms || 0} phòng</span>
+                  <span>{cinema.totalRooms || 0} {t('rooms')}</span>
                 </div>
                 <div className={styles.statItem}>
                   <Star size={16} />
-                  <span>{movieCounts[cinema.id] || cinema.movieIds?.length || 0} phim</span>
+                  <span>{movieCounts[cinema.id] || cinema.movieIds?.length || 0} {t('movies')}</span>
                 </div>
               </div>
 
@@ -327,7 +323,7 @@ const CinemaManagement = () => {
                   ))}
                   {cinema.facilities.length > 3 && (
                     <span className={styles.moreFacilities}>
-                      +{cinema.facilities.length - 3} khác
+                      +{cinema.facilities.length - 3} {t('other')}
                     </span>
                   )}
                 </div>
@@ -337,28 +333,28 @@ const CinemaManagement = () => {
                 <button
                   onClick={() => handleViewCinema(cinema)}
                   className={styles.actionButton}
-                  title="Xem chi tiết"
+                  title={t('View details')}
                 >
                   <Eye size={16} />
                 </button>
                 <button
                   onClick={() => handleManageMovies(cinema)}
                   className={styles.actionButton}
-                  title="Quản lý phim"
+                  title={t('Manage movies')}
                 >
                   <Film size={16} />
                 </button>
                 <button
                   onClick={() => handleEditCinema(cinema)}
                   className={styles.actionButton}
-                  title="Chỉnh sửa"
+                  title={t('Edit')}
                 >
                   <Edit size={16} />
                 </button>
                 <button
                   onClick={() => handleDeleteCinema(cinema.id)}
                   className={`${styles.actionButton} ${styles.deleteButton}`}
-                  title="Xóa"
+                  title={t('Delete')}
                 >
                   <Trash2 size={16} />
                 </button>
@@ -371,14 +367,14 @@ const CinemaManagement = () => {
       {filteredCinemas.length === 0 && (
         <div className={styles.emptyState}>
           <MapPin size={64} />
-          <h3>Không có rạp chiếu nào</h3>
-          <p>Hãy thêm rạp chiếu đầu tiên của bạn</p>
+          <h3>{t('No cinemas found')}</h3>
+          <p>{t('Add your first cinema')}</p>
           <button
             onClick={() => setShowCreateModal(true)}
             className={styles.addFirstButton}
           >
             <Plus size={20} />
-            Thêm rạp chiếu đầu tiên
+            {t('Add first cinema')}
           </button>
         </div>
       )}

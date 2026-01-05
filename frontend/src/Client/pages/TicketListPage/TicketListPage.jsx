@@ -193,7 +193,6 @@ const TicketListPage = ({ userId }) => {
       const filename = `ticket_${ticket?.ticketNumber || ticketId}.pdf`;
       downloadFile(blob, filename);
     } catch (error) {
-      console.error('Error downloading ticket:', error);
       alert('Không thể tải vé. Vui lòng thử lại sau.');
     } finally {
       setActionLoading(prev => ({ ...prev, [ticketId]: false }));

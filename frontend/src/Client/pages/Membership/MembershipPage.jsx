@@ -1,6 +1,6 @@
 import React from 'react';
 import { getCurrentUserSync } from '../../../services/userService';
-import { getMemberOverview, getMemberTransactions, getMemberNews } from '../../../services/memberService';
+import { getMemberOverview, getMemberTransactions } from '../../../services/memberService';
 import { useTranslation } from 'react-i18next';
 
 const MembershipPage = () => {
@@ -8,20 +8,17 @@ const MembershipPage = () => {
   const user = getCurrentUserSync();
   const [overview, setOverview] = React.useState({ name: user?.fullName || user?.username || 'Thành viên CGV', tier: user?.tier || 'Member', points: user?.rewardPoints ?? 0, promotions: [] });
   const [transactions, setTransactions] = React.useState([]);
-  const [setNews] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
     const load = async () => {
       try {
-        const [ov, tx, nw] = await Promise.all([
+        const [ov, tx] = await Promise.all([
           getMemberOverview().catch(() => null),
-          getMemberTransactions().catch(() => []),
-          getMemberNews().catch(() => [])
+          getMemberTransactions().catch(() => [])
         ]);
         if (ov) setOverview(ov);
         setTransactions(tx || []);
-        setNews(nw || []);
       } finally {
         setLoading(false);
       }

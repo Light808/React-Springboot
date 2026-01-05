@@ -45,9 +45,14 @@ export async function getMemberTransactions() {
 
 export async function getMemberNews() {
   try {
-    const res = await fetch(`${API_BASE_URL}/members/news`);
-    if (res.ok) return await res.json();
-  } catch {}
+    const res = await fetch(`${API_BASE_URL}/news?featured=true&size=5`);
+    if (res.ok) {
+      const data = await res.json();
+      return data.news || data || [];
+    }
+  } catch (err) {
+    console.warn('Failed to fetch member news:', err);
+  }
   return [];
 }
 

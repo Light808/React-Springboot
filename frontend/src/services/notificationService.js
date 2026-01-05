@@ -3,10 +3,22 @@ const API_BASE_URL = 'http://localhost:8080/api';
 // get all notifications by user
 export async function getNotificationsByUser(userId) {
   try {
-    const response = await fetch(`${API_BASE_URL}/notifications/user/${userId}`);
+    const response = await fetch(`${API_BASE_URL}/notifications/user/${userId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    
     if (!response.ok) {
+      // If server is not available, return empty array instead of throwing
+      if (response.status === 0 || response.status >= 500) {
+        console.warn('Notification service unavailable, returning empty array');
+        return [];
+      }
       throw new Error(`HTTP error! status: ${response.status}`);
     }
+    
     const notifications = await response.json();
     
     // Trigger custom event for real-time updates
@@ -14,38 +26,73 @@ export async function getNotificationsByUser(userId) {
       detail: { userId, notifications }
     }));
     
-    return notifications;
+    return notifications || [];
   } catch (error) {
+    // If it's a network error (Failed to fetch), return empty array instead of throwing
+    if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+      console.warn('Network error fetching notifications, backend may be offline. Returning empty array.');
+      return [];
+    }
     console.error('Error fetching notifications:', error);
-    throw error;
+    // Return empty array instead of throwing to prevent app crash
+    return [];
   }
 }
 
 // get unread notifications by user
 export async function getUnreadNotificationsByUser(userId) {
   try {
-    const response = await fetch(`${API_BASE_URL}/notifications/user/${userId}/unread`);
+    const response = await fetch(`${API_BASE_URL}/notifications/user/${userId}/unread`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    
     if (!response.ok) {
+      if (response.status === 0 || response.status >= 500) {
+        console.warn('Notification service unavailable, returning empty array');
+        return [];
+      }
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    return await response.json();
+    return await response.json() || [];
   } catch (error) {
+    if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+      console.warn('Network error fetching unread notifications, backend may be offline. Returning empty array.');
+      return [];
+    }
     console.error('Error fetching unread notifications:', error);
-    throw error;
+    return [];
   }
 }
 
 // get unread notification count
 export async function getUnreadNotificationCount(userId) {
   try {
-    const response = await fetch(`${API_BASE_URL}/notifications/user/${userId}/count`);
+    const response = await fetch(`${API_BASE_URL}/notifications/user/${userId}/count`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    
     if (!response.ok) {
+      if (response.status === 0 || response.status >= 500) {
+        console.warn('Notification service unavailable, returning 0');
+        return 0;
+      }
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    return await response.json();
+    const count = await response.json();
+    return count || 0;
   } catch (error) {
+    if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+      console.warn('Network error fetching notification count, backend may be offline. Returning 0.');
+      return 0;
+    }
     console.error('Error fetching unread notification count:', error);
-    throw error;
+    return 0;
   }
 }
 

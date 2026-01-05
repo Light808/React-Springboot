@@ -16,6 +16,7 @@ import NewsPage from './Client/pages/NewsPage/NewsPage';
 import NewsDetailPage from './Client/pages/NewsDetailPage/NewsDetailPage';
 import MembershipPage from './Client/pages/Membership/MembershipPage';
 import EGiftPage from './Client/pages/EGift/EGiftPage';
+import RewardsPage from './Client/pages/RewardsPage/RewardsPage';
 import AdminDashboard from './Admin/pages/Admin/AdminDashboard';
 import AdminRoute from './Admin/components/Admin/AdminRoute';
 import PaymentManagement from './Admin/pages/PaymentManagement/PaymentManagement';
@@ -31,6 +32,11 @@ import AboutUsPage from './Client/pages/AboutUsPage/AboutUsPage';
 import HelpCenterPage from './Client/pages/HelpCenterPage/HelpCenterPage';
 import FAQPage from './Client/pages/FAQPage/FAQPage';
 import TechnicalSupportPage from './Client/pages/TechnicalSupportPage/TechnicalSupportPage';
+import ContactUsPage from './Client/pages/ContactUsPage/ContactUsPage';
+import FeedbackPage from './Client/pages/FeedbackPage/FeedbackPage';
+import TermsOfServicePage from './Client/pages/TermsOfServicePage/TermsOfServicePage';
+import RefundPolicyPage from './Client/pages/RefundPolicyPage/RefundPolicyPage';
+import ComplaintPage from './Client/pages/ComplaintPage/ComplaintPage';
 
 function ProtectedRoute({ children }) {
   return isAuthenticated() ? children : <Navigate to="/" replace />;
@@ -105,6 +111,7 @@ function RouteAwareLayout({ user, setUser, onLogout }) {
           <Route path="/news" element={<NewsPage />} />
           <Route path="/news/:id" element={<NewsDetailPage />} />
           <Route path="/membership" element={<MembershipPage />} />
+          <Route path="/rewards" element={<RewardsPage />} />
           <Route path="/egift" element={<EGiftPage />} />
           <Route path="/game" element={<DailySpinPage />} />
           <Route path="/payment/sandbox" element={<PaymentSandbox />} />
@@ -115,6 +122,11 @@ function RouteAwareLayout({ user, setUser, onLogout }) {
           <Route path="/help" element={<HelpCenterPage />} />
           <Route path="/faq" element={<FAQPage />} />
           <Route path="/support" element={<TechnicalSupportPage />} />
+          <Route path="/contact" element={<ContactUsPage />} />
+          <Route path="/feedback" element={<FeedbackPage />} />
+          <Route path="/terms" element={<TermsOfServicePage />} />
+          <Route path="/refund-policy" element={<RefundPolicyPage />} />
+          <Route path="/complaint" element={<ComplaintPage />} />
 
           {/* Protected routes */}
           <Route

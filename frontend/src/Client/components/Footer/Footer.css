@@ -85,7 +85,7 @@
 }
 
 /* Section Titles */
-.section-title {
+.title-section {
   color: #f8fafc !important;
   font-size: 1.1rem !important;
   font-weight: 700 !important;
@@ -95,7 +95,7 @@
   position: relative !important;
 }
 
-.section-title::after {
+.title-section::after {
   content: '' !important;
   position: absolute !important;
   bottom: -2px !important;
@@ -574,7 +574,7 @@
     font-size: 0.85rem;
   }
   
-  .section-title {
+  .title-section {
     font-size: 1rem;
   }
   

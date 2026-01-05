@@ -72,9 +72,9 @@ const NewsDetailPage = () => {
 
   if (loading) {
     return (
-      <div className={`${styles['news-detail-page']}`}>
-        <div className={`${styles['loading-container']}`}>
-          <div className={`${styles['loading-spinner']}`}></div>
+      <div className={`${styles['cnewsd-page']}`}>
+        <div className={`${styles['cnewsd-loading-container']}`}>
+          <div className={`${styles['cnewsd-loading-spinner']}`}></div>
           <p>{t('Đang tải bài viết...')}</p>
         </div>
       </div>
@@ -83,8 +83,8 @@ const NewsDetailPage = () => {
 
   if (error || !article) {
     return (
-      <div className={`${styles['news-detail-page']}`}>
-        <div className={`${styles['error-container']}`}>
+      <div className={`${styles['cnewsd-page']}`}>
+        <div className={`${styles['cnewsd-error-container']}`}>
           <h3>{t('Không tìm thấy bài viết')}</h3>
           <p>{error || t('Bài viết không tồn tại hoặc đã bị xóa')}</p>
           <button onClick={() => navigate('/news')}>
@@ -97,12 +97,12 @@ const NewsDetailPage = () => {
   }
 
   return (
-    <div className={`${styles['news-detail-page']}`}>
-      <div className={`${styles['news-detail-container']}`}>
+    <div className={`${styles['cnewsd-page']}`}>
+      <div className={`${styles['cnewsd-container']}`}>
         {/* Back button */}
-        <div className={`${styles['news-detail-header']}`}>
+        <div className={`${styles['cnewsd-header']}`}>
           <button 
-            className={`${styles['back-button']}`}
+            className={`${styles['cnewsd-back-button']}`}
             onClick={() => navigate('/news')}
           >
             <ArrowLeft size={20} />
@@ -111,27 +111,27 @@ const NewsDetailPage = () => {
         </div>
 
         {/* Article content */}
-        <article className={`${styles['news-article']}`}>
-          <div className={`${styles['article-meta']}`}>
-            <div className={`${styles['article-category']}`}>{article.category}</div>
-            <div className={`${styles['article-date']}`}>
+        <article className={`${styles['cnewsd-article']}`}>
+          <div className={`${styles['cnewsd-article-meta']}`}>
+            <div className={`${styles['cnewsd-article-category']}`}>{article.category}</div>
+            <div className={`${styles['cnewsd-article-date']}`}>
               <Calendar size={16} />
               {formatDate(article.publishDate)}
             </div>
-            <div className={`${styles['article-views']}`}>
+            <div className={`${styles['cnewsd-article-views']}`}>
               <Eye size={16} />
               {article.views.toLocaleString()} {t('lượt xem')}
             </div>
           </div>
 
           {/* Article title */}
-          <h1 className={`${styles['article-title']}`}>{article.title}</h1>
+          <h1 className={`${styles['cnewsd-article-title']}`}>{article.title}</h1>
 
           {/* Article summary */}
-          <p className={`${styles['article-summary']}`}>{article.summary}</p>
+          <p className={`${styles['cnewsd-article-summary']}`}>{article.summary}</p>
 
           {/* Article image */}
-          <div className={`${styles['article-image']}`}>
+          <div className={`${styles['cnewsd-article-image']}`}>
             <img 
               src={article.imageUrl} 
               alt={article.title}
@@ -140,22 +140,22 @@ const NewsDetailPage = () => {
               }}
             />
             {article.featured && (
-              <div className={`${styles['featured-badge']}`}>{t('Nổi bật')}</div>
+              <div className={`${styles['cnewsd-featured-badge']}`}>{t('Nổi bật')}</div>
             )}
           </div>
 
           {/* Article content */}
           <div 
-            className={`${styles['article-content']}`}
+            className={`${styles['cnewsd-article-content']}`}
             dangerouslySetInnerHTML={{ __html: article.content }}
           />
 
           {/* Article tags */}
-          <div className={`${styles['article-tags']}`}>
+          <div className={`${styles['cnewsd-article-tags']}`}>
             <h4>Tags:</h4>
-            <div className={`${styles['tags-list']}`}>
+            <div className={`${styles['cnewsd-tags-list']}`}>
               {article.tags.map(tag => (
-                <span key={tag} className={`${styles['article-tag']}`}>
+                <span key={tag} className={`${styles['cnewsd-article-tag']}`}>
                   <Tag size={12} />
                   {tag}
                 </span>
@@ -164,17 +164,17 @@ const NewsDetailPage = () => {
           </div>
 
           {/* Article footer */}
-          <div className={`${styles['article-footer']}`}>
-            <div className={`${styles['article-author']}`}> 
+          <div className={`${styles['cnewsd-article-footer']}`}>
+            <div className={`${styles['cnewsd-article-author']}`}> 
               <User size={16} />
               <span>{t('Tác giả:')} {article.author}</span>
             </div>
-            <div className={`${styles['article-actions']}`}>
-              <button className={`${styles['action-btn']}`} onClick={handleShare}>
+            <div className={`${styles['cnewsd-article-actions']}`}>
+              <button className={`${styles['cnewsd-action-btn']}`} onClick={handleShare}>
                 <Share2 size={16} />
                 {t('Chia sẻ')}
               </button>
-              <button className={`${styles['action-btn']}`} onClick={handleBookmark}>
+              <button className={`${styles['cnewsd-action-btn']}`} onClick={handleBookmark}>
                 <Bookmark size={16} />
                 {t('Đánh dấu')}
               </button>
@@ -184,12 +184,12 @@ const NewsDetailPage = () => {
 
         {/* Related articles */}
         {relatedArticles.length > 0 && (
-          <section className={`${styles['related-articles']}`}>
+          <section className={`${styles['cnewsd-related-articles']}`}>
             <h3>{t('Bài viết liên quan')}</h3>
-            <div className={`${styles['related-grid']}`}>
+            <div className={`${styles['cnewsd-related-grid']}`}>
               {relatedArticles.map(relatedArticle => (
-                <div key={relatedArticle.id} className={`${styles['related-card']}`}>
-                  <div className={`${styles['related-image']}`}>
+                <div key={relatedArticle.id} className={`${styles['cnewsd-related-card']}`}>
+                  <div className={`${styles['cnewsd-related-image']}`}>
                     <img 
                       src={relatedArticle.imageUrl} 
                       alt={relatedArticle.title}
@@ -198,20 +198,20 @@ const NewsDetailPage = () => {
                       }}
                     />
                   </div>
-                  <div className={`${styles['related-content']}`}>
-                    <div className={`${styles['related-category']}`}>{relatedArticle.category}</div>
+                  <div className={`${styles['cnewsd-related-content']}`}>
+                    <div className={`${styles['cnewsd-related-category']}`}>{relatedArticle.category}</div>
                     <h4>
                       <Link to={`/news/${relatedArticle.id}`}>
                         {relatedArticle.title}
                       </Link>
                     </h4>
                     <p>{relatedArticle.summary}</p>
-                    <div className={`${styles['related-meta']}`}>
-                      <span className={`${styles['related-date']}`}> 
+                    <div className={`${styles['cnewsd-related-meta']}`}>
+                      <span className={`${styles['cnewsd-related-date']}`}> 
                         <Calendar size={12} />
                         {formatDate(relatedArticle.publishDate)}
                       </span>
-                      <span className={`${styles['related-views']}`}>
+                      <span className={`${styles['cnewsd-related-views']}`}>
                         <Eye size={12} />
                         {relatedArticle.views.toLocaleString()}
                       </span>

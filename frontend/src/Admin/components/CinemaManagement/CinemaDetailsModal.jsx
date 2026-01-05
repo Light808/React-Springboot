@@ -1,8 +1,10 @@
 import React from 'react';
 import { X, MapPin, Phone, Mail, Clock, Users, Star, Globe, MessageCircle, Calendar, Film } from 'lucide-react';
 import styles from './CinemaDetailsModal.module.css';
+import { useTranslation } from 'react-i18next';
 
 const CinemaDetailsModal = ({ cinema, onClose }) => {
+  const { t } = useTranslation();
   if (!cinema) return null;
 
   const formatStatus = (status) => {
@@ -27,7 +29,7 @@ const CinemaDetailsModal = ({ cinema, onClose }) => {
     <div className={styles.modalOverlay}>
       <div className={styles.modalContent}>
         <div className={styles.modalHeader}>
-          <h2>Chi tiết rạp chiếu</h2>
+          <h2>{t('Cinema Details')}</h2>
           <button onClick={onClose} className={styles.closeButton}>
             <X size={24} />
           </button>
@@ -69,12 +71,12 @@ const CinemaDetailsModal = ({ cinema, onClose }) => {
 
           {/* Basic Information */}
           <div className={styles.infoSection}>
-            <h3>Thông tin cơ bản</h3>
+            <h3>{t('Basic Information')}</h3>
             <div className={styles.infoGrid}>
               <div className={styles.infoItem}>
                 <MapPin className={styles.infoIcon} size={20} />
                 <div className={styles.infoContent}>
-                  <span className={styles.infoLabel}>Địa chỉ</span>
+                  <span className={styles.infoLabel}>{t('Address')}</span>
                   <span className={styles.infoValue}>{cinema.address}</span>
                 </div>
               </div>
@@ -82,7 +84,7 @@ const CinemaDetailsModal = ({ cinema, onClose }) => {
               <div className={styles.infoItem}>
                 <MapPin className={styles.infoIcon} size={20} />
                 <div className={styles.infoContent}>
-                  <span className={styles.infoLabel}>Thành phố</span>
+                  <span className={styles.infoLabel}>{t('City')}</span>
                   <span className={styles.infoValue}>{cinema.city}</span>
                 </div>
               </div>
@@ -91,7 +93,7 @@ const CinemaDetailsModal = ({ cinema, onClose }) => {
                 <div className={styles.infoItem}>
                   <Phone className={styles.infoIcon} size={20} />
                   <div className={styles.infoContent}>
-                    <span className={styles.infoLabel}>Số điện thoại</span>
+                    <span className={styles.infoLabel}>{t('Phone')}</span>
                     <span className={styles.infoValue}>{cinema.phone}</span>
                   </div>
                 </div>
@@ -101,7 +103,7 @@ const CinemaDetailsModal = ({ cinema, onClose }) => {
                 <div className={styles.infoItem}>
                   <Mail className={styles.infoIcon} size={20} />
                   <div className={styles.infoContent}>
-                    <span className={styles.infoLabel}>Email</span>
+                    <span className={styles.infoLabel}>{t('Email')}</span>
                     <span className={styles.infoValue}>{cinema.email}</span>
                   </div>
                 </div>
@@ -111,13 +113,13 @@ const CinemaDetailsModal = ({ cinema, onClose }) => {
 
           {/* Technical Information */}
           <div className={styles.infoSection}>
-            <h3>Thông tin kỹ thuật</h3>
+            <h3>{t('Technical Information')}</h3>
             <div className={styles.statsGrid}>
               <div className={styles.statItem}>
                 <Users className={styles.statIcon} size={24} />
                 <div className={styles.statContent}>
                   <span className={styles.statValue}>{cinema.totalSeats || 0}</span>
-                  <span className={styles.statLabel}>Tổng số ghế</span>
+                  <span className={styles.statLabel}>{t('Total Seats')}</span>
                 </div>
               </div>
               
@@ -125,7 +127,7 @@ const CinemaDetailsModal = ({ cinema, onClose }) => {
                 <Clock className={styles.statIcon} size={24} />
                 <div className={styles.statContent}>
                   <span className={styles.statValue}>{cinema.totalRooms || 0}</span>
-                  <span className={styles.statLabel}>Số phòng</span>
+                  <span className={styles.statLabel}>{t('Total Rooms')}</span>
                 </div>
               </div>
               
@@ -133,7 +135,7 @@ const CinemaDetailsModal = ({ cinema, onClose }) => {
                 <Film className={styles.statIcon} size={24} />
                 <div className={styles.statContent}>
                   <span className={styles.statValue}>{cinema.movieIds?.length || 0}</span>
-                  <span className={styles.statLabel}>Số phim đang chiếu</span>
+                  <span className={styles.statLabel}>{t('Total Movies')}</span>
                 </div>
               </div>
             </div>
@@ -142,7 +144,7 @@ const CinemaDetailsModal = ({ cinema, onClose }) => {
               <div className={styles.infoItem}>
                 <Clock className={styles.infoIcon} size={20} />
                 <div className={styles.infoContent}>
-                  <span className={styles.infoLabel}>Giờ mở cửa</span>
+                  <span className={styles.infoLabel}>{t('Opening Hours')}</span>
                   <span className={styles.infoValue}>{cinema.openingHours}</span>
                 </div>
               </div>
@@ -152,7 +154,7 @@ const CinemaDetailsModal = ({ cinema, onClose }) => {
           {/* Facilities */}
           {cinema.facilities && cinema.facilities.length > 0 && (
             <div className={styles.infoSection}>
-              <h3>Tiện ích</h3>
+              <h3>{t('Facilities')}</h3>
               <div className={styles.facilitiesList}>
                 {cinema.facilities.map((facility, index) => (
                   <span key={index} className={styles.facilityTag}>
@@ -166,7 +168,7 @@ const CinemaDetailsModal = ({ cinema, onClose }) => {
           {/* Links */}
           {(cinema.website || cinema.socialMedia) && (
             <div className={styles.infoSection}>
-              <h3>Liên kết</h3>
+              <h3>{t('Links')}</h3>
               <div className={styles.linksList}>
                 {cinema.website && (
                   <a 
@@ -176,7 +178,7 @@ const CinemaDetailsModal = ({ cinema, onClose }) => {
                     className={styles.linkItem}
                   >
                     <Globe size={20} />
-                    <span>Website</span>
+                    <span>{t('Website')}</span>
                   </a>
                 )}
                 
@@ -193,12 +195,12 @@ const CinemaDetailsModal = ({ cinema, onClose }) => {
           {/* Movies List */}
           {cinema.movieIds && cinema.movieIds.length > 0 && (
             <div className={styles.infoSection}>
-              <h3>Phim đang chiếu</h3>
+              <h3>{t('Movies')}</h3>
               <div className={styles.moviesList}>
                 {cinema.movieIds.map((movieId, index) => (
                   <div key={index} className={styles.movieItem}>
                     <Film size={16} />
-                    <span>Phim ID: {movieId}</span>
+                    <span>{t('Movie ID')}: {movieId}</span>
                   </div>
                 ))}
               </div>
@@ -208,7 +210,7 @@ const CinemaDetailsModal = ({ cinema, onClose }) => {
 
         <div className={styles.modalFooter}>
           <button onClick={onClose} className={styles.closeModalButton}>
-            Đóng
+            {t('Close')}
           </button>
         </div>
       </div>

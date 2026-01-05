@@ -48,7 +48,7 @@ const Homepage = () => {
 
   if (loading) {
     return (
-      <div className="homepage">
+      <div className="landingpage">
         <div className="loading-container">
           <div className="loading-spinner"></div>
           <p>{t('Loadinghomepage')}</p>
@@ -59,7 +59,7 @@ const Homepage = () => {
 
   if (error) {
     return (
-      <div className="homepage">
+      <div className="landingpage">
         <div className="error-container">
           <p>{error}</p>
           <button onClick={() => window.location.reload()}>{t('Reload Server')}</button>
@@ -69,10 +69,10 @@ const Homepage = () => {
   }
 
   return (
-    <div className="homepage">
+    <div className="landingpage">
       <main className="main-content">
         <HeroSection />
-        <MovieCarousel movies={featuredMovies} />
+        <MovieCarousel movies={featuredMovies.length > 0 ? featuredMovies : movies.slice(0, 8)} />
         <div className="content-wrapper" style={{ maxWidth: 1200, margin: '0 auto' }}>
           <div className="movie-tabs">
             {tabs.map(tab => (

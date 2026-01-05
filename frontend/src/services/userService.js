@@ -303,6 +303,31 @@ export function generateAvatarForCurrentUser() {
   }
 }
 
+// Get user profile by userId (for viewing other users' profiles)
+export async function getUserProfileById(userId) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/users/profile?userId=${userId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+
+    if (!res.ok) {
+      if (res.status === 404) {
+        throw new Error('User not found');
+      }
+      throw new Error(`Get user profile failed: ${res.status}`);
+    }
+
+    const userData = await res.json();
+    return userData;
+  } catch (error) {
+    console.error('Get user profile by ID error:', error);
+    throw new Error(error.message || 'Get user profile failed. Please try again.');
+  }
+}
+
 export async function checkUsername(username) {
   try {
     const res = await fetch(`${API_BASE_URL}/users/check-username?username=${encodeURIComponent(username)}`);

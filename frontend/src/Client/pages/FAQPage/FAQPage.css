@@ -1,7 +1,7 @@
 /* FAQ Page */
 .faq-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: rgb(252, 249, 249);
   padding: 2rem 0;
 }
 
@@ -26,7 +26,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(19, 18, 18, 0.8);
   text-decoration: none;
   font-size: 0.9rem;
   transition: color 0.3s ease;
@@ -41,12 +41,14 @@
   font-weight: 700;
   margin: 0 0 1rem 0;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  color: rgba(19, 18, 18, 0.8);
 }
 
 .faq-subtitle {
   font-size: 1.2rem;
   margin: 0;
   opacity: 0.9;
+  color: rgba(19, 18, 18, 0.521);
 }
 
 /* Search Section */
@@ -107,10 +109,10 @@
   align-items: center;
   gap: 1rem;
   padding: 1.5rem;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgb(255, 255, 255);
   border: 2px solid transparent;
   border-radius: 12px;
-  color: white;
+  color: rgb(0, 0, 0);
   cursor: pointer;
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
@@ -300,11 +302,11 @@
   font-size: 1.5rem;
   font-weight: 600;
   margin: 0 0 0.5rem 0;
-  color: white;
+  color: rgb(0, 0, 0);
 }
 
 .contact-content p {
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(10, 9, 9, 0.8);
   margin: 0 0 1.5rem 0;
   font-size: 1.1rem;
 }
@@ -339,7 +341,7 @@
 
 .contact-btn.secondary {
   background: rgba(255, 255, 255, 0.2);
-  color: white;
+  color: rgb(50, 86, 204);
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
 

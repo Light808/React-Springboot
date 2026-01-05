@@ -134,6 +134,13 @@ const Header = ({ user, setUser, onLogout }) => {
     setError(null);
     try {
       const data = await getCinemas();
+      // Handle empty array (backend offline or no cinemas)
+      if (!data || data.length === 0) {
+        setCinemas([]);
+        setFilteredCinemas([]);
+        // Don't set error if it's just empty array (backend might be offline)
+        return;
+      }
       setCinemas(data);
       let savedCity = null;
       try { savedCity = localStorage.getItem('selectedCity'); } catch {}
@@ -144,8 +151,11 @@ const Header = ({ user, setUser, onLogout }) => {
       }
       filterCinemas(data, initialCity, cinemaSearchQuery);
     } catch (err) {
-      setError('cannot load cinema list');
-      console.error('Error fetching cinemas:', err);
+      // Only set error if it's not a network error (already handled in service)
+      if (!err.message.includes('Failed to fetch') && !err.message.includes('NetworkError')) {
+        setError('cannot load cinema list');
+        console.error('Error fetching cinemas:', err);
+      }
     } finally {
       setLoading(false);
     }

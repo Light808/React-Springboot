@@ -1,7 +1,8 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Star, Send } from 'lucide-react';
 import { createReview } from '../../../services/reviewService';
+import { getCurrentUserSync, isAuthenticated } from '../../../services/userService';
 import styles from './ReviewForm.module.css';
 import { useTranslation } from 'react-i18next';
 
@@ -9,10 +10,17 @@ const ReviewForm = ({ movieId, onReviewAdded }) => {
   const { t } = useTranslation();
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
-  const [userName, setUserName] = useState('');
+  const [currentUser, setCurrentUser] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+
+  useEffect(() => {
+    if (isAuthenticated()) {
+      const user = getCurrentUserSync();
+      setCurrentUser(user);
+    }
+  }, []);
 
   const handleRatingClick = (selectedRating) => {
     setRating(selectedRating);
@@ -21,8 +29,8 @@ const ReviewForm = ({ movieId, onReviewAdded }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!userName.trim()) {
-      setError(t('Please enter your name'));
+    if (!isAuthenticated() || !currentUser) {
+      setError(t('Please login to submit a review'));
       return;
     }
     
@@ -41,10 +49,11 @@ const ReviewForm = ({ movieId, onReviewAdded }) => {
     setSuccess('');
 
     try {
+      const userName = currentUser.fullName || currentUser.username;
       const reviewData = {
         movieId: movieId,
-        userId: userName.trim(),
-        userName: userName.trim(),
+        userId: currentUser.id || currentUser.username,
+        userName: userName,
         rating: rating,
         comment: comment.trim(),
         likes: 0,
@@ -57,7 +66,6 @@ const ReviewForm = ({ movieId, onReviewAdded }) => {
       setSuccess(t('Your review has been submitted successfully!'));
       setRating(0);
       setComment('');
-      setUserName('');
       
       if (onReviewAdded) {
         setTimeout(() => {
@@ -76,20 +84,16 @@ const ReviewForm = ({ movieId, onReviewAdded }) => {
       <h3 className={`${styles['review-form-title']}`}>{t('Write your review ')}</h3>
       
       <form onSubmit={handleSubmit} className={`${styles['review-form']}`}>
-        <div className={`${styles['form-group']}`}>
-          <label htmlFor="userName" className={`${styles['form-label']}`}>
-            {t('Your name')} *
-          </label>
-          <input
-            type="text"
-            id="userName"
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
-            className={`${styles['form-input']}`}
-            placeholder={t("Enter your name")}
-            maxLength={50}
-          />
-        </div>
+        {currentUser && (
+          <div className={`${styles['form-group']}`}>
+            <label className={`${styles['form-label']}`}>
+              {t('Your name')}
+            </label>
+            <div className={`${styles['user-name-display']}`}>
+              {currentUser.fullName || currentUser.username}
+            </div>
+          </div>
+        )}
 
         <div className={`${styles['form-group']}`}>
           <label className={`${styles['form-label']}`}>
@@ -146,7 +150,7 @@ const ReviewForm = ({ movieId, onReviewAdded }) => {
         <button
           type="submit"
           className={`${styles['submit-button']}`}
-          disabled={isSubmitting || rating === 0 || !comment.trim() || !userName.trim()}
+          disabled={isSubmitting || rating === 0 || !comment.trim() || !currentUser}
         >
           {isSubmitting ? (
             <>

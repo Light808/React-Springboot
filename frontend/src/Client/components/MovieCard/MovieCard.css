@@ -123,11 +123,6 @@
   transition: all 0.3s ease;
 }
 
-.trailer-btn:hover {
-  background: #374151;
-  transform: translateY(-1px);
-}
-
 .movie-card .showtimes-section {
   margin-top: 6px;
 }
@@ -178,7 +173,6 @@
   font-size: 0.8rem !important;
   font-weight: 500 !important;
   cursor: pointer !important;
-  transition: all 0.3s ease !important;
   text-align: center !important;
   min-height: 50px !important;
   min-width: 80px !important;
@@ -206,7 +200,6 @@
 
 .movie-card .showtime-btn:hover {
   background-color: #12263f !important;
-  border-color: #12263f !important;
   color: white !important;
 }
 

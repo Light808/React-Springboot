@@ -331,7 +331,7 @@ const LoginPage = ({ onLogin }) => {
             {isLoading ? (
               <div className={`${styles['loading-spinner']}`}></div>
             ) : (
-              isRegister ? t('Đăng ký') : t('Đăng nhập')
+              isRegister ? t('Register') : t('Login')
             )}
           </button>
         </form>
@@ -343,8 +343,8 @@ const LoginPage = ({ onLogin }) => {
             onClick={toggleMode}
           >
             {isRegister 
-              ? t('Đã có tài khoản? Đăng nhập ngay')
-              : t('Chưa có tài khoản? Đăng ký ngay')
+              ? t('Already have an account? Login now')
+              : t('Don\'t have an account? Sign up now!')
             }
           </button>
         </div>

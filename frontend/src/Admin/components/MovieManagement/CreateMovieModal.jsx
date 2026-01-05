@@ -1,10 +1,12 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import { X, Upload, Image as ImageIcon } from 'lucide-react';
-import { createShowtime } from '../../../services/showtimeService';
 import CinemaSelector from '../CinemaManagement/CinemaSelector';
 import styles from './CreateMovieModal.module.css';
-
+import { useTranslation } from 'react-i18next';
+    
 const CreateMovieModal = ({ onClose, onMovieCreated }) => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     title: '',
     englishTitle: '',
@@ -45,27 +47,27 @@ const CreateMovieModal = ({ onClose, onMovieCreated }) => {
     const newErrors = {};
 
     if (!formData.title.trim()) {
-      newErrors.title = 'Tên phim là bắt buộc';
+      newErrors.title = t('Movie name is required');
     }
 
     if (!formData.genre.trim()) {
-      newErrors.genre = 'Thể loại là bắt buộc';
+      newErrors.genre = t('Genre is required');
     }
 
     if (!formData.director.trim()) {
-      newErrors.director = 'Đạo diễn là bắt buộc';
+      newErrors.director = t('Director is required');
     }
 
     if (!formData.duration || isNaN(formData.duration) || formData.duration <= 0) {
-      newErrors.duration = 'Thời lượng phải là số dương';
+      newErrors.duration = t('Duration must be a positive number');
     }
 
     if (!formData.releaseDate) {
-      newErrors.releaseDate = 'Ngày phát hành là bắt buộc';
+      newErrors.releaseDate = t('Release date is required');
     }
 
     if (formData.rating && (isNaN(formData.rating) || formData.rating < 0 || formData.rating > 10)) {
-      newErrors.rating = 'Đánh giá phải từ 0 đến 10';
+      newErrors.rating = t('Rating must be between 0 and 10');
     }
 
     setErrors(newErrors);
@@ -88,12 +90,8 @@ const CreateMovieModal = ({ onClose, onMovieCreated }) => {
         rating: formData.rating ? parseFloat(formData.rating) : null,
         cast: formData.cast ? formData.cast.split(',').map(name => name.trim()) : []
       };
-
-      // Create movie first
       onMovieCreated(movieData);
-      
-      // Note: Showtimes will be created by the parent component
-      // after the movie is successfully created
+
     } catch (error) {
       console.error('Error creating movie:', error);
     } finally {
@@ -119,7 +117,7 @@ const CreateMovieModal = ({ onClose, onMovieCreated }) => {
     <div className={styles.modalOverlay} onClick={onClose}>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
         <div className={styles.modalHeader}>
-          <h2>Thêm phim mới</h2>
+          <h2>{t('Add new movie')}</h2>
           <button className={styles.closeBtn} onClick={onClose}>
             <X size={20} />
           </button>
@@ -129,107 +127,107 @@ const CreateMovieModal = ({ onClose, onMovieCreated }) => {
           <div className={styles.formGrid}>
             {/* Basic Info */}
             <div className={styles.formSection}>
-              <h3>Thông tin cơ bản</h3>
+              <h3>{t('Basic information')}</h3>
               
               <div className={styles.formGroup}>
-                <label className={styles.formLabel}>Tên phim *</label>
+                <label className={styles.formLabel}>{t('Movie name')} *</label>
                 <input
                   type="text"
                   name="title"
                   value={formData.title}
                   onChange={handleInputChange}
                   className={`${styles.formInput} ${errors.title ? styles.error : ''}`}
-                  placeholder="Nhập tên phim"
+                  placeholder={t('Enter movie name')}
                 />
                 {errors.title && <span className={styles.errorMessage}>{errors.title}</span>}
               </div>
 
               <div className={styles.formGroup}>
-                <label className={styles.formLabel}>Tên tiếng Anh</label>
+                <label className={styles.formLabel}>{t('English title')}</label>
                 <input
                   type="text"
                   name="englishTitle"
                   value={formData.englishTitle}
                   onChange={handleInputChange}
                   className={styles.formInput}
-                  placeholder="Nhập tên phim bằng tiếng Anh"
+                  placeholder={t('Enter movie name in English')}
                 />
               </div>
 
               <div className={styles.formGroup}>
-                <label className={styles.formLabel}>Mô tả</label>
+                <label className={styles.formLabel}>{t('Description')}</label>
                 <textarea
                   name="description"
                   value={formData.description}
                   onChange={handleInputChange}
                   className={styles.formTextarea}
-                  placeholder="Nhập mô tả phim"
+                  placeholder={t('Enter movie description')}
                   rows={4}
                 />
               </div>
 
               <div className={styles.formRow}>
                 <div className={styles.formGroup}>
-                  <label className={styles.formLabel}>Thể loại *</label>
+                  <label className={styles.formLabel}>{t('Genre')} *</label>
                   <input
                     type="text"
                     name="genre"
                     value={formData.genre}
                     onChange={handleInputChange}
                     className={`${styles.formInput} ${errors.genre ? styles.error : ''}`}
-                    placeholder="VD: Hành động, Tình cảm"
+                    placeholder={t('Example: Action, Romance')}
                   />
                   {errors.genre && <span className={styles.errorMessage}>{errors.genre}</span>}
                 </div>
 
                 <div className={styles.formGroup}>
-                  <label className={styles.formLabel}>Đạo diễn *</label>
+                  <label className={styles.formLabel}>{t('Director')} *</label>
                   <input
                     type="text"
                     name="director"
                     value={formData.director}
                     onChange={handleInputChange}
                     className={`${styles.formInput} ${errors.director ? styles.error : ''}`}
-                    placeholder="Tên đạo diễn"
+                    placeholder={t('Enter director name')}
                   />
                   {errors.director && <span className={styles.errorMessage}>{errors.director}</span>}
                 </div>
               </div>
 
               <div className={styles.formGroup}>
-                <label className={styles.formLabel}>Diễn viên</label>
+                <label className={styles.formLabel}>{t('Actor')}</label>
                 <input
                   type="text"
                   name="cast"
                   value={formData.cast}
                   onChange={handleInputChange}
                   className={styles.formInput}
-                  placeholder="Tên diễn viên (cách nhau bởi dấu phẩy)"
+                  placeholder={t('Enter actor name (separated by comma)')}
                 />
               </div>
             </div>
 
             {/* Technical Info */}
             <div className={styles.formSection}>
-              <h3>Thông tin kỹ thuật</h3>
+              <h3>{t('Technical information')}</h3>
               
               <div className={styles.formRow}>
                 <div className={styles.formGroup}>
-                  <label className={styles.formLabel}>Thời lượng (phút) *</label>
+                  <label className={styles.formLabel}>{t('Duration (minutes)')} *</label>
                   <input
                     type="number"
                     name="duration"
                     value={formData.duration}
                     onChange={handleInputChange}
                     className={`${styles.formInput} ${errors.duration ? styles.error : ''}`}
-                    placeholder="120"
+                    placeholder={t('120')}
                     min="1"
                   />
                   {errors.duration && <span className={styles.errorMessage}>{errors.duration}</span>}
                 </div>
 
                 <div className={styles.formGroup}>
-                  <label className={styles.formLabel}>Ngày phát hành *</label>
+                  <label className={styles.formLabel}>{t('Release date')} *</label>
                   <input
                     type="date"
                     name="releaseDate"
@@ -243,7 +241,7 @@ const CreateMovieModal = ({ onClose, onMovieCreated }) => {
 
               <div className={styles.formRow}>
                 <div className={styles.formGroup}>
-                  <label className={styles.formLabel}>Đánh giá (0-10)</label>
+                  <label className={styles.formLabel}>{t('Rating (0-10)')} *</label>
                   <input
                     type="number"
                     name="rating"
@@ -259,39 +257,39 @@ const CreateMovieModal = ({ onClose, onMovieCreated }) => {
                 </div>
 
                 <div className={styles.formGroup}>
-                  <label className={styles.formLabel}>Ngôn ngữ</label>
+                  <label className={styles.formLabel}>{t('Language')}</label>
                   <select
                     name="language"
                     value={formData.language}
                     onChange={handleInputChange}
                     className={styles.formSelect}
                   >
-                    <option value="Vietnamese">Tiếng Việt</option>
-                    <option value="English">Tiếng Anh</option>
-                    <option value="Korean">Tiếng Hàn</option>
-                    <option value="Chinese">Tiếng Trung</option>
-                    <option value="Japanese">Tiếng Nhật</option>
+                    <option value="Vietnamese">{t('Vietnamese')}</option>
+                    <option value="English">{t('English')}</option>
+                    <option value="Korean">{t('Korean')}</option>
+                    <option value="Chinese">{t('Chinese')}</option>
+                    <option value="Japanese">{t('Japanese')}</option>
                   </select>
                 </div>
 
                 <div className={styles.formGroup}>
-                  <label className={styles.formLabel}>Giới hạn độ tuổi</label>
+                  <label className={styles.formLabel}>{t('Age rating')}</label>
                   <select
                     name="ageRating"
                     value={formData.ageRating}
                     onChange={handleInputChange}
                     className={styles.formSelect}
                   >
-                    <option value="P">P - Mọi lứa tuổi</option>
-                    <option value="T13">T13 - Trên 13 tuổi</option>
-                    <option value="T16">T16 - Trên 16 tuổi</option>
-                    <option value="T18">T18 - Trên 18 tuổi</option>
+                    <option value="P">{t('P - All ages')}</option>
+                    <option value="T13">{t('T13 - Over 13')}</option>
+                    <option value="T16">{t('T16 - Over 16')}</option>
+                    <option value="T18">{t('T18 - Over 18')}</option>
                   </select>
                 </div>
               </div>
 
               <div className={styles.formGroup}>
-                <label className={styles.formLabel}>URL Poster</label>
+                <label className={styles.formLabel}>{t('URL Poster')}</label>
                 <input
                   type="url"
                   name="posterUrl"
@@ -303,7 +301,7 @@ const CreateMovieModal = ({ onClose, onMovieCreated }) => {
               </div>
 
               <div className={styles.formGroup}>
-                <label className={styles.formLabel}>URL Trailer</label>
+                <label className={styles.formLabel}>{t('URL Trailer')}</label>
                 <input
                   type="url"
                   name="trailerUrl"
@@ -322,14 +320,14 @@ const CreateMovieModal = ({ onClose, onMovieCreated }) => {
               className={styles.cancelBtn}
               onClick={onClose}
             >
-              Hủy
+              {t('Cancel')}
             </button>
             <button
               type="submit"
               className={styles.submitBtn}
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Đang thêm...' : 'Thêm phim'}
+              {isSubmitting ? t('Adding...') : t('Add movie')}
             </button>
           </div>
         </form>

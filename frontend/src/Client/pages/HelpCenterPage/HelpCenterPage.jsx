@@ -115,7 +115,7 @@ const HelpCenterPage = () => {
       icon: Phone,
       title: t('Phone Support'),
       description: t('Call us for immediate assistance'),
-      contact: '+84 1900 1234',
+      contact: '+84 93 208 2976',
       available: t('24/7 Available'),
       color: '#10b981'
     },
@@ -123,7 +123,7 @@ const HelpCenterPage = () => {
       icon: Mail,
       title: t('Email Support'),
       description: t('Send us an email and we\'ll respond within 24 hours'),
-      contact: 'support@galaxystudio.com',
+      contact: 'hk4744t@gre.ac.uk',
       available: t('24/7 Available'),
       color: '#3b82f6'
     },
@@ -132,7 +132,7 @@ const HelpCenterPage = () => {
       title: t('Live Chat'),
       description: t('Chat with our support team in real-time'),
       contact: t('Click the chat button'),
-      available: t('9 AM - 10 PM'),
+      available: t('9:00 AM - 22:00 PM'),
       color: '#8b5cf6'
     }
   ];
@@ -248,7 +248,6 @@ const HelpCenterPage = () => {
               ))
             ) : (
               <div className="no-results">
-                <AlertCircle size={48} className="no-results-icon" />
                 <h3>{t('No articles found')}</h3>
                 <p>{t('Try adjusting your search terms or browse different categories')}</p>
               </div>

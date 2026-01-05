@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { 
   FileText, 
@@ -9,7 +10,7 @@ import {
   RefreshCw,
   XCircle
 } from 'lucide-react';
-import { getAllNews, createNews, updateNews, deleteNews } from '../../../services/newsService';
+import { getAllNews, deleteNews } from '../../../services/newsService';
 import CreateNews from '../CreateNews/CreateNews';
 import NewsDetailModal from '../NewsDetailModal/NewsDetailModal';
 import EditNewsModal from '../EditNewsModal/EditNewsModal';

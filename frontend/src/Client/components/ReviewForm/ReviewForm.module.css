@@ -49,6 +49,16 @@
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
+.user-name-display {
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: #f9fafb;
+  color: #374151;
+  font-weight: 500;
+}
+
 .form-textarea {
   padding: 12px 16px;
   border: 2px solid #d1d5db;

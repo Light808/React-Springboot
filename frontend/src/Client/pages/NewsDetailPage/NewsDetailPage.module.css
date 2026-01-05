@@ -1,21 +1,21 @@
-.news-detail-page {
+.cnewsd-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   padding: 20px 0;
 }
 
-.news-detail-container {
+.cnewsd-container {
   max-width: 800px;
   margin: 0 auto;
   padding: 0 20px;
 }
 
 /* Header */
-.news-detail-header {
+.cnewsd-header {
   margin-bottom: 30px;
 }
 
-.back-button {
+.cnewsd-back-button {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -31,7 +31,7 @@
   text-decoration: none;
 }
 
-.back-button:hover {
+.cnewsd-back-button:hover {
   background: #667eea;
   color: white;
   border-color: #667eea;
@@ -40,7 +40,7 @@
 }
 
 /* Article */
-.news-article {
+.cnewsd-article {
   background: white;
   border-radius: 20px;
   overflow: hidden;
@@ -48,7 +48,7 @@
   margin-bottom: 40px;
 }
 
-.article-meta {
+.cnewsd-article-meta {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -57,7 +57,7 @@
   gap: 15px;
 }
 
-.article-category {
+.cnewsd-article-category {
   background: #667eea;
   color: white;
   padding: 8px 16px;
@@ -68,8 +68,8 @@
   letter-spacing: 0.5px;
 }
 
-.article-date,
-.article-views {
+.cnewsd-article-date,
+.cnewsd-article-views {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -77,7 +77,7 @@
   font-size: 14px;
 }
 
-.article-title {
+.cnewsd-article-title {
   font-size: 2.5rem;
   font-weight: 700;
   color: #333;
@@ -86,7 +86,7 @@
   text-align: center;
 }
 
-.article-summary {
+.cnewsd-article-summary {
   font-size: 1.2rem;
   color: #666;
   line-height: 1.6;
@@ -95,19 +95,19 @@
   font-style: italic;
 }
 
-.article-image {
+.cnewsd-article-image {
   position: relative;
   height: 400px;
   overflow: hidden;
 }
 
-.article-image img {
+.cnewsd-article-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.featured-badge {
+.cnewsd-featured-badge {
   position: absolute;
   top: 20px;
   right: 20px;
@@ -122,54 +122,54 @@
   box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
 }
 
-.article-content {
+.cnewsd-article-content {
   padding: 40px 30px;
   font-size: 1.1rem;
   line-height: 1.8;
   color: #333;
 }
 
-.article-content h3 {
+.cnewsd-article-content h3 {
   color: #667eea;
   font-size: 1.5rem;
   margin: 30px 0 15px;
   font-weight: 600;
 }
 
-.article-content ul {
+.cnewsd-article-content ul {
   margin: 15px 0;
   padding-left: 20px;
 }
 
-.article-content li {
+.cnewsd-article-content li {
   margin-bottom: 8px;
 }
 
-.article-content p {
+.cnewsd-article-content p {
   margin-bottom: 20px;
 }
 
-.article-tags {
+.cnewsd-article-tags {
   padding: 0 30px 30px;
   border-top: 1px solid #f0f0f0;
   margin-top: 30px;
   padding-top: 30px;
 }
 
-.article-tags h4 {
+.cnewsd-article-tags h4 {
   color: #333;
   font-size: 1.1rem;
   margin-bottom: 15px;
   font-weight: 600;
 }
 
-.tags-list {
+.cnewsd-tags-list {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 }
 
-.article-tag {
+.cnewsd-article-tag {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -182,12 +182,12 @@
   transition: all 0.3s ease;
 }
 
-.article-tag:hover {
+.cnewsd-article-tag:hover {
   background: #667eea;
   color: white;
 }
 
-.article-footer {
+.cnewsd-article-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -198,7 +198,7 @@
   gap: 15px;
 }
 
-.article-author {
+.cnewsd-article-author {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -206,12 +206,12 @@
   font-size: 14px;
 }
 
-.article-actions {
+.cnewsd-article-actions {
   display: flex;
   gap: 10px;
 }
 
-.action-btn {
+.cnewsd-action-btn {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -226,7 +226,7 @@
   transition: all 0.3s ease;
 }
 
-.action-btn:hover {
+.cnewsd-action-btn:hover {
   background: #667eea;
   color: white;
   transform: translateY(-2px);
@@ -234,14 +234,14 @@
 }
 
 /* Related articles */
-.related-articles {
+.cnewsd-related-articles {
   background: white;
   border-radius: 20px;
   padding: 30px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
 }
 
-.related-articles h3 {
+.cnewsd-related-articles h3 {
   color: #333;
   font-size: 1.5rem;
   font-weight: 600;
@@ -249,13 +249,13 @@
   text-align: center;
 }
 
-.related-grid {
+.cnewsd-related-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
 }
 
-.related-card {
+.cnewsd-related-card {
   background: #f8f9fa;
   border-radius: 15px;
   overflow: hidden;
@@ -263,33 +263,33 @@
   border: 2px solid transparent;
 }
 
-.related-card:hover {
+.cnewsd-related-card:hover {
   transform: translateY(-5px);
   border-color: #667eea;
   box-shadow: 0 10px 25px rgba(102, 126, 234, 0.2);
 }
 
-.related-image {
+.cnewsd-related-image {
   height: 150px;
   overflow: hidden;
 }
 
-.related-image img {
+.cnewsd-related-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.3s ease;
 }
 
-.related-card:hover .related-image img {
+.cnewsd-related-card:hover .cnewsd-related-image img {
   transform: scale(1.05);
 }
 
-.related-content {
+.cnewsd-related-content {
   padding: 20px;
 }
 
-.related-category {
+.cnewsd-related-category {
   background: #667eea;
   color: white;
   padding: 4px 10px;
@@ -302,11 +302,11 @@
   margin-bottom: 10px;
 }
 
-.related-content h4 {
+.cnewsd-related-content h4 {
   margin-bottom: 10px;
 }
 
-.related-content h4 a {
+.cnewsd-related-content h4 a {
   color: #333;
   text-decoration: none;
   font-size: 1rem;
@@ -315,11 +315,11 @@
   transition: color 0.3s ease;
 }
 
-.related-content h4 a:hover {
+.cnewsd-related-content h4 a:hover {
   color: #667eea;
 }
 
-.related-content p {
+.cnewsd-related-content p {
   color: #666;
   font-size: 0.9rem;
   line-height: 1.5;
@@ -331,7 +331,7 @@
   overflow: hidden;
 }
 
-.related-meta {
+.cnewsd-related-meta {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -339,16 +339,16 @@
   color: #999;
 }
 
-.related-date,
-.related-views {
+.cnewsd-related-date,
+.cnewsd-related-views {
   display: flex;
   align-items: center;
   gap: 4px;
 }
 
 /* Loading and Error */
-.loading-container,
-.error-container {
+.cnewsd-loading-container,
+.cnewsd-error-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -360,7 +360,7 @@
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
 }
 
-.loading-spinner {
+.cnewsd-loading-spinner {
   width: 50px;
   height: 50px;
   border: 4px solid #f3f3f3;
@@ -375,18 +375,18 @@
   100% { transform: rotate(360deg); }
 }
 
-.error-container h3 {
+.cnewsd-error-container h3 {
   color: #333;
   margin-bottom: 10px;
   font-size: 1.5rem;
 }
 
-.error-container p {
+.cnewsd-error-container p {
   color: #666;
   margin-bottom: 20px;
 }
 
-.error-container button {
+.cnewsd-error-container button {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -401,75 +401,75 @@
   transition: all 0.3s ease;
 }
 
-.error-container button:hover {
+.cnewsd-error-container button:hover {
   background: #5a6fd8;
   transform: translateY(-2px);
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-  .news-detail-container {
+  .cnewsd-container {
     padding: 0 15px;
   }
 
-  .article-title {
+  .cnewsd-article-title {
     font-size: 2rem;
     margin: 20px 20px 15px;
   }
 
-  .article-summary {
+  .cnewsd-article-summary {
     font-size: 1.1rem;
     margin: 0 20px 25px;
   }
 
-  .article-meta {
+  .cnewsd-article-meta {
     padding: 20px 20px 0;
     flex-direction: column;
     align-items: flex-start;
   }
 
-  .article-content {
+  .cnewsd-article-content {
     padding: 30px 20px;
     font-size: 1rem;
   }
 
-  .article-tags {
+  .cnewsd-article-tags {
     padding: 0 20px 25px;
   }
 
-  .article-footer {
+  .cnewsd-article-footer {
     padding: 20px;
     flex-direction: column;
     align-items: flex-start;
   }
 
-  .related-articles {
+  .cnewsd-related-articles {
     padding: 20px;
   }
 
-  .related-grid {
+  .cnewsd-related-grid {
     grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 480px) {
-  .article-title {
+  .cnewsd-article-title {
     font-size: 1.8rem;
   }
 
-  .article-image {
+  .cnewsd-article-image {
     height: 250px;
   }
 
-  .article-content {
+  .cnewsd-article-content {
     padding: 25px 15px;
   }
 
-  .article-tags {
+  .cnewsd-article-tags {
     padding: 0 15px 20px;
   }
 
-  .related-articles {
+  .cnewsd-related-articles {
     padding: 15px;
   }
 }

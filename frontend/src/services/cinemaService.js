@@ -3,30 +3,61 @@ const API_BASE_URL = 'http://localhost:8080/api';
 // Get all cinemas
 export const getAllCinemas = async () => {
   try {
-    const response = await fetch(`${API_BASE_URL}/cinemas`);
+    const response = await fetch(`${API_BASE_URL}/cinemas`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    
     if (!response.ok) {
+      if (response.status === 0 || response.status >= 500) {
+        console.warn('Cinema service unavailable, returning empty array');
+        return [];
+      }
       throw new Error(`HTTP error! status: ${response.status}`);
     }
+    
     const data = await response.json();
-    return data;
+    return data || [];
   } catch (error) {
+    if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+      console.warn('Network error fetching cinemas, backend may be offline. Returning empty array.');
+      return [];
+    }
     console.error('Error fetching cinemas:', error);
-    throw error;
+
+    return [];
   }
 };
 
 // Get cinema by ID
 export const getCinemaById = async (cinemaId) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/cinemas/${cinemaId}`);
+    const response = await fetch(`${API_BASE_URL}/cinemas/${cinemaId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    
     if (!response.ok) {
+      if (response.status === 0 || response.status >= 500) {
+        console.warn('Cinema service unavailable');
+        return null;
+      }
       throw new Error(`HTTP error! status: ${response.status}`);
     }
+    
     const data = await response.json();
     return data;
   } catch (error) {
+    if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+      console.warn('Network error fetching cinema, backend may be offline. Returning null.');
+      return null;
+    }
     console.error('Error fetching cinema:', error);
-    throw error;
+    return null;
   }
 };
 
@@ -53,15 +84,30 @@ export const searchCinemas = async (searchParams) => {
 // Get active cinemas
 export const getActiveCinemas = async () => {
   try {
-    const response = await fetch(`${API_BASE_URL}/cinemas/active`);
+    const response = await fetch(`${API_BASE_URL}/cinemas/active`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    
     if (!response.ok) {
+      if (response.status === 0 || response.status >= 500) {
+        console.warn('Cinema service unavailable, returning empty array');
+        return [];
+      }
       throw new Error(`HTTP error! status: ${response.status}`);
     }
+    
     const data = await response.json();
-    return data;
+    return data || [];
   } catch (error) {
+    if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+      console.warn('Network error fetching active cinemas, backend may be offline. Returning empty array.');
+      return [];
+    }
     console.error('Error fetching active cinemas:', error);
-    throw error;
+    return [];
   }
 };
 

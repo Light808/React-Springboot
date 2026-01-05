@@ -8,6 +8,7 @@ import { getCachedAvatar } from '../../../services/avatarService';
 import { getAllNews, getNewsByCategory } from '../../../services/newsService';
 import ReviewForm from '../../components/ReviewForm/ReviewForm';
 import ShowtimeSchedule from '../../components/ShowtimeSchedule/ShowtimeSchedule';
+import UserProfileView from '../../components/UserProfileView/UserProfileView';
 import styles from './MovieDetailPage.module.css';
 import newsStyles from './NewsSection.module.css';
 import { useTranslation } from 'react-i18next';
@@ -39,6 +40,7 @@ const MovieDetailPage = () => {
     }
     return false;
   });
+  const [selectedUserId, setSelectedUserId] = useState(null);
   const reviewFormRef = React.useRef(null);
   const reviewsSectionRef = React.useRef(null);
   const bookingSectionRef = React.useRef(null);
@@ -88,6 +90,7 @@ const MovieDetailPage = () => {
      
       const transformedReviews = reviews.map(review => ({
         id: review.id,
+        userId: review.userId,
         userName: review.userName,
         rating: review.rating,
         timeAgo: formatTimeAgo(review.createdAt),
@@ -572,7 +575,12 @@ const MovieDetailPage = () => {
                         <div className={`${styles['review-card']}`} key={review.id}>
                           <div className={`${styles['review-header']}`}>
                             <div className={`${styles['user-info']}`}>
-                              <div className={`${styles['user-avatar']}`}>
+                              <div 
+                                className={`${styles['user-avatar']}`}
+                                onClick={() => review.userId && setSelectedUserId(review.userId)}
+                                style={{ cursor: review.userId ? 'pointer' : 'default' }}
+                                title={review.userId ? t('Click to view profile') : ''}
+                              >
                                 <img 
                                   src={review.avatar} 
                                   alt={review.userName}
@@ -582,7 +590,14 @@ const MovieDetailPage = () => {
                                 />
                               </div>
                               <div className={`${styles['user-details']}`}>
-                                <span className={`${styles['user-name']}`}>{review.userName}</span>
+                                <span 
+                                  className={`${styles['user-name']}`}
+                                  onClick={() => review.userId && setSelectedUserId(review.userId)}
+                                  style={{ cursor: review.userId ? 'pointer' : 'default' }}
+                                  title={review.userId ? t('Click to view profile') : ''}
+                                >
+                                  {review.userName}
+                                </span>
                                 <div className={`${styles['rating-time']}`}>
                                   <Star size={16} className={`${styles['star-icon']}`} />
                                   <span className={`${styles['rating']}`}>{review.rating}</span>
@@ -689,7 +704,12 @@ const MovieDetailPage = () => {
                       <div className={`${styles['review-card']}`} key={review.id}>
                         <div className={`${styles['review-header']}`}>
                           <div className={`${styles['user-info']}`}>
-                            <div className={`${styles['user-avatar']}`}>
+                            <div 
+                              className={`${styles['user-avatar']}`}
+                              onClick={() => review.userId && setSelectedUserId(review.userId)}
+                              style={{ cursor: review.userId ? 'pointer' : 'default' }}
+                              title={review.userId ? t('Click to view profile') : ''}
+                            >
                               <img 
                                 src={review.avatar} 
                                 alt={review.userName}
@@ -699,7 +719,14 @@ const MovieDetailPage = () => {
                               />
                             </div>
                             <div className={`${styles['user-details']}`}>
-                              <span className={`${styles['user-name']}`}>{review.userName}</span>
+                              <span 
+                                className={`${styles['user-name']}`}
+                                onClick={() => review.userId && setSelectedUserId(review.userId)}
+                                style={{ cursor: review.userId ? 'pointer' : 'default' }}
+                                title={review.userId ? t('Click to view profile') : ''}
+                              >
+                                {review.userName}
+                              </span>
                               <div className={`${styles['rating-time']}`}> 
                                 <Star size={16} className={`${styles['star-icon']}`} />
                                 <span className={`${styles['rating']}`}>{review.rating}</span>
@@ -877,6 +904,14 @@ const MovieDetailPage = () => {
           </div>
         )}
       </div>
+
+      {/* User Profile View Modal */}
+      {selectedUserId && (
+        <UserProfileView 
+          userId={selectedUserId} 
+          onClose={() => setSelectedUserId(null)} 
+        />
+      )}
 
       {/* Trailer Modal */}
       {showTrailerModal && movie.trailerUrl && (

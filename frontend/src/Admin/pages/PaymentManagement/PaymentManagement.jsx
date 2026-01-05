@@ -7,8 +7,10 @@ import { getAllOrders, markPaid, markExpired } from '../../../services/paymentSe
 import PaymentOrderDetail from './PaymentOrderDetail';
 import useToast from '../../hooks/useToast';
 import ToastContainer from '../../components/Toast/ToastContainer';
+import { useTranslation } from 'react-i18next';
 
 function PaymentManagement() {
+  const { t } = useTranslation();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -63,8 +65,8 @@ function PaymentManagement() {
       
       // Show success toast
       const successMessage = status === 'paid' 
-        ? 'Đã xác nhận thanh toán thành công!' 
-        : 'Đã đánh dấu hết hạn thành công!';
+        ? t('Payment confirmed successfully!') 
+        : t('Payment expired successfully!');
       
       showSuccess(successMessage, 3000);
       
@@ -126,7 +128,7 @@ function PaymentManagement() {
               disabled={refreshing}
             >
               <RefreshCw size={18} />
-              {refreshing ? 'Đang tải...' : 'Làm mới'}
+              {refreshing ? t('Loading...') : t('Refresh')}
             </button>
           </div>
         </div>
@@ -140,7 +142,7 @@ function PaymentManagement() {
           </div>
           <div className="stat-content">
             <div className="stat-value">{stats.total}</div>
-            <div className="stat-label">Tổng đơn hàng</div>
+            <div className="stat-label">{t('Total orders')}</div>
           </div>
         </div>
         <div className="stat-card">
@@ -149,7 +151,7 @@ function PaymentManagement() {
           </div>
           <div className="stat-content">
             <div className="stat-value">{stats.pending}</div>
-            <div className="stat-label">Chờ thanh toán</div>
+            <div className="stat-label">{t('Pending payment')}</div>
           </div>
         </div>
         <div className="stat-card">
@@ -158,7 +160,7 @@ function PaymentManagement() {
           </div>
           <div className="stat-content">
             <div className="stat-value">{stats.paid}</div>
-            <div className="stat-label">Đã thanh toán</div>
+            <div className="stat-label">{t('Paid')}</div>
           </div>
         </div>
         <div className="stat-card">
@@ -167,7 +169,7 @@ function PaymentManagement() {
           </div>
           <div className="stat-content">
             <div className="stat-value">{stats.expired}</div>
-            <div className="stat-label">Hết hạn</div>
+            <div className="stat-label">{t('Expired')}</div>
           </div>
         </div>
       </div>
@@ -178,7 +180,7 @@ function PaymentManagement() {
           <Search size={18} />
           <input
             type="text"
-            placeholder="Tìm kiếm theo mã đơn, email, thông tin..."
+            placeholder={t('Search by order ID, email, information...')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -190,11 +192,11 @@ function PaymentManagement() {
             onChange={(e) => setStatusFilter(e.target.value)}
             className="status-filter"
           >
-            <option value="all">Tất cả trạng thái</option>
-            <option value="pending">Chờ thanh toán</option>
-            <option value="paid">Đã thanh toán</option>
-            <option value="expired">Hết hạn</option>
-            <option value="failed">Thất bại</option>
+            <option value="all">{t('All status')}</option>
+            <option value="pending">{t('Pending payment')}</option>
+            <option value="paid">{t('Paid')}</option>
+            <option value="expired">{t('Expired')}</option>
+            <option value="failed">{t('Failed')}</option>
           </select>
         </div>
       </div>
@@ -204,31 +206,31 @@ function PaymentManagement() {
         {loading ? (
           <div className="loading-container">
             <div className="loading-spinner"></div>
-            <p>Đang tải dữ liệu...</p>
+            <p>{t('Loading data...')}</p>
           </div>
         ) : error ? (
           <div className="error-container">
             <AlertCircle size={48} />
             <p>{error}</p>
-            <button onClick={fetchOrders} className="retry-btn">Thử lại</button>
+            <button onClick={fetchOrders} className="retry-btn">{t('Try again')}</button>
           </div>
         ) : (
           <div className="payment-layout">
             {/* Orders Table */}
             <div className="orders-section">
               <div className="section-header">
-                <h2>Danh sách đơn hàng ({filteredOrders.length})</h2>
+                <h2>{t('Order list')} ({filteredOrders.length})</h2>
               </div>
               <div className="table-container">
                 <table className="orders-table">
                   <thead>
                     <tr>
-                      <th>Mã đơn hàng</th>
-                      <th>Khách hàng</th>
-                      <th>Thông tin</th>
-                      <th>Số tiền</th>
-                      <th>Trạng thái</th>
-                      <th>Thao tác</th>
+                      <th>{t('Order ID')}</th>
+                      <th>{t('Customer')}</th>
+                      <th>{t('Information')}</th>
+                      <th>{t('Amount')}</th>
+                      <th>{t('Status')}</th>
+                      <th>{t('Actions')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -237,7 +239,7 @@ function PaymentManagement() {
                         <td colSpan="6" className="no-data">
                           <div className="no-data-content">
                             <CreditCard size={48} />
-                            <p>Không có đơn hàng nào</p>
+                            <p>{t('No orders found')}</p>
                           </div>
                         </td>
                       </tr>
@@ -309,7 +311,7 @@ function PaymentManagement() {
                                     disabled={actionLoading[order.orderId]}
                                   >
                                     <CheckCircle size={14} />
-                                    Xác nhận
+                                    {t('Confirm')}
                                   </button>
                                   <button
                                     className="action-btn danger"
@@ -320,7 +322,7 @@ function PaymentManagement() {
                                     disabled={actionLoading[order.orderId]}
                                   >
                                     <XCircle size={14} />
-                                    Hủy
+                                    {t('Cancel')}
                                   </button>
                                 </>
                               )}
@@ -343,12 +345,17 @@ function PaymentManagement() {
             <div className="detail-section">
               {selectedOrder ? (
                 <div className="detail-card">
-                  <PaymentOrderDetail order={selectedOrder} />
+                  <PaymentOrderDetail 
+                    order={selectedOrder} 
+                    onApprove={(orderId) => handleMark(orderId, 'paid')}
+                    onReject={(orderId) => handleMark(orderId, 'expired')}
+                    actionLoading={actionLoading[selectedOrder.orderId]}
+                  />
                 </div>
               ) : (
                 <div className="no-selection">
                   <CreditCard size={48} />
-                  <p>Chọn một đơn hàng để xem chi tiết</p>
+                  <p>{t('Select an order to view details')}</p>
                 </div>
               )}
             </div>

@@ -32,6 +32,7 @@ import PaymentManagement from '../PaymentManagement/PaymentManagement';
 import styles from './AdminDashboard.module.css';
 import { useTranslation } from 'react-i18next';
 
+
 // Register Chart.js components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend);
 
@@ -117,7 +118,7 @@ const AdminDashboard = () => {
       ...chartOptions.plugins,
       title: {
         display: true,
-        text: 'Doanh thu theo tháng'
+        text: t('Revenue by month')
       }
     },
     scales: {
@@ -140,7 +141,7 @@ const AdminDashboard = () => {
     const userToken = localStorage.getItem('authToken');
     
     if (userToken) {
-      showWarning('Vui lòng đăng xuất tài khoản người dùng trước khi truy cập Admin Panel');
+      showWarning(t('Please logout user account before accessing Admin Panel'));
       navigate('/');
       return;
     }
@@ -159,7 +160,7 @@ const AdminDashboard = () => {
       setStats(statsData);
     } catch (error) {
       console.error('Error fetching admin data:', error);
-      showError('Lỗi khi tải dữ liệu admin: ' + error.message);
+      showError(t('Error fetching admin data: ') + error.message);
     } finally {
       setLoading(false);
     }
@@ -202,7 +203,7 @@ const AdminDashboard = () => {
                   <Users size={24} />
                 </div>
                 <div className={styles.statInfo}>
-                  <h3>Tổng người dùng</h3>
+                  <h3>{t('Total users')}</h3>
                   <p className={styles.statNumber}>{stats.totalUsers}</p>
                   <div className={styles.statTrend}>
                     <TrendingUp size={16} />
@@ -216,7 +217,7 @@ const AdminDashboard = () => {
                   <BarChart3 size={24} />
                 </div>
                 <div className={styles.statInfo}>
-                  <h3>Vé đã xác nhận</h3>
+                  <h3>{t('Confirmed tickets')}</h3>
                   <p className={styles.statNumber}>{stats.confirmedTickets}</p>
                   <div className={styles.statTrend}>
                     <TrendingUp size={16} />
@@ -230,7 +231,7 @@ const AdminDashboard = () => {
                   <Settings size={24} />
                 </div>
                 <div className={styles.statInfo}>
-                  <h3>Vé đã hủy</h3>
+                  <h3>{t('Cancelled tickets')}</h3>
                   <p className={styles.statNumber}>{stats.cancelledTickets}</p>
                   <div className={styles.statTrend}>
                     <TrendingDown size={16} />
@@ -244,7 +245,7 @@ const AdminDashboard = () => {
                   <BarChart3 size={24} />
                 </div>
                 <div className={styles.statInfo}>
-                  <h3>Tổng doanh thu</h3>
+                  <h3>{t('Total revenue')}</h3>
                   <p className={styles.statNumber}>{formatCurrency(stats.totalRevenue)}</p>
                   <div className={styles.statTrend}>
                     <TrendingUp size={16} />
@@ -257,17 +258,17 @@ const AdminDashboard = () => {
             {/* Charts Section */}
             <div className={styles.chartsSection}>
               <div className={styles.chartContainer}>
-                <h3>Doanh thu theo tháng</h3>
+                <h3>{t('Revenue by month')}</h3>
                 <Line data={revenueData} options={revenueChartOptions} />
               </div>
               
               <div className={styles.chartContainer}>
-                <h3>Vé bán theo ngày trong tuần</h3>
+                <h3>{t('Ticket sales by day in week')}</h3>
                 <Bar data={ticketSalesData} options={chartOptions} />
               </div>
               
               <div className={styles.chartContainer}>
-                <h3>Người dùng mới đăng ký</h3>
+                <h3>{t('New users registered')}</h3>
                 <Bar data={userGrowthData} options={chartOptions} />
               </div>
             </div>
@@ -275,7 +276,7 @@ const AdminDashboard = () => {
             {/* Popular Movies Section */}
             {stats.popularMovies && Object.keys(stats.popularMovies).length > 0 && (
               <div className={styles.popularMoviesSection}>
-                <h3>Phim được xem nhiều nhất</h3>
+                <h3>{t('Most viewed movies')}</h3>
                 <div className={styles.popularMoviesList}>
                   {Object.entries(stats.popularMovies).map(([key, movieTitle], index) => (
                     <div key={key} className={styles.popularMovieItem}>
@@ -314,7 +315,7 @@ const AdminDashboard = () => {
     return (
       <div className={styles.loading}>
         <div className={styles.spinner}></div>
-        <p>Đang tải...</p>
+        <p>{t('Loading...')}</p>
       </div>
     );
   }
@@ -323,7 +324,7 @@ const AdminDashboard = () => {
     <div className={styles.adminDashboard}>
       <div className={styles.sidebar}>
         <div className={styles.logo}>
-          <h2>Admin Panel</h2>
+          <h2>{t('Admin Panel')}</h2>
         </div>  
         {/* Navbar Section */}
         <nav className={styles.nav}>
@@ -331,21 +332,21 @@ const AdminDashboard = () => {
             className={`${styles.navItem} ${activeTab === 'dashboard' ? styles.active : ''}`}
             onClick={() => setActiveTab('dashboard')} >
             <BarChart3 size={20}/> 
-          Dashboard 
+          {t('Dashboard')} 
           </button>
           <button
             className={`${styles.navItem} ${activeTab === 'payments' ? styles.active : ''}`}
             onClick={() => setActiveTab('payments')}
           >
             <DollarSign size={20} />
-            Quản lý thanh toán
+            {t('Payment management')}
           </button>
           <button 
             className={`${styles.navItem} ${activeTab === 'movies' ? styles.active : ''}`}
             onClick={() => setActiveTab('movies')}
                   >
             <Film size={20} />
-            Quản lý phim
+            {t('Movie management')}
           </button>
 
           <button 
@@ -353,7 +354,7 @@ const AdminDashboard = () => {
             onClick={() => setActiveTab('cinemas')}
                   >
             <Building2 size={20} />
-            Quản lý rạp
+            {t('Cinema management')}
           </button>
 
           
@@ -363,7 +364,7 @@ const AdminDashboard = () => {
             onClick={() => setActiveTab('tickets')}
                             >
             <Ticket size={20} />
-            Quản lý vé
+            {t('Ticket management')}
           </button>
           
           <button 
@@ -371,7 +372,7 @@ const AdminDashboard = () => {
             onClick={() => setActiveTab('news')}
                   >
             <FileText size={20} />
-            Quản lý tin tức
+            {t('News management')}
           </button>
           
           <button 
@@ -379,7 +380,7 @@ const AdminDashboard = () => {
             onClick={() => setActiveTab('combos')}
                   >
             <Package size={20} />
-            Quản lý combo
+            {t('Combo management')}
           </button>
           
           <button 
@@ -387,7 +388,7 @@ const AdminDashboard = () => {
             onClick={() => setActiveTab('seats')}
           >
             <Settings size={20} />
-            Quản lý ghế
+            {t('Seat management')}
           </button>
         
           <button 
@@ -395,7 +396,7 @@ const AdminDashboard = () => {
             onClick={() => setActiveTab('users')}
                   >
             <Users size={20} />
-            Quản lý người dùng
+            {t('User management')}
           </button>
 
         </nav>
@@ -407,7 +408,7 @@ const AdminDashboard = () => {
             onClick={handleLogout}
           >
             <LogOut size={20} />
-            Đăng xuất
+            {t('Logout')}
                     </button>
                   </div>
                 </div>
@@ -416,14 +417,14 @@ const AdminDashboard = () => {
         <div className={styles.header}>
           <h1>
             {activeTab === 'dashboard' && 'Dashboard'}
-            {activeTab === 'payments' && 'Quản lý thanh toán'}
-            {activeTab === 'users' && 'Quản lý người dùng'}
-            {activeTab === 'tickets' && 'Quản lý vé'}
-            {activeTab === 'news' && 'Quản lý tin tức'}
-            {activeTab === 'combos' && 'Quản lý combo'}
-            {activeTab === 'seats' && 'Quản lý ghế'}
-            {activeTab === 'movies' && 'Quản lý phim'}
-            {activeTab === 'cinemas' && 'Quản lý rạp chiếu'}
+            {activeTab === 'payments' && t('Payment management')}
+            {activeTab === 'users' && t('User management')}
+            {activeTab === 'tickets' && t('Ticket management')}
+            {activeTab === 'news' && t('News management')}
+            {activeTab === 'combos' && t('Combo management')}
+            {activeTab === 'seats' && t('Seat management')}
+            {activeTab === 'movies' && t('Movie management')}
+            {activeTab === 'cinemas' && t('Cinema management')}
             
           </h1>
       </div>

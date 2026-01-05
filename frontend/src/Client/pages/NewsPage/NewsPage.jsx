@@ -138,9 +138,9 @@ const NewsPage = () => {
 
   if (loading) {
     return (
-      <div className={ `${styles['news-page']}`}> 
-        <div className={ `${styles['loading-container']}`}>
-          <div className={ `${styles['loading-spinner']}`}></div>
+      <div className={ `${styles['cnews-page']}`}> 
+        <div className={ `${styles['cnews-loading-container']}`}>
+          <div className={ `${styles['cnews-loading-spinner']}`}></div>
           <p>{t('Loading news...')}</p>
         </div>
       </div>
@@ -149,68 +149,68 @@ const NewsPage = () => {
 
   if (error) {
     return (
-      <div className={ `${styles['news-page']}`}>
-        <div className={ `${styles['error-container']}`}>
+      <div className={ `${styles['cnews-page']}`}>
+        <div className={ `${styles['cnews-error-container']}`}>
           <p>{error}</p>
-          <button onClick={fetchNews} className={ `${styles['retry-btn']}`}>{t('Thử lại')}</button>
+          <button onClick={fetchNews} className={ `${styles['cnews-retry-btn']}`}>{t('Retry')}</button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className={ `${styles['news-page']}`}>
-      <div className={ `${styles['news-container']}`}>
-        <div className={ `${styles['news-header']}`}>
+    <div className={ `${styles['cnews-page']}`}>
+      <div className={ `${styles['cnews-container']}`}>
+        <div className={ `${styles['cnews-header']}`}>
           <h1>{t('CGV HAK News')}</h1>
-          <p>{t('Cập nhật những tin tức mới nhất về phim ảnh, rạp chiếu và ưu đãi')}</p>
+          <p>{t('Stay updated with the latest news on movies, cinemas, and promotions')}</p>
         </div>
 
         {/* Filters */}
-        <div className={ `${styles['news-filters']}`}>
-          <div className={ `${styles['search-box']}`}>
+        <div className={ `${styles['cnews-filters']}`}>
+          <div className={ `${styles['cnews-search-box']}`}>
             <Search size={20} />
             <input
               type="text"
-              placeholder={t('Tìm kiếm tin tức...')}
+              placeholder={t('Search news...')}
               value={searchQuery}
               onChange={handleSearch}
             />
           </div>
 
-          <div className={ `${styles['filter-controls']}`}>
-            <div className={ `${styles['filter-group']}`}>
+          <div className={ `${styles['cnews-filter-controls']}`}>
+            <div className={ `${styles['cnews-filter-group']}`}>
               <Filter size={16} />
               <select value={selectedCategory} onChange={handleCategoryChange}>
-                <option value="all">{t('Tất cả danh mục')}</option>
+                <option value="all">{t('All categories')}</option>
                 {categories.map(category => (
                   <option key={category} value={category}>{category}</option>
                 ))}
               </select>
             </div>
 
-              <div className={ `${styles['filter-group']}`}>  
+              <div className={ `${styles['cnews-filter-group']}`}>  
               <Clock size={16} />
               <select value={sortBy} onChange={handleSortChange}>
-                <option value="newest">{t('Mới nhất')}</option>
-                <option value="oldest">{t('Cũ nhất')}</option>
-                <option value="most_viewed">{t('Xem nhiều nhất')}</option>
-                <option value="title">{t('Theo tên')}</option>
+                <option value="newest">{t('Latest')}</option>
+                <option value="oldest">{t('Oldest')}</option>
+                <option value="most_viewed">{t('Most viewed')}</option>
+                <option value="title">{t('By name')}</option>
               </select>
             </div>
           </div>
         </div>
 
         {/* Results count */}
-        <div className={ `${styles['news-results']}`}>
-          <p>{t('Tìm thấy')} {filteredArticles.length} {t('bài viết')}</p>
+        <div className={ `${styles['cnews-results']}`}>
+          <p>{t('Find')} {filteredArticles.length} {t('article')}</p>
         </div>
 
         {/* Articles Grid */}
-        <div className={ `${styles['articles-grid']}`}>
+        <div className={ `${styles['cnews-articles-grid']}`}>
           {filteredArticles.map(article => (
-            <article key={article.id} className={ `${styles['news-card']}`}>
-              <div className={ `${styles['news-card-image']}`}>
+            <article key={article.id} className={ `${styles['cnews-news-card']}`}>
+              <div className={ `${styles['cnews-news-card-image']}`}>
                 <img 
                   src={article.imageUrl} 
                   alt={article.title}
@@ -219,40 +219,40 @@ const NewsPage = () => {
                   }}
                 />
                 {article.featured && (
-                  <div className={ `${styles['featured-badge']}`}>Nổi bật</div>
+                  <div className={ `${styles['cnews-featured-badge']}`}>{t('Outstanding')}</div>
                 )}
               </div>
 
-              <div className={ `${styles['news-card-content']}`}>
-                <div className={ `${styles['news-card-meta']}`}>
-                  <div className={ `${styles['news-category']}`}>{article.category}</div>
-                  <div className={ `${styles['news-date']}`}>
+              <div className={ `${styles['cnews-news-card-content']}`}>
+                <div className={ `${styles['cnews-news-card-meta']}`}>
+                  <div className={ `${styles['cnews-news-category']}`}>{article.category}</div>
+                  <div className={ `${styles['cnews-news-date']}`}>
                     <Calendar size={14} />
                     {formatDate(article.publishDate)}
                   </div>
                 </div>
 
-                <h2 className={ `${styles['news-card-title']}`}>
+                <h2 className={ `${styles['cnews-news-card-title']}`}>
                   <Link to={`/news/${article.id}`}>{article.title}</Link>
                 </h2>
 
-                <p className={ `${styles['news-card-summary']}`}>{article.summary}</p>
+                <p className={ `${styles['cnews-news-card-summary']}`}>{article.summary}</p>
 
-                <div className={ `${styles['news-card-tags']}`}>
+                <div className={ `${styles['cnews-news-card-tags']}`}>
                   {article.tags.slice(0, 3).map(tag => (
-                    <span key={tag} className={ `${styles['news-tag']}`}>
+                    <span key={tag} className={ `${styles['cnews-news-tag']}`}>
                       <Tag size={12} />
                       {tag}
                     </span>
                   ))}
                 </div>
 
-                <div className={ `${styles['news-card-footer']}`}>
-                  <div className={ `${styles['news-author']}`}>
+                <div className={ `${styles['cnews-news-card-footer']}`}>
+                  <div className={ `${styles['cnews-news-author']}`}>
                     <User size={14} />
                     {article.author}
                   </div>
-                  <div className={ `${styles['news-views']}`}>
+                  <div className={ `${styles['cnews-news-views']}`}>
                     <Eye size={14} />
                     {article.views.toLocaleString()}
                   </div>
@@ -264,9 +264,9 @@ const NewsPage = () => {
 
         {/* No results */}
         {filteredArticles.length === 0 && (
-          <div className={ `${styles['no-results']}`}> 
-            <h3>Không tìm thấy bài viết nào</h3>
-            <p>Hãy thử tìm kiếm với từ khóa khác hoặc chọn danh mục khác</p>
+          <div className={ `${styles['cnews-no-results']}`}> 
+            <h3>{t('No posts found')}</h3>
+            <p>{t('Please try searching with different keywords or selecting a different category.')}</p>
           </div>
         )}
       </div>

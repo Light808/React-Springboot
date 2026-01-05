@@ -30,7 +30,7 @@ const Footer = () => {
 
         {/* Quick Links Section */}
         <div className="footer-section quick-links-section">
-          <h4 className="section-title">{t('Quick Links')}</h4>
+          <h4 className="title-section">{t('Quick Links')}</h4>
           <ul className="footer-links-list">
             <li><Link to="/movies">{t('Movies')}</Link></li>
             <li><Link to="/cinemas">{t('Cinemas')}</Link></li>
@@ -45,7 +45,7 @@ const Footer = () => {
 
         {/* Customer Service Section */}
         <div className="footer-section customer-service-section">
-          <h4 className="section-title">{t('Customer Service')}</h4>
+          <h4 className="title-section">{t('Customer Service')}</h4>
           <ul className="footer-links-list">
             <li><Link to="/help">{t('Help Center')}</Link></li>
             <li><Link to="/faq">{t('FAQ')}</Link></li>
@@ -60,7 +60,7 @@ const Footer = () => {
 
         {/* Contact & Social Section */}
         <div className="footer-section contact-section">
-          <h4 className="section-title">{t('Contact & Follow Us')}</h4>
+          <h4 className="title-section">{t('Contact & Follow Us')}</h4>
           
           <div className="contact-info">
             <div className="contact-item">
@@ -91,7 +91,7 @@ const Footer = () => {
               <h5 className="social-title">{t('Follow Us')}</h5>
               <div className="social-icons">
               <a
-                href="https://www.facebook.com/cgvcinemavietnam"
+                href="https://www.facebook.com/moveekvn"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="social-icon facebook"
