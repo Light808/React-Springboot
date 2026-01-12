@@ -151,12 +151,10 @@ const ShowtimeSchedule = ({ movieId, movieTitle }) => {
     return result;
   }, {});
 
-  // Helper: detect cinema system/brand from cinema name
   const detectCinemaSystem = (cinema) => {
-    // Ưu tiên trường brand/cinemaSystem nếu có
     if (cinema.brand) return cinema.brand;
     if (cinema.cinemaSystem) return cinema.cinemaSystem;
-    // Nếu không có, tách từ tên rạp
+    // Separate form cinema name
     const name = (cinema.name || cinema.cinemaName || '').toLowerCase();
     if (name.includes('cgv')) return 'CGV';
     if (name.includes('galaxy')) return 'Galaxy Cinema';
@@ -177,8 +175,6 @@ const ShowtimeSchedule = ({ movieId, movieTitle }) => {
     cinemaSystems[system].push(cinema);
   });
   const systemNames = Object.keys(cinemaSystems);
-
-  // State cho expand/collapse hệ thống và rạp con
   const [expandedSystems, setExpandedSystems] = useState([]);
   const [expandedCinemas, setExpandedCinemas] = useState([]);
 

@@ -11,6 +11,10 @@
   padding-top: 70px;
 }
 
+.app-main.no-header {
+  padding-top: 0;
+}
+
 /* Header styles */
 .main-header {
   position: fixed;

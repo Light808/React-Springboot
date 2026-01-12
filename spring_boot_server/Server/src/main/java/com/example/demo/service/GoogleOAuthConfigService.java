@@ -18,10 +18,6 @@ public class GoogleOAuthConfigService {
     @Value("${google.oauth.scope:openid email profile}")
     private String scope;
 
-    /**
-     * Get Google OAuth configuration for frontend
-     * @return Map containing OAuth configuration
-     */
     public Map<String, String> getOAuthConfig() {
         Map<String, String> config = new HashMap<>();
         config.put("clientId", clientId);
@@ -31,26 +27,14 @@ public class GoogleOAuthConfigService {
         return config;
     }
 
-    /**
-     * Get only the Client ID
-     * @return Client ID string
-     */
     public String getClientId() {
         return clientId;
     }
 
-    /**
-     * Get redirect URI
-     * @return Redirect URI string
-     */
     public String getRedirectUri() {
         return redirectUri;
     }
 
-    /**
-     * Get OAuth scope
-     * @return Scope string
-     */
     public String getScope() {
         return scope;
     }

@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { registerUser, loginUser, loginWithGoogle, handleGoogleLoginSuccess } from '../../../services/userService';
+import { initializeGoogleAuth } from '../../../services/googleAuthService';
 import { loginWithFacebook } from '../../../services/facebookAuthService';
 import { adminLogin } from '../../../services/adminService';
 import { Eye, EyeOff, X, AlertCircle, CheckCircle, Shield } from 'lucide-react';
@@ -29,7 +30,26 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showAdminKey, setShowAdminKey] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
+  const [googleButtonRendered, setGoogleButtonRendered] = useState(false);
   const navigate = useNavigate();
+
+  // Initialize Google Auth when modal opens
+  useEffect(() => {
+    if (isOpen && !isAdmin) {
+      const initGoogleButton = async () => {
+        try {
+          await initializeGoogleAuth();
+          setGoogleButtonRendered(true);
+        } catch (error) {
+          console.error('Failed to initialize Google Auth:', error);
+          setGoogleButtonRendered(false);
+        }
+      };
+      initGoogleButton();
+    } else {
+      setGoogleButtonRendered(false);
+    }
+  }, [isOpen, isAdmin]);
 
   // Reset form when modal opens/closes
   useEffect(() => {
@@ -265,6 +285,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
     setMessage({ type: '', text: '' });
 
     try {
+      // Set up callback before rendering button
       const user = await loginWithGoogle();
       
       if (user && user.id) {
@@ -285,12 +306,86 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
     } catch (error) {
       setMessage({
         type: 'error',
-        text: t('googleLoginFailed')
+        text: error.message || t('googleLoginFailed')
       });
     } finally {
       setIsLoading(false);
     }
   };
+
+  // Render Google button when container is ready
+  useEffect(() => {
+    if (isOpen && !isAdmin && googleButtonRendered) {
+      const setupGoogleCallback = () => {
+        return new Promise((resolve, reject) => {
+          window.googleAuthCallback = { resolve, reject };
+        });
+      };
+
+      const containerId = 'google-signin-button';
+      const container = document.getElementById(containerId);
+      if (container && window.google && window.google.accounts) {
+        try {
+          container.innerHTML = ''; 
+          
+          // Setup callback promise
+          const loginPromise = setupGoogleCallback();
+          
+          // Handle the promise
+          loginPromise.then(async (user) => {
+            if (user && user.id) {
+              setIsLoading(true);
+              try {
+                await handleGoogleLoginSuccess(user);
+                setMessage({
+                  type: 'success',
+                  text: t('googleLoginSuccess')
+                });
+                if (onLogin) onLogin(user);
+                setTimeout(() => {
+                  onClose();
+                  navigate('/');
+                }, 1000);
+              } catch (error) {
+                setMessage({
+                  type: 'error',
+                  text: error.message || t('googleLoginFailed')
+                });
+              } finally {
+                setIsLoading(false);
+              }
+            }
+          }).catch((error) => {
+            if (error.message !== 'Google Sign-In timeout. Please try again.') {
+              setMessage({
+                type: 'error',
+                text: error.message || t('googleLoginFailed')
+              });
+            }
+          });
+          
+          // Render button
+          window.google.accounts.id.renderButton(
+            container,
+            {
+              theme: 'outline',
+              size: 'large',
+              text: 'signin_with',
+              shape: 'rectangular',
+              logo_alignment: 'left',
+              width: '100%'
+            }
+          );
+        } catch (error) {
+          console.error('Error rendering Google button:', error);
+          setMessage({
+            type: 'error',
+            text: 'Failed to load Google Sign-In button'
+          });
+        }
+      }
+    }
+  }, [isOpen, isAdmin, googleButtonRendered, onLogin, onClose, navigate, t]);
 
   const handleFacebookLogin = async () => {
     setIsLoading(true);
@@ -325,7 +420,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
     <div className="login-modal-overlay" onClick={onClose}>
       <div className="login-modal" onClick={(e) => e.stopPropagation()}>
         <div className="login-modal-header">
-          <h2>{isAdmin ? 'Admin Panel' : t('Account')}</h2>
+          <h2>{isAdmin ? 'Admin Panel' : t('User Account')}</h2>
           <button className="close-btn" onClick={onClose}>
             <X size={20} />
           </button>
@@ -345,7 +440,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
 
         <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">
-            <label className="form-label">{t('Account')}</label>
+            <label className="form-label">{t('Username')}</label>
             <input
               type="text"
               name="username"
@@ -355,7 +450,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
               placeholder={t('Enter username')}
             />
             {errors.username && (
-              <span className="error-message">{errors.username}</span>
+              <span className="message-error">{errors.username}</span>
             )}
           </div>
 
@@ -379,7 +474,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
               </button>
             </div>
             {errors.password && (
-              <span className="error-message">{errors.password}</span>
+              <span className="message-error">{errors.password}</span>
             )}
           </div>
 
@@ -396,7 +491,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
                   placeholder={t('Enter your full name')}
                 />
                 {errors.fullName && (
-                  <span className="error-message">{errors.fullName}</span>
+                  <span className="message-error">{errors.fullName}</span>
                 )}
               </div>
 
@@ -411,7 +506,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
                   placeholder="example@email.com"
                 />
                 {errors.email && (
-                  <span className="error-message">{errors.email}</span>
+                  <span className="message-error">{errors.email}</span>
                 )}
               </div>
 
@@ -426,7 +521,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
                   placeholder="0123456789"
                 />
                 {errors.phone && (
-                  <span className="error-message">{errors.phone}</span>
+                  <span className="message-error">{errors.phone}</span>
                 )}
               </div>
 
@@ -450,7 +545,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
                   </button>
                 </div>
                 {errors.confirmPassword && (
-                  <span className="error-message">{errors.confirmPassword}</span>
+                  <span className="message-error">{errors.confirmPassword}</span>
                 )}
               </div>
             </>
@@ -477,14 +572,14 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
                 </button>
               </div>
               {errors.adminKey && (
-                <span className="error-message">{errors.adminKey}</span>
+                <span className="message-error">{errors.adminKey}</span>
               )}
             </div>
           )}
 
           {!isRegister && !isAdmin && (
             <div className="forgot-password">
-              <a href="#" className="forgot-link">{t('Forgot password')}?</a>
+              <a href="/forgot-password" className="forgot-link" onClick={(e) => { e.preventDefault(); onClose(); navigate('/forgot-password'); }}>{t('Forgot password')}?</a>
             </div>
           )}
 
@@ -514,20 +609,23 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
             <div className="divider">
               <span className="divider-text">{t('Or')}</span>
             </div>
-            <button
-              type="button"
-              className="google-login-btn"
-              onClick={handleGoogleLogin}
-              disabled={isLoading}
-            >
-              <svg className="google-icon" viewBox="0 0 24 24" width="20" height="20">
-                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-              </svg>
-              {t('loginWithGoogle')}
-            </button>
+            <div id="google-signin-button" style={{ width: '100%', display: 'flex', justifyContent: 'center' }}></div>
+            {!googleButtonRendered && (
+              <button
+                type="button"
+                className="google-login-btn"
+                onClick={handleGoogleLogin}
+                disabled={isLoading}
+              >
+                <svg className="google-icon" viewBox="0 0 24 24" width="20" height="20">
+                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                {t('loginWithGoogle')}
+              </button>
+            )}
             
             {/* Facebook Login Button */}
             <button

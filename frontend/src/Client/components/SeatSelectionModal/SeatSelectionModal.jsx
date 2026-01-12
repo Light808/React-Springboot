@@ -85,7 +85,7 @@ const SeatSelectionModal = ({ isOpen, onClose, showtime, movie, userId }) => {
       // Create ticket data
       const seatNumbers = selectedSeats.map(seat => seat.seatNumber).join(', ');
       const seatIds = selectedSeats.map(seat => seat.id).join(', ');
-      const totalPrice = (showtime.price || 100000) * selectedSeats.length;
+      const totalPrice = getTotalPrice();
 
       const ticketData = {
         userId: userId,
@@ -146,9 +146,32 @@ const SeatSelectionModal = ({ isOpen, onClose, showtime, movie, userId }) => {
     }
   };
 
+  // Get seat price based on type
+  const getSeatPrice = (seat) => {
+    // If seat has its own price, use it
+    if (seat.price && seat.price > 0) {
+      return seat.price;
+    }
+    
+    // Otherwise, use default prices based on seat type
+    const basePrice = showtime.price || 100000;
+    const seatType = seat.seatType || 'REGULAR';
+    
+    switch (seatType) {
+      case 'VIP':
+        return basePrice * 1.5; // VIP costs 50% more
+      case 'COUPLE':
+        return basePrice * 2.0; // Couple seat costs 2x (for 2 people)
+      case 'REGULAR':
+      default:
+        return basePrice;
+    }
+  };
+
   const getTotalPrice = () => {
-    const pricePerSeat = showtime.price || 100000;
-    return selectedSeats.length * pricePerSeat;
+    return selectedSeats.reduce((total, seat) => {
+      return total + getSeatPrice(seat);
+    }, 0);
   };
 
   const formatPrice = (price) => {
@@ -191,18 +214,26 @@ const SeatSelectionModal = ({ isOpen, onClose, showtime, movie, userId }) => {
                   {seats.map(seat => {
                     const isSelected = selectedSeats.find(s => s.id === seat.id);
                     const isActuallyBooked = seat.booked && seat.bookedBy && seat.bookedBy.trim() !== '';
-                    const className = `seat ${isActuallyBooked ? 'booked' : ''} ${
+                    const seatType = seat.seatType || 'REGULAR';
+                    const className = `seat seat-${seatType.toLowerCase()} ${isActuallyBooked ? 'booked' : ''} ${
                       isSelected ? 'selected' : ''
                     }`;
+                    
+                    // Get seat price for tooltip
+                    const seatPrice = getSeatPrice(seat);
+                    const priceText = formatPrice(seatPrice);
                     
                     return (
                       <button
                         key={seat.id}
                         className={className}
-                        style={inlineStyle}
                         disabled={isActuallyBooked}
                         onClick={() => handleSeatClick(seat)}
-                      title={isActuallyBooked ? t('Booked by {{name}}', { name: seat.bookedBy || 'người khác' }) : ''}
+                        title={
+                          isActuallyBooked 
+                            ? t('Booked by {{name}}', { name: seat.bookedBy || 'người khác' })
+                            : `${seat.seatNumber} - ${seatType} - ${priceText}`
+                        }
                       >
                         {isActuallyBooked ? (
                           <span style={{ color: '#ef4444', fontSize: '14px', fontWeight: 'bold' }}>✕</span>
@@ -222,6 +253,18 @@ const SeatSelectionModal = ({ isOpen, onClose, showtime, movie, userId }) => {
                 <span>{t('Available seat')}</span>
               </div>
               <div className="legend-item">
+                <div className="seat-sample seat-regular"></div>
+                <span>{t('Regular')}</span>
+              </div>
+              <div className="legend-item">
+                <div className="seat-sample seat-vip"></div>
+                <span>{t('VIP')}</span>
+              </div>
+              <div className="legend-item">
+                <div className="seat-sample seat-couple"></div>
+                <span>{t('Couple')}</span>
+              </div>
+              <div className="legend-item">
                 <div className="seat-sample selected"></div>
                 <span>{t('Selected')}</span>
               </div>
@@ -236,6 +279,14 @@ const SeatSelectionModal = ({ isOpen, onClose, showtime, movie, userId }) => {
             {selectedSeats.length > 0 && (
               <div className="selected-seats-info">
                 <h3>{t('Selected seats:')} {selectedSeats.map(s => s.seatNumber).join(', ')}</h3>
+                <div className="selected-seats-details">
+                  {selectedSeats.map(seat => (
+                    <div key={seat.id} className="seat-detail-item">
+                      <span>{seat.seatNumber} ({seat.seatType || 'REGULAR'})</span>
+                      <span>{formatPrice(getSeatPrice(seat))}</span>
+                    </div>
+                  ))}
+                </div>
                 <div className="price-info">
                   <span>{t('Total:')} {formatPrice(getTotalPrice())}</span>
                 </div>

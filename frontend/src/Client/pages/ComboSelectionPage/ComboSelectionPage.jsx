@@ -270,8 +270,19 @@ const ComboSelectionPage = () => {
             user
           }
         });
+      } else if (selectedPaymentMethod === 'momo') {
+        navigate('/payment/momo', {
+          state: {
+            ticketData,
+            summary,
+            description: `${ticketData.movieTitle} - ${ticketData.seatNumber}`,
+            user
+          }
+        });
       } else {
-        navigate('/payment/sandbox', { state: { ticketData, summary, method: selectedPaymentMethod } });
+        setMessage('Phương thức thanh toán không được hỗ trợ. Vui lòng chọn phương thức khác.');
+        setBooking(false);
+        return;
       }
       
     } catch (error) {

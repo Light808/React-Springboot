@@ -581,7 +581,7 @@ const Header = ({ user, setUser, onLogout }) => {
                   placeholder={t('searchMovies')}
                   value={searchQuery}
                   onChange={handleSearchInputChange}
-                  className="search-input"
+                  className="input-search"
                 />
                 {isSearching && (
                   <div className="search-loading">

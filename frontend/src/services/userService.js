@@ -385,21 +385,90 @@ export async function adminResetPassword(userId, newPassword) {
   }
 }
 
-// Google OAuth functions
+// Google OAuth functions - Initialize and return promise for button click
 export async function loginWithGoogle() {
   try {
     await initializeGoogleAuth();
-    
-    // Trigger Google Sign-In
-    window.google.accounts.id.prompt();
-    
     return new Promise((resolve, reject) => {
-      // Store resolve/reject for the callback
-      window.googleAuthCallback = { resolve, reject };
+      const callbackRef = { resolve, reject };
+      window.googleAuthCallback = callbackRef;
+
+      setTimeout(() => {
+        if (window.googleAuthCallback === callbackRef) {
+          reject(new Error('Google Sign-In timeout. Please try again.'));
+          window.googleAuthCallback = null;
+        }
+      }, 300000); 
     });
   } catch (error) {
     console.error('Google login initialization error:', error);
-    throw new Error('Failed to initialize Google login');
+    throw new Error('Failed to initialize Google login: ' + error.message);
+  }
+}
+
+
+// Password reset functions
+export async function requestPasswordReset(email) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/auth/forgot-password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email })
+    });
+
+    const data = await res.json();
+    
+    if (!res.ok) {
+      throw new Error(data.message || 'Failed to request password reset');
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Password reset request error:', error);
+    throw new Error(error.message || 'Failed to request password reset. Please try again.');
+  }
+}
+
+export async function resetPassword(token, newPassword) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/auth/reset-password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ token, newPassword })
+    });
+
+    const data = await res.json();
+    
+    if (!res.ok) {
+      throw new Error(data.message || 'Failed to reset password');
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Password reset error:', error);
+    throw new Error(error.message || 'Failed to reset password. Please try again.');
+  }
+}
+
+export async function verifyResetToken(token) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/auth/verify-reset-token`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ token })
+    });
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error('Token verification error:', error);
+    return { valid: false, message: 'Failed to verify token' };
   }
 }
 

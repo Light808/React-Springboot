@@ -208,40 +208,38 @@ const TicketListPage = ({ userId }) => {
         modal.innerHTML = `
           <div class="${styles['modal-content']}">
             <div class="${styles['modal-header']}">
-              <h3>Chi tiết vé</h3>
+              <h3>{t('Ticket details')}</h3>
               <button class="${styles['close-btn']}">&times;</button>
             </div>
             <div class="${styles['modal-body']}">
               <div class="${styles['ticket-detail-info']}">
-                <h4>Thông tin cơ bản</h4>
-                <p><strong>Mã vé:</strong> ${ticket.ticketNumber || ticket.id}</p>
-                <p><strong>Phim:</strong> ${ticket.movieTitle || 'N/A'}</p>
-                <p><strong>Rạp:</strong> ${ticket.cinemaName || 'N/A'}</p>
+                <h4>{t('Basic information')}</h4>
+                <p><strong>{t('Ticket number')}:</strong> ${ticket.ticketNumber || ticket.id}</p>
+                <p><strong>{t('Movie')}:</strong> ${ticket.movieTitle || 'N/A'}</p>
+                <p><strong>{t('Cinema'):</strong> ${ticket.cinemaName || 'N/A'}</p>
                 ${ticket.cinemaAddress ? `<p><strong>Địa chỉ rạp:</strong> ${ticket.cinemaAddress}</p>` : ''}
-                <p><strong>Ngày chiếu:</strong> ${formatDate(ticket.showDate)}</p>
-                <p><strong>Giờ chiếu:</strong> ${formatTime(ticket.showTime)}</p>
-                <p><strong>Ghế:</strong> ${ticket.seatNumber || 'N/A'}</p>
-                <p><strong>Giá:</strong> ${formatPrice(ticket.price)}</p>
-                <p><strong>Trạng thái:</strong> ${getStatusBadge(ticket.status).props.children}</p>
-                <p><strong>QR Code:</strong> ${ticket.qrCode || 'N/A'}</p>
+                <p><strong>{t('Show date')}:</strong> ${formatDate(ticket.showDate)}</p>
+                <p><strong>{t('Show time')}:</strong> ${formatTime(ticket.showTime)}</p>
+                <p><strong>{t('Seat')}:</strong> ${ticket.seatNumber || 'N/A'}</p>
+                <p><strong>{t('Price')}:</strong> ${formatPrice(ticket.price)}</p>
+                <p><strong>{t('Status')}:</strong> ${getStatusBadge(ticket.status).props.children}</p>
+                <p><strong>{t('QR Code')}:</strong> ${ticket.qrCode || 'N/A'}</p>
                 
-                <h4>Thông tin thanh toán</h4>
-                <p><strong>Phương thức thanh toán:</strong> ${ticket.paymentMethod || 'N/A'}</p>
-                <p><strong>Trạng thái thanh toán:</strong> ${ticket.paymentStatus || 'N/A'}</p>
-                <p><strong>Thời gian đặt vé:</strong> ${ticket.bookingTime ? formatDate(ticket.bookingTime) : 'N/A'}</p>
-                
-          
+                <h4>{t('Payment information')}</h4>
+                <p><strong>{t('Payment method')}:</strong> ${ticket.paymentMethod || 'N/A'}</p>
+                <p><strong>{t('Payment status')}:</strong> ${ticket.paymentStatus || 'N/A'}</p>
+                <p><strong>{t('Booking time')}:</strong> ${ticket.bookingTime ? formatDate(ticket.bookingTime) : 'N/A'}</p>
                 
                 ${ticket.usedAt ? `
-                  <h4>Thông tin sử dụng</h4>
-                  <p><strong>Thời gian sử dụng:</strong> ${formatDate(ticket.usedAt)}</p>
+                  <h4>{t('Used information')}</h4>
+                  <p><strong>{t('Used time')}:</strong> ${formatDate(ticket.usedAt)}</p>
                 ` : ''}
                 
                 ${ticket.refundedAt ? `
-                  <h4>Thông tin hoàn tiền</h4>
-                  <p><strong>Thời gian hoàn tiền:</strong> ${formatDate(ticket.refundedAt)}</p>
-                  <p><strong>Số tiền hoàn:</strong> ${formatPrice(ticket.refundAmount || 0)}</p>
-                  <p><strong>Lý do hoàn tiền:</strong> ${ticket.refundReason || 'N/A'}</p>
+                  <h4>{t('Refund information')}</h4>
+                  <p><strong>{t('Refund time')}:</strong> ${formatDate(ticket.refundedAt)}</p>
+                  <p><strong>{t('Refund amount')}:</strong> ${formatPrice(ticket.refundAmount || 0)}</p>
+                  <p><strong>{t('Refund reason')}:</strong> ${ticket.refundReason || 'N/A'}</p>
                 ` : ''}
               </div>
             </div>
@@ -261,7 +259,7 @@ const TicketListPage = ({ userId }) => {
       }
     } catch (error) {
       console.error('Error fetching ticket details:', error);
-      alert('Không thể tải chi tiết vé. Vui lòng thử lại.');
+      alert(t('Cannot load ticket details. Please try again.'));
     }
   };
 
@@ -282,7 +280,7 @@ const TicketListPage = ({ userId }) => {
 
   const confirmRefundTicket = async () => {
     if (!selectedTicket || !refundAmount || !refundReason) {
-      alert('Vui lòng nhập đầy đủ thông tin hoàn tiền');
+      alert(t('Please fill in all required fields'));
       return;
     }
 
@@ -298,14 +296,14 @@ const TicketListPage = ({ userId }) => {
       } catch (e) {
         console.warn('Could not credit sandbox wallet after refund:', e);
       }
-      alert('Hoàn tiền thành công! Số dư ví đã được cộng.');
+      alert(t('Refund successful! The wallet balance has been added.'));
       setShowRefundModal(false);
       setRefundAmount('');
       setRefundReason('');
       window.location.reload();
     } catch (error) {
       console.error('Error refunding ticket:', error);
-      alert('Hoàn tiền thất bại. Vui lòng thử lại.');
+      alert(t('Refund failed. Please try again.'));
     } finally {
       setActionLoading(prev => ({ ...prev, [selectedTicket.id]: false }));
     }
@@ -329,10 +327,10 @@ const TicketListPage = ({ userId }) => {
       setShowCancelModal(false);
       setSelectedTicket(null);
       setCancelReason('');
-      alert('Vé đã được hủy thành công!');
+      alert(t('Ticket cancelled successfully!'));
     } catch (error) {
       console.error('Error cancelling ticket:', error);
-      alert('Không thể hủy vé. Vui lòng thử lại sau.');
+      alert(t('Cannot cancel ticket. Please try again.'));
     } finally {
       setActionLoading(prev => ({ ...prev, [selectedTicket.id]: false }));
     }
@@ -346,7 +344,7 @@ const TicketListPage = ({ userId }) => {
       downloadFile(blob, filename);
     } catch (error) {
       console.error('Error exporting tickets:', error);
-      alert('Không thể xuất danh sách vé. Vui lòng thử lại sau.');
+      alert(t('Cannot export ticket list. Please try again.'));
     } finally {
       setActionLoading(prev => ({ ...prev, export: false }));
     }
@@ -357,9 +355,9 @@ const TicketListPage = ({ userId }) => {
       <div className={`${styles['ticket-list-page']}`}>
         <div className={`${styles['container']}`}>
           <div className={`${styles['login-required']}`}>
-            <h2>Vé của tôi</h2>
-            <p>Vui lòng đăng nhập để xem vé của bạn</p>
-            <Link to="/login" className={`${styles['login-btn']}`}>Đăng nhập</Link>
+            <h2>{t('My tickets')}</h2>
+            <p>{t('Please login to view your tickets')}</p>
+            <Link to="/login" className={`${styles['login-btn']}`}>{t('Login')}</Link>
           </div>
         </div>
       </div>
@@ -372,8 +370,8 @@ const TicketListPage = ({ userId }) => {
         <div className={`${styles['page-header']}`}>
           <div className={`${styles['header-content']}`}>
             <div className={`${styles['header-text']}`}>
-              <h1>Vé của tôi</h1>
-              <p>Quản lý và theo dõi vé phim của bạn</p>
+              <h1>{t('My tickets')}</h1>
+              <p>{t('Manage and track your movie tickets')}</p>
             </div>
           </div>
         </div>

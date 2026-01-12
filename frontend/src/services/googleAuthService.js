@@ -14,8 +14,16 @@ export const initializeGoogleAuth = async () => {
     throw new Error('Failed to get Google OAuth configuration');
   }
 
-  if (window.google) {
-    return;
+  if (window.google && window.google.accounts) {
+    // Re-initialize if already loaded
+    window.google.accounts.id.initialize({
+      client_id: GOOGLE_CLIENT_ID,
+      callback: handleGoogleResponse,
+      auto_select: false,
+      cancel_on_tap_outside: true,
+      use_fedcm_for_prompt: true // Enable FedCM as required by Google
+    });
+    return Promise.resolve();
   }
 
   return new Promise((resolve, reject) => {
@@ -25,14 +33,19 @@ export const initializeGoogleAuth = async () => {
     script.defer = true;
     
     script.onload = () => {
-      window.google.accounts.id.initialize({
-        client_id: GOOGLE_CLIENT_ID,
-        callback: handleGoogleResponse,
-        auto_select: false,
-        cancel_on_tap_outside: true,
-        use_fedcm_for_prompt: false
-      });
-      resolve();
+      try {
+        window.google.accounts.id.initialize({
+          client_id: GOOGLE_CLIENT_ID,
+          callback: handleGoogleResponse,
+          auto_select: false,
+          cancel_on_tap_outside: true,
+          use_fedcm_for_prompt: true // Enable FedCM as required by Google
+        });
+        resolve();
+      } catch (error) {
+        console.error('Failed to initialize Google OAuth:', error);
+        reject(error);
+      }
     };
     
     script.onerror = () => {

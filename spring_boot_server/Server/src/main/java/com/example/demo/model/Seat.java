@@ -17,4 +17,10 @@ public class Seat {
     private boolean booked;
     private String bookedBy;
     private String bookedAt;
+    
+    // Seat type: REGULAR, VIP, COUPLE
+    private String seatType = "REGULAR";
+    
+    // Price for this seat (in VND)
+    private double price = 0.0;
 }

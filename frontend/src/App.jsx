@@ -24,9 +24,9 @@ import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'r
 import { getCurrentUser, logoutUser, isAuthenticated } from './services/userService';
 import DailySpinPage from './Client/pages/DailySpinPage';
 import ChatBox from './Client/components/ChatBox/ChatBox';
-import PaymentSandbox from './Client/pages/PaymentSandbox/PaymentSandbox.jsx';
 import VietQRPayment from './Client/pages/VietQRPayment/VietQRPayment.jsx';
 import ZaloPayPayment from './Client/pages/ZaloPayPayment/ZaloPayPayment.jsx';
+import MoMoPayment from './Client/pages/MoMoPayment/MoMoPayment.jsx';
 import GiftCardsPage from './Client/pages/GiftCardsPage/GiftCardsPage';
 import AboutUsPage from './Client/pages/AboutUsPage/AboutUsPage';
 import HelpCenterPage from './Client/pages/HelpCenterPage/HelpCenterPage';
@@ -37,6 +37,8 @@ import FeedbackPage from './Client/pages/FeedbackPage/FeedbackPage';
 import TermsOfServicePage from './Client/pages/TermsOfServicePage/TermsOfServicePage';
 import RefundPolicyPage from './Client/pages/RefundPolicyPage/RefundPolicyPage';
 import ComplaintPage from './Client/pages/ComplaintPage/ComplaintPage';
+import ForgotPasswordPage from './Client/pages/ForgotPasswordPage/ForgotPasswordPage';
+import ResetPasswordPage from './Client/pages/ResetPasswordPage/ResetPasswordPage';
 
 function ProtectedRoute({ children }) {
   return isAuthenticated() ? children : <Navigate to="/" replace />;
@@ -95,11 +97,12 @@ function App() {
 
 function RouteAwareLayout({ user, setUser, onLogout }) {
   const location = useLocation();
+  const hideHeader = location.pathname === '/forgot-password' || location.pathname === '/reset-password';
 
   return (
     <div className="app">
-      <Header user={user} setUser={setUser} onLogout={onLogout} />
-      <main className="app-main">
+      {!hideHeader && <Header user={user} setUser={setUser} onLogout={onLogout} />}
+      <main className={`app-main ${hideHeader ? 'no-header' : ''}`}>
         <Routes>
           <Route path="/" element={<Homepage />} />
           <Route path="/cinemas" element={<CinemasPage />} />
@@ -114,9 +117,9 @@ function RouteAwareLayout({ user, setUser, onLogout }) {
           <Route path="/rewards" element={<RewardsPage />} />
           <Route path="/egift" element={<EGiftPage />} />
           <Route path="/game" element={<DailySpinPage />} />
-          <Route path="/payment/sandbox" element={<PaymentSandbox />} />
           <Route path="/payment/vietqr" element={<VietQRPayment />} />
           <Route path="/payment/zalopay" element={<ZaloPayPayment />} />
+          <Route path="/payment/momo" element={<MoMoPayment />} />
           <Route path="/gift-cards" element={<GiftCardsPage />} />
           <Route path="/about" element={<AboutUsPage />} />
           <Route path="/help" element={<HelpCenterPage />} />
@@ -127,6 +130,8 @@ function RouteAwareLayout({ user, setUser, onLogout }) {
           <Route path="/terms" element={<TermsOfServicePage />} />
           <Route path="/refund-policy" element={<RefundPolicyPage />} />
           <Route path="/complaint" element={<ComplaintPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
 
           {/* Protected routes */}
           <Route
@@ -162,9 +167,9 @@ function RouteAwareLayout({ user, setUser, onLogout }) {
         </Routes>
       </main>
 
-      {/* Footer & ChatBox (Hide on admin) */}
-      {!location.pathname.startsWith('/admin') && <Footer />}
-      {!location.pathname.startsWith('/admin') && <ChatBox />}
+      {/* Footer & ChatBox (Hide on admin and auth pages) */}
+      {!location.pathname.startsWith('/admin') && !hideHeader && <Footer />}
+      {!location.pathname.startsWith('/admin') && !hideHeader && <ChatBox />}
     </div>
   );
 }

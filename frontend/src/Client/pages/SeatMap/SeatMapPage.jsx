@@ -25,13 +25,34 @@ const SeatMapPage = ({ showtimeId, userId }) => {
     const seats = [];
     const rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
     const seatsPerRow = 10;
+    const basePrice = showtime?.price || 100000;
     
-    rows.forEach((row) => {
-      for (let seatNum = 1; seatNum <= seatsPerRow; seatNum++) {
+    rows.forEach((row, rowIndex) => {
+      // Row J only has 5 seats (J1-J5), other rows have 10 seats
+      const maxSeats = rowIndex === 9 ? 5 : seatsPerRow;
+      
+      for (let seatNum = 1; seatNum <= maxSeats; seatNum++) {
+        // Determine seat type based on position
+        let seatType = 'REGULAR';
+        let price = basePrice;
+        
+        // VIP seats: rows E, F (middle rows)
+        if (rowIndex === 4 || rowIndex === 5) {
+          seatType = 'VIP';
+          price = basePrice * 1.5;
+        }
+        // Couple seats: only row J (last row), seats 1-5 (J1 to J5)
+        else if (rowIndex === 9) {
+          seatType = 'COUPLE';
+          price = basePrice * 2.0;
+        }
+        
         seats.push({
           seatNumber: `${row}${seatNum}`,
           showtimeId: showtime?.id || showtimeId || 'default',
-          booked: false 
+          booked: false,
+          seatType: seatType,
+          price: price
         });
       }
     });
@@ -133,7 +154,7 @@ const SeatMapPage = ({ showtimeId, userId }) => {
       // Tạo danh sách ghế
       const seatNumbers = selectedSeats.map(seat => seat.seatNumber).join(', ');
       const seatIds = selectedSeats.map(seat => seat.id || seat.seatNumber).join(', ');
-      const totalPrice = (showtime?.price || 100000) * selectedSeats.length;
+      const totalPrice = getTotalPrice();
 
       const ticketData = {
         userId: user?.id || userId,
@@ -234,9 +255,30 @@ const SeatMapPage = ({ showtimeId, userId }) => {
     }
   };
 
+  // Get seat price based on type
+  const getSeatPrice = (seat) => {
+    if (seat.price && seat.price > 0) {
+      return seat.price;
+    }
+    
+    const basePrice = showtime?.price || 100000;
+    const seatType = seat.seatType || 'REGULAR';
+    
+    switch (seatType) {
+      case 'VIP':
+        return basePrice * 1.5;
+      case 'COUPLE':
+        return basePrice * 2.0;
+      case 'REGULAR':
+      default:
+        return basePrice;
+    }
+  };
+
   const getTotalPrice = () => {
-    const pricePerSeat = showtime?.price || 100000;
-    return selectedSeats.length * pricePerSeat;
+    return selectedSeats.reduce((total, seat) => {
+      return total + getSeatPrice(seat);
+    }, 0);
   };
 
   const formatPrice = (price) => {
@@ -312,15 +354,26 @@ const SeatMapPage = ({ showtimeId, userId }) => {
                 <div className="seats-grid">
                   {seats.map(seat => {
                     const isActuallyBooked = seat.booked && seat.bookedBy && seat.bookedBy.trim() !== '';
+                    const isSelected = selectedSeats.find(s => s.seatNumber === seat.seatNumber);
+                    const seatType = seat.seatType || 'REGULAR';
+                    const className = `seat seat-${seatType.toLowerCase()} ${isActuallyBooked ? 'booked' : ''} ${
+                      isSelected ? 'selected' : ''
+                    }`;
+                    
+                    const seatPrice = getSeatPrice(seat);
+                    const priceText = formatPrice(seatPrice);
+                    
                     return (
                       <button
                         key={seat.id || seat.seatNumber}
-                        className={`seat ${isActuallyBooked ? 'booked' : ''} ${
-                          selectedSeats.find(s => s.seatNumber === seat.seatNumber) ? 'selected' : ''
-                        }`}
+                        className={className}
                         disabled={isActuallyBooked}
                         onClick={() => handleSeatClick(seat)}
-                        title={isActuallyBooked ? `Đã được đặt bởi ${seat.bookedBy || 'người khác'}` : ''}
+                        title={
+                          isActuallyBooked 
+                            ? `Đã được đặt bởi ${seat.bookedBy || 'người khác'}`
+                            : `${seat.seatNumber} - ${seatType} - ${priceText}`
+                        }
                       >
                         {isActuallyBooked ? (
                           <span style={{ color: '#ef4444', fontSize: '14px', fontWeight: 'bold' }}>✕</span>
@@ -340,6 +393,18 @@ const SeatMapPage = ({ showtimeId, userId }) => {
                 <span>Ghế trống</span>
               </div>
               <div className="legend-item">
+                <div className="seat-sample seat-regular"></div>
+                <span>Ghế thường</span>
+              </div>
+              <div className="legend-item">
+                <div className="seat-sample seat-vip"></div>
+                <span>Ghế VIP</span>
+              </div>
+              <div className="legend-item">
+                <div className="seat-sample seat-couple"></div>
+                <span>Ghế đôi</span>
+              </div>
+              <div className="legend-item">
                 <div className="seat-sample selected"></div>
                 <span>Đã chọn</span>
               </div>
@@ -353,6 +418,14 @@ const SeatMapPage = ({ showtimeId, userId }) => {
               {selectedSeats.length > 0 ? (
                 <>
                   <h3>Ghế đã chọn: {selectedSeats.map(s => s.seatNumber).join(', ')}</h3>
+                  <div className="selected-seats-details">
+                    {selectedSeats.map(seat => (
+                      <div key={seat.id || seat.seatNumber} className="seat-detail-item">
+                        <span>{seat.seatNumber} ({seat.seatType || 'REGULAR'})</span>
+                        <span>{formatPrice(getSeatPrice(seat))}</span>
+                      </div>
+                    ))}
+                  </div>
                   <div className="price-info">
                     <span>Tổng cộng: {formatPrice(getTotalPrice())}</span>
                   </div>
