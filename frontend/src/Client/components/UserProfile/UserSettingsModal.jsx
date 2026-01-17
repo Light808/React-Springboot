@@ -103,7 +103,7 @@ return (
                 </div>
                 <div className="form-row">
                   <label>{t('Xác nhận mật khẩu mới')}</label>
-                    <input type="password" value={pwdForm.confirmPassword} onChange={(e) => setPwdForm({ ...pwdForm, confirmPassword: e.target.value })} placeholder="Nhập lại mật khẩu mới" />
+                    <input type="password" value={pwdForm.confirmPassword} onChange={(e) => setPwdForm({ ...pwdForm, confirmPassword: e.target.value })} placeholder={t('Nhập lại mật khẩu mới')} />
                   </div>
                   {pwdError && <div className="form-error">{pwdError}</div>}
                   {pwdSuccess && <div className="form-success">{pwdSuccess}</div>}

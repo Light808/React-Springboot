@@ -215,7 +215,7 @@ const LoginPage = ({ onLogin }) => {
                   value={formData.email}
                   onChange={handleInputChange}
                   className={`${styles['form-input']} ${errors.email ? styles['error'] : ''}`}
-                  placeholder="example@email.com"
+                  placeholder={t('example@email.com')}
                 />
                 {errors.email && (
                   <span className={`${styles['error-message']}`}>{errors.email}</span>
@@ -233,7 +233,7 @@ const LoginPage = ({ onLogin }) => {
                   value={formData.phone}
                   onChange={handleInputChange}
                   className={`${styles['form-input']} ${errors.phone ? styles['error'] : ''}`}
-                  placeholder="0123456789"
+                  placeholder={t('0123456789')}
                 />
                 {errors.phone && (
                   <span className={`${styles['error-message']}`}>{errors.phone}</span>

@@ -297,7 +297,7 @@ const CinemasPage = () => {
                   className={styles['pagination-button']}
                   onClick={handlePrevious}
                   disabled={currentPage === 1}
-                  aria-label="Previous page"
+                  aria-label={t('Previous page')}
                 >
                   <ChevronLeft size={18} />
                 </button>
@@ -329,7 +329,7 @@ const CinemasPage = () => {
                   className={styles['pagination-button']}
                   onClick={handleNext}
                   disabled={currentPage === totalPages}
-                  aria-label="Next page"
+                  aria-label={t('Next page')}
                 >
                   <ChevronRight size={18} />
                 </button>

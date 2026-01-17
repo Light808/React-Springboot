@@ -316,7 +316,7 @@ const VietQRPayment = () => {
               <button 
                 onClick={() => copyToClipboard('1221868856')}
                 className="copy-btn"
-                title="Sao chép"
+                title={t('Sao chép')}
               >
                 <Copy size={14} />
               </button>
@@ -327,7 +327,7 @@ const VietQRPayment = () => {
               <button 
                 onClick={() => copyToClipboard(`${ticketData.movieTitle} ${getSeatText()}`)}
                 className="copy-btn"
-                title="Sao chép"
+                title={t('Sao chép')}
               >
                 <Copy size={14} />
               </button>

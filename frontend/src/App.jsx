@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import { useTranslation } from 'react-i18next';
 import Header from './Client/components/Header/Header';
 import Footer from './Client/components/Footer/Footer';
 import ScrollToTop from './Client/components/ScrollToTop';
@@ -45,6 +46,7 @@ function ProtectedRoute({ children }) {
 }
 
 function App() {
+  const { t } = useTranslation();
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -82,7 +84,7 @@ function App() {
     return (
       <div className="app-loading">
         <div className="loading-spinner"></div>
-        <p>Loading...</p>
+        <p>{t('Loading...')}</p>
       </div>
     );
   }

@@ -503,7 +503,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
                   value={formData.email}
                   onChange={handleInputChange}
                   className={`form-input ${errors.email ? 'error' : ''}`}
-                  placeholder="example@email.com"
+                  placeholder={t('example@email.com')}
                 />
                 {errors.email && (
                   <span className="message-error">{errors.email}</span>
@@ -518,7 +518,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
                   value={formData.phone}
                   onChange={handleInputChange}
                   className={`form-input ${errors.phone ? 'error' : ''}`}
-                  placeholder="0123456789"
+                  placeholder={t('0123456789')}
                 />
                 {errors.phone && (
                   <span className="message-error">{errors.phone}</span>
