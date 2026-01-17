@@ -15,9 +15,11 @@ import {
 import { getAllShowtimes } from '../../../services/showtimeService';
 import { createSeat, createMultipleSeats, updateSeat, deleteSeat, deleteSeatsByShowtime, getSeatsByShowtime, checkApiConnection } from '../../../services/seatService';
 import useToast from '../../hooks/useToast';
+import { useTranslation } from 'react-i18next';
 import styles from './SeatManagement.module.css';
 
 const SeatManagement = () => {
+  const { t } = useTranslation();
   const { showSuccess, showError, showWarning, showInfo } = useToast();
   const [showtimes, setShowtimes] = useState([]);
   const [selectedShowtime, setSelectedShowtime] = useState(null);
@@ -289,7 +291,7 @@ const SeatManagement = () => {
       return;
     }
 
-    if (window.confirm('Bạn có chắc chắn muốn xóa tất cả ghế?')) {
+    if (window.confirm(t('Are you sure you want to delete all seats?'))) {
       try {
         await deleteSeatsByShowtime(selectedShowtime.id);
         setSeats([]);

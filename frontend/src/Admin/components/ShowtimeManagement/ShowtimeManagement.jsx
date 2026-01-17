@@ -8,9 +8,11 @@ import ToastContainer from '../Toast/ToastContainer';
 import CreateShowtimeModal from './CreateShowtimeModal';
 import EditShowtimeModal from './EditShowtimeModal';
 import ShowtimeDetailsModal from './ShowtimeDetailsModal';
+import { useTranslation } from 'react-i18next';
 import styles from './ShowtimeManagement.module.css';
 
 const ShowtimeManagement = () => {
+  const { t } = useTranslation();
   const [showtimes, setShowtimes] = useState([]);
   const [filteredShowtimes, setFilteredShowtimes] = useState([]);
   const [cinemas, setCinemas] = useState([]);
@@ -106,7 +108,7 @@ const ShowtimeManagement = () => {
   };
 
   const handleDeleteShowtime = async (showtimeId) => {
-    if (window.confirm('Bạn có chắc chắn muốn xóa suất chiếu này?')) {
+    if (window.confirm(t('Are you sure you want to delete this showtime?'))) {
       try {
         await deleteShowtime(showtimeId);
         setShowtimes(prev => prev.filter(showtime => showtime.id !== showtimeId));

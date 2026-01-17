@@ -19,11 +19,13 @@ import {
 } from '../../../services/adminService';
 import EditUserForm from '../EditUserForm/EditUserForm';
 import CreateUserModal from './CreateUserModal';
+import { useTranslation } from 'react-i18next';
 import useToast from '../../hooks/useToast';
 import ToastContainer from '../Toast/ToastContainer';
 import styles from './UserManagement.module.css';
 
 const UserManagement = () => {
+  const { t } = useTranslation();
   const { showSuccess, showError, toasts, removeToast } = useToast();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
