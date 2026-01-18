@@ -21,12 +21,12 @@ export const initializeGoogleAuth = async () => {
       callback: handleGoogleResponse,
       auto_select: false,
       cancel_on_tap_outside: true,
-      use_fedcm_for_prompt: true // Enable FedCM as required by Google
+      use_fedcm_for_prompt: true 
     });
     return Promise.resolve();
   }
 
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const script = document.createElement('script');
     script.src = 'https://accounts.google.com/gsi/client';
     script.async = true;
@@ -34,22 +34,29 @@ export const initializeGoogleAuth = async () => {
     
     script.onload = () => {
       try {
+        if (!GOOGLE_CLIENT_ID) {
+          console.warn('Google Client ID not configured. Google Sign-In will not be available.');
+          resolve(); 
+          return;
+        }
+        
         window.google.accounts.id.initialize({
           client_id: GOOGLE_CLIENT_ID,
           callback: handleGoogleResponse,
           auto_select: false,
           cancel_on_tap_outside: true,
-          use_fedcm_for_prompt: true // Enable FedCM as required by Google
+          use_fedcm_for_prompt: true 
         });
         resolve();
       } catch (error) {
-        console.error('Failed to initialize Google OAuth:', error);
-        reject(error);
+        console.warn('Failed to initialize Google OAuth (non-critical):', error);
+        resolve();
       }
     };
     
     script.onerror = () => {
-      reject(new Error('Failed to load Google OAuth script'));
+      console.warn('Failed to load Google OAuth script (non-critical)');
+      resolve();
     };
     
     document.head.appendChild(script);

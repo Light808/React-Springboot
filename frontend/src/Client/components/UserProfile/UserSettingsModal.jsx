@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
-import { X, Settings } from 'lucide-react';
-import { changePassword } from '../../../services/userService';
+import React, { useState, useEffect } from 'react';
+import { X, Settings, Camera } from 'lucide-react';
+import { changePassword, getCurrentUserSync } from '../../../services/userService';
+import { checkFaceRegistered, deleteFaceDescriptor } from '../../../services/faceService';
+import FaceIDRegistration from '../FaceIDRegistration/FaceIDRegistration';
 import './UserProfile.css';
 import { useTranslation } from 'react-i18next';
 
@@ -10,8 +12,83 @@ const UserSettingsModal = ({ isOpen, onClose }) => {
   const [changingPwd, setChangingPwd] = useState(false);
   const [pwdError, setPwdError] = useState('');
   const [pwdSuccess, setPwdSuccess] = useState('');
+  const [faceIDEnabled, setFaceIDEnabled] = useState(false);
+  const [loadingFaceID, setLoadingFaceID] = useState(false);
+  const [showFaceIDRegistration, setShowFaceIDRegistration] = useState(false);
+  const [faceIDError, setFaceIDError] = useState('');
+  const [faceIDSuccess, setFaceIDSuccess] = useState('');
+
+  // Check Face ID status when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      checkFaceIDStatus();
+    }
+  }, [isOpen]);
+
+  const checkFaceIDStatus = async () => {
+    try {
+      const user = getCurrentUserSync();
+      if (user && user.id) {
+        const hasFace = await checkFaceRegistered(user.id);
+        setFaceIDEnabled(hasFace);
+      }
+    } catch (error) {
+      console.error('Error checking Face ID status:', error);
+    }
+  };
+
+  const handleFaceIDToggle = async (enabled) => {
+    const user = getCurrentUserSync();
+    if (!user || !user.id) {
+      setFaceIDError('User not found');
+      return;
+    }
+
+    setLoadingFaceID(true);
+    setFaceIDError('');
+    setFaceIDSuccess('');
+
+    try {
+      if (enabled) {
+        // Enable Face ID - show registration modal
+        setShowFaceIDRegistration(true);
+      } else {
+        // Disable Face ID - delete face descriptor
+        await deleteFaceDescriptor(user.id);
+        setFaceIDEnabled(false);
+        setFaceIDSuccess('Face ID đã được tắt thành công');
+        setTimeout(() => setFaceIDSuccess(''), 3000);
+      }
+    } catch (error) {
+      setFaceIDError(error.message || 'Có lỗi xảy ra');
+      setTimeout(() => setFaceIDError(''), 3000);
+    } finally {
+      setLoadingFaceID(false);
+    }
+  };
+
+  const handleFaceIDRegistrationSuccess = () => {
+    setShowFaceIDRegistration(false);
+    setFaceIDEnabled(true);
+    setFaceIDSuccess('Face ID đã được bật thành công');
+    setTimeout(() => setFaceIDSuccess(''), 3000);
+  };
 
   if (!isOpen) return null;
+
+  // Show Face ID Registration modal
+  if (showFaceIDRegistration) {
+    const user = getCurrentUserSync();
+    return (
+      <FaceIDRegistration
+        userId={user?.id}
+        onSuccess={handleFaceIDRegistrationSuccess}
+        onCancel={() => {
+          setShowFaceIDRegistration(false);
+        }}
+      />
+    );
+  }
 
   const validate = () => {
     setPwdError('');
@@ -69,6 +146,42 @@ return (
       </div>
 
       <div className="profile-content">
+        {/* Face ID Settings */}
+        <div className="settings-section">
+          <div className="settings-header" style={{ cursor: 'default' }}>
+            <div className="settings-title">
+              <Camera size={18} />
+              <h4>Face ID</h4>
+            </div>
+          </div>
+          <div className="settings-content">
+            <div className="face-id-settings-card">
+              <div className="face-id-toggle-row">
+                <div className="face-id-info">
+                  <label>Bật/Tắt Face ID</label>
+                  <p className="face-id-description">
+                    {faceIDEnabled 
+                      ? 'Face ID đang được bật. Bạn có thể đăng nhập bằng khuôn mặt.'
+                      : 'Face ID đang được tắt. Bật để đăng nhập nhanh hơn bằng khuôn mặt.'}
+                  </p>
+                </div>
+                <label className="toggle-switch">
+                  <input
+                    type="checkbox"
+                    checked={faceIDEnabled}
+                    onChange={(e) => handleFaceIDToggle(e.target.checked)}
+                    disabled={loadingFaceID}
+                  />
+                  <span className="toggle-slider"></span>
+                </label>
+              </div>
+              {faceIDError && <div className="form-error">{faceIDError}</div>}
+              {faceIDSuccess && <div className="form-success">{faceIDSuccess}</div>}
+            </div>
+          </div>
+        </div>
+
+        {/* Change Password Settings */}
         <div className="settings-section">
           <div className="settings-header" style={{ cursor: 'default' }}>
             <div className="settings-title">

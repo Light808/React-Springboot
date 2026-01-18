@@ -81,4 +81,8 @@ public class MoMoService {
 		order.setUpdatedAt(Instant.now());
 		repo.save(order);
 	}
+
+	public java.util.List<MoMoOrder> getAllOrders() {
+		return repo.findAll();
+	}
 }

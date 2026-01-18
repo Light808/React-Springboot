@@ -23,6 +23,8 @@ const ZaloPayPayment = () => {
   const [timeLeft, setTimeLeft] = useState(Math.floor(POLL_TIMEOUT_MS / 1000));
   const pollRef = useRef(null);
   const timeoutRef = useRef(null);
+  // Prevent double order creation
+  const orderCreatedRef = useRef(false); 
 
   const amount = useMemo(() => summary?.totalPrice || summary?.amount || ticketData?.price || 0, [summary, ticketData]);
   const orderDescription = useMemo(() => (
@@ -35,7 +37,18 @@ const ZaloPayPayment = () => {
       return;
     }
 
+    // Prevent double order creation (React StrictMode or remount)
+    if (orderCreatedRef.current) {
+      return;
+    }
+
     const createOrder = async () => {
+      if (orderCreatedRef.current) {
+        return; 
+      }
+      
+      orderCreatedRef.current = true;
+      
       try {
         setStatus('PENDING');
         setError('');
@@ -46,6 +59,7 @@ const ZaloPayPayment = () => {
         setPayUrl(res.payUrl || '');
         setQrUrl(res.qrUrl || '');
       } catch (e) {
+        orderCreatedRef.current = false; // Reset on error to allow retry
         setStatus('ERROR');
         setError(e?.message || 'Failed to create ZaloPay order');
       }

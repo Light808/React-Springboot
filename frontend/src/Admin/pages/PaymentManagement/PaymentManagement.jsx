@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { CreditCard, DollarSign, Clock, CheckCircle, XCircle, AlertCircle, RefreshCw, Eye, Filter, Search, Calendar, User, Mail, Phone } from 'lucide-react';
 import './PaymentManagement.css';
 import { getAllOrders, markPaid, markExpired } from '../../../services/paymentService';
+import { markMoMoPaid, markMoMoExpired, getAllMoMoOrders } from '../../../services/momoService';
+import { getAllZaloPayOrders, markZaloPayPaid, markZaloPayExpired } from '../../../services/zaloPayService';
 import PaymentOrderDetail from './PaymentOrderDetail';
 import useToast from '../../hooks/useToast';
 import ToastContainer from '../../components/Toast/ToastContainer';
@@ -24,11 +26,82 @@ function PaymentManagement() {
   const fetchOrders = async () => {
     setLoading(true);
     try {
-      const data = await getAllOrders();
-      setOrders(Array.isArray(data) ? data : []);
+      // Fetch all types of orders in parallel
+      const [paymentOrders, momoOrders, zaloPayOrders] = await Promise.allSettled([
+        getAllOrders().catch(() => []),
+        getAllMoMoOrders().catch(() => []),
+        getAllZaloPayOrders().catch(() => [])
+      ]);
+
+      // Normalize and merge all orders
+      const allOrders = [];
+      
+      // PaymentOrders (VietQR, etc.) - format: { orderId, amount, orderInfo, method, status, userId, userName, userEmail, createdAt }
+      if (paymentOrders.status === 'fulfilled' && Array.isArray(paymentOrders.value)) {
+        paymentOrders.value.forEach(order => {
+          allOrders.push({
+            orderId: order.orderId,
+            amount: order.amount,
+            orderInfo: order.orderInfo,
+            method: order.method || 'vietqr',
+            status: order.status?.toLowerCase() || 'pending',
+            userId: order.userId,
+            userName: order.userName,
+            userEmail: order.userEmail,
+            createdAt: order.createdAt,
+            type: 'payment'
+          });
+        });
+      }
+
+      // MoMoOrders - format: { orderId, amount, description, status, userLabel, createdAt }
+      if (momoOrders.status === 'fulfilled' && Array.isArray(momoOrders.value)) {
+        momoOrders.value.forEach(order => {
+          allOrders.push({
+            orderId: order.orderId,
+            amount: order.amount,
+            orderInfo: order.description,
+            method: 'momo',
+            status: order.status?.toLowerCase() || 'pending',
+            userId: order.userLabel,
+            userName: order.userLabel,
+            userEmail: order.userLabel?.includes('@') ? order.userLabel : '',
+            createdAt: order.createdAt,
+            type: 'momo'
+          });
+        });
+      }
+
+      // ZaloPayOrders - format: { appTransId, amount, description, status, userLabel, createdAt }
+      if (zaloPayOrders.status === 'fulfilled' && Array.isArray(zaloPayOrders.value)) {
+        zaloPayOrders.value.forEach(order => {
+          allOrders.push({
+            orderId: order.appTransId,
+            amount: order.amount,
+            orderInfo: order.description,
+            method: 'zalopay',
+            status: order.status?.toLowerCase() || 'pending',
+            userId: order.userLabel,
+            userName: order.userLabel,
+            userEmail: order.userLabel?.includes('@') ? order.userLabel : '',
+            createdAt: order.createdAt,
+            type: 'zalopay'
+          });
+        });
+      }
+
+      // Sort by createdAt (newest first)
+      allOrders.sort((a, b) => {
+        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return dateB - dateA;
+      });
+
+      setOrders(allOrders);
       setError(null);
     } catch (e) {
       setError(e.message);
+      setOrders([]);
     } finally {
       setLoading(false);
     }
@@ -46,22 +119,43 @@ function PaymentManagement() {
     return () => clearInterval(timer);
   }, []);
 
-  const handleMark = async (id, status) => {
+  const handleMark = async (id, status, method) => {
     setActionLoading(l => ({ ...l, [id]: true }));
     try {
+      // Check payment method and orderId format to determine correct API
+      // MoMo orders have orderId starting with "MM-"
+      // ZaloPay orders have orderId (appTransId) starting with "ZP-"
+      // PaymentOrders start with "local-"
+      const isMoMoOrder = method === 'momo' && id && id.startsWith('MM-');
+      const isZaloPayOrder = method === 'zalopay' && id && id.startsWith('ZP-');
+      
+      if (isMoMoOrder) {
+        // Handle MoMo orders (orderId format: MM-xxxxx)
+        if (status === 'paid') {
+          await markMoMoPaid(id);
+        } else {
+          await markMoMoExpired(id);
+        }
+      } else if (isZaloPayOrder) {
+        // Handle ZaloPay orders (appTransId format: ZP-xxxxx)
       if (status === 'paid') {
-        await markPaid(id);
-        try {
-          localStorage.setItem('paymentStatusUpdate', JSON.stringify({ orderId: id, status: 'paid', ts: Date.now() }));
-          setTimeout(() => localStorage.removeItem('paymentStatusUpdate'), 50);
-        } catch (_) {}
+          await markZaloPayPaid(id);
+        } else {
+          await markZaloPayExpired(id);
+        }
+      } else {
+        // Handle PaymentOrders (VietQR, etc.) - orderId format: local-xxxxx
+        if (status === 'paid') {
+          await markPaid(id);
       } else {
         await markExpired(id);
-        try {
-          localStorage.setItem('paymentStatusUpdate', JSON.stringify({ orderId: id, status: 'expired', ts: Date.now() }));
-          setTimeout(() => localStorage.removeItem('paymentStatusUpdate'), 50);
-        } catch (_) {}
+        }
       }
+      
+      try {
+        localStorage.setItem('paymentStatusUpdate', JSON.stringify({ orderId: id, status: status, ts: Date.now() }));
+        setTimeout(() => localStorage.removeItem('paymentStatusUpdate'), 50);
+      } catch (_) {}
       
       // Show success toast
       const successMessage = status === 'paid' 
@@ -230,13 +324,12 @@ function PaymentManagement() {
                       <th>{t('Information')}</th>
                       <th>{t('Amount')}</th>
                       <th>{t('Status')}</th>
-                      <th>{t('Actions')}</th>
                     </tr>
                   </thead>
                   <tbody>
                     {filteredOrders.length === 0 ? (
                       <tr>
-                        <td colSpan="6" className="no-data">
+                        <td colSpan="5" className="no-data">
                           <div className="no-data-content">
                             <CreditCard size={48} />
                             <p>{t('No orders found')}</p>
@@ -298,41 +391,6 @@ function PaymentManagement() {
                               <span>{order.status}</span>
                             </div>
                           </td>
-                          <td className="actions">
-                            <div className="action-buttons">
-                              {order.status === 'pending' && (
-                                <>
-                                  <button
-                                    className="action-btn success"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleMark(order.orderId, 'paid');
-                                    }}
-                                    disabled={actionLoading[order.orderId]}
-                                  >
-                                    <CheckCircle size={14} />
-                                    {t('Confirm')}
-                                  </button>
-                                  <button
-                                    className="action-btn danger"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleMark(order.orderId, 'expired');
-                                    }}
-                                    disabled={actionLoading[order.orderId]}
-                                  >
-                                    <XCircle size={14} />
-                                    {t('Cancel')}
-                                  </button>
-                                </>
-                              )}
-                              {actionLoading[order.orderId] && (
-                                <div className="loading-indicator">
-                                  <RefreshCw size={14} className="spinning" />
-                                </div>
-                              )}
-                            </div>
-                          </td>
                         </tr>
                       ))
                     )}
@@ -347,8 +405,8 @@ function PaymentManagement() {
                 <div className="detail-card">
                   <PaymentOrderDetail 
                     order={selectedOrder} 
-                    onApprove={(orderId) => handleMark(orderId, 'paid')}
-                    onReject={(orderId) => handleMark(orderId, 'expired')}
+                    onApprove={(orderId) => handleMark(orderId, 'paid', selectedOrder.method)}
+                    onReject={(orderId) => handleMark(orderId, 'expired', selectedOrder.method)}
                     actionLoading={actionLoading[selectedOrder.orderId]}
                   />
                 </div>

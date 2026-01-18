@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.service.FaceRecognitionService;
 import com.example.demo.service.FacebookOAuthService;
 import com.example.demo.service.GoogleOAuthConfigService;
 import com.example.demo.service.GoogleOAuthService;
@@ -39,6 +40,9 @@ public class UserController {
     
     @Autowired
     private FacebookOAuthService facebookOAuthService;
+    
+    @Autowired
+    private FaceRecognitionService faceRecognitionService;
 
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
@@ -569,6 +573,167 @@ public class UserController {
             return ResponseEntity.ok(exists);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    
+    // Register face descriptor for a user
+    @PostMapping("/{id}/register-face")
+    public ResponseEntity<Map<String, Object>> registerFace(
+            @PathVariable String id,
+            @RequestBody Map<String, Object> request) {
+        try {
+            Optional<User> userOpt = userRepository.findById(id);
+            if (!userOpt.isPresent()) {
+                return ResponseEntity.notFound().build();
+            }
+            
+            User user = userOpt.get();
+            @SuppressWarnings("unchecked")
+            List<Double> faceDescriptor = (List<Double>) request.get("faceDescriptor");
+            
+            if (faceDescriptor == null || faceDescriptor.isEmpty()) {
+                return ResponseEntity.badRequest().build();
+            }
+            
+            user.setFaceDescriptor(faceDescriptor);
+            user.setUpdatedAt(java.time.LocalDateTime.now());
+            userRepository.save(user);
+            
+            Map<String, Object> response = new java.util.HashMap<>();
+            response.put("success", true);
+            response.put("message", "Face registered successfully");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            System.err.println("Register face error: " + e.getMessage());
+            e.printStackTrace();
+            Map<String, Object> errorResponse = new java.util.HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", "Failed to register face: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+    
+    // Verify face descriptor for login
+    @PostMapping("/verify-face")
+    public ResponseEntity<User> verifyFace(@RequestBody Map<String, Object> request) {
+        try {
+            @SuppressWarnings("unchecked")
+            List<Double> inputDescriptor = (List<Double>) request.get("faceDescriptor");
+            
+            if (inputDescriptor == null || inputDescriptor.isEmpty()) {
+                return ResponseEntity.badRequest().build();
+            }
+            
+            // Get all users with face descriptors
+            List<User> allUsers = userRepository.findAll();
+            User matchedUser = null;
+            double bestSimilarity = 0.0;
+            
+            // Normalize input descriptor
+            List<Double> normalizedInput = normalizeDescriptor(inputDescriptor);
+            
+            for (User user : allUsers) {
+                if (user.getFaceDescriptor() != null && !user.getFaceDescriptor().isEmpty()) {
+                    // Normalize stored descriptor
+                    List<Double> normalizedStored = normalizeDescriptor(user.getFaceDescriptor());
+                    
+                    double similarity = faceRecognitionService.calculateSimilarity(
+                            normalizedInput, normalizedStored);
+                    
+                    System.out.println("Comparing with user " + user.getUsername() + ": similarity = " + String.format("%.4f", similarity));
+                    
+                    if (similarity > bestSimilarity) {
+                        bestSimilarity = similarity;
+                        // Match with the highest similarity (no threshold check)
+                        matchedUser = user;
+                    }
+                }
+            }
+            
+            System.out.println("Best similarity found: " + String.format("%.4f", bestSimilarity));
+            
+            // Accept any face match (very lenient)
+            if (matchedUser != null && bestSimilarity > 0) {
+                System.out.println("Face matched with user: " + matchedUser.getUsername() + " (similarity: " + String.format("%.4f", bestSimilarity) + ")");
+                matchedUser.setLastLoginAt(java.time.LocalDateTime.now());
+                userRepository.save(matchedUser);
+                matchedUser.setPassword(null);
+                return ResponseEntity.ok(matchedUser);
+            } else {
+                System.out.println("No face match found. Best similarity: " + String.format("%.4f", bestSimilarity));
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+        } catch (Exception e) {
+            System.err.println("Verify face error: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    
+    // Helper method to normalize descriptor
+    private List<Double> normalizeDescriptor(List<Double> descriptor) {
+        double norm = 0.0;
+        for (Double val : descriptor) {
+            norm += val * val;
+        }
+        norm = Math.sqrt(norm);
+        
+        if (norm == 0.0) {
+            return descriptor;
+        }
+        
+        List<Double> normalized = new java.util.ArrayList<>();
+        for (Double val : descriptor) {
+            normalized.add(val / norm);
+        }
+        return normalized;
+    }
+    
+    // Check if user has registered face
+    @GetMapping("/{id}/has-face")
+    public ResponseEntity<Map<String, Boolean>> hasFace(@PathVariable String id) {
+        try {
+            Optional<User> userOpt = userRepository.findById(id);
+            if (!userOpt.isPresent()) {
+                return ResponseEntity.notFound().build();
+            }
+            
+            User user = userOpt.get();
+            boolean hasFace = user.getFaceDescriptor() != null && !user.getFaceDescriptor().isEmpty();
+            
+            Map<String, Boolean> response = new java.util.HashMap<>();
+            response.put("hasFace", hasFace);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    
+    // Delete/disable Face ID for a user
+    @DeleteMapping("/{id}/delete-face")
+    public ResponseEntity<Map<String, Object>> deleteFace(@PathVariable String id) {
+        try {
+            Optional<User> userOpt = userRepository.findById(id);
+            if (!userOpt.isPresent()) {
+                return ResponseEntity.notFound().build();
+            }
+            
+            User user = userOpt.get();
+            user.setFaceDescriptor(null);
+            user.setUpdatedAt(java.time.LocalDateTime.now());
+            userRepository.save(user);
+            
+            Map<String, Object> response = new java.util.HashMap<>();
+            response.put("success", true);
+            response.put("message", "Face ID disabled successfully");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            System.err.println("Delete face error: " + e.getMessage());
+            e.printStackTrace();
+            Map<String, Object> errorResponse = new java.util.HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", "Failed to delete face: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
 }

@@ -4,7 +4,10 @@ import { registerUser, loginUser, loginWithGoogle, handleGoogleLoginSuccess } fr
 import { initializeGoogleAuth } from '../../../services/googleAuthService';
 import { loginWithFacebook } from '../../../services/facebookAuthService';
 import { adminLogin } from '../../../services/adminService';
-import { Eye, EyeOff, X, AlertCircle, CheckCircle, Shield } from 'lucide-react';
+import { checkFaceRegistered } from '../../../services/faceService';
+import FaceIDLogin from '../FaceIDLogin/FaceIDLogin';
+import FaceIDRegistration from '../FaceIDRegistration/FaceIDRegistration';
+import { Eye, EyeOff, X, AlertCircle, CheckCircle, Shield, Camera } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import './LoginModal.css';
 import { useTranslation } from "react-i18next";
@@ -40,6 +43,9 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
   const [showAdminKey, setShowAdminKey] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
   const [googleButtonRendered, setGoogleButtonRendered] = useState(false);
+  const [showFaceIDLogin, setShowFaceIDLogin] = useState(false);
+  const [showFaceIDRegistration, setShowFaceIDRegistration] = useState(false);
+  const [hasFaceID, setHasFaceID] = useState(false);
   const navigate = useNavigate();
 
   // Initialize Google Auth when modal opens
@@ -242,17 +248,39 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
         });
         
         if (user && user.id) {
-        setMessage({
-          type: 'success',
-          text: 'Login successful!'
-        });
-        
-        if (onLogin) onLogin(user);
-        
-        setTimeout(() => {
-          onClose();
-          navigate('/');
-        }, 1000);
+          setMessage({
+            type: 'success',
+            text: 'Login successful!'
+          });
+          
+          if (onLogin) onLogin(user);
+          
+          // Check if user has Face ID registered (after login success)
+          try {
+            const hasFace = await checkFaceRegistered(user.id);
+            setHasFaceID(hasFace);
+            
+            if (!hasFace) {
+              const registerFace = window.confirm('Would you like to register Face ID for faster login next time?');
+              if (registerFace) {
+                setShowFaceIDRegistration(true);
+                return; 
+              }
+              // If user declined, close modal and navigate
+              setTimeout(() => {
+                onClose();
+                navigate('/');
+              }, 1000);
+              return; 
+            }
+          } catch (error) {
+            console.warn('Could not check Face ID status:', error);
+          }
+          
+          setTimeout(() => {
+            onClose();
+            navigate('/');
+          }, 1000);
         } else {
           setMessage({
             type: 'error',
@@ -434,7 +462,101 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
   };
 
 
+  // Handle Face ID login success
+  const handleFaceIDLoginSuccess = async (user) => {
+    try {
+      // Save user data to localStorage first (similar to password login)
+      if (user && user.id) {
+        localStorage.setItem('authToken', 'user-token-' + user.id);
+        localStorage.setItem('currentUser', JSON.stringify(user));
+      }
+      
+      await handleGoogleLoginSuccess(user);
+      setMessage({
+        type: 'success',
+        text: 'Face ID login successful!'
+      });
+      
+      if (onLogin) onLogin(user);
+      
+      setTimeout(() => {
+        setShowFaceIDLogin(false);
+        onClose();
+        navigate('/');
+      }, 1000);
+    } catch (error) {
+      console.error('Error handling Face ID login:', error);
+    }
+  };
+
+  // Handle Face ID registration success
+  const handleFaceIDRegistrationSuccess = () => {
+    setShowFaceIDRegistration(false);
+    setHasFaceID(true);
+    setMessage({
+      type: 'success',
+      text: 'Face ID registered successfully! You can use Face ID to login next time.'
+    });
+    
+    setTimeout(() => {
+      onClose();
+      navigate('/');
+    }, 2000);
+  };
+
+  // Check if user has Face ID when username changes
+  useEffect(() => {
+    const checkUserFaceID = async () => {
+      if (formData.username && !isRegister && !isAdmin) {
+        try {
+          // We need to check after login, not before
+        } catch (error) {
+          // Ignore
+        }
+      }
+    };
+    
+    // Don't check on every username change, only after successful login
+  }, [formData.username, isRegister, isAdmin]);
+
   if (!isOpen) return null;
+
+  // Show Face ID Login modal
+  if (showFaceIDLogin) {
+    return (
+      <FaceIDLogin
+        onSuccess={handleFaceIDLoginSuccess}
+        onCancel={() => setShowFaceIDLogin(false)}
+        onSwitchToPassword={() => setShowFaceIDLogin(false)}
+      />
+    );
+  }
+
+  // Show Face ID Registration modal
+  if (showFaceIDRegistration) {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    console.log('Showing Face ID Registration for user:', currentUser);
+    
+    if (!currentUser || !currentUser.id) {
+      console.error('No user ID found for Face ID registration');
+      setMessage({ type: 'error', text: 'User not found. Please login again.' });
+      setShowFaceIDRegistration(false);
+      return null;
+    }
+    
+    console.log('Rendering FaceIDRegistration with userId:', currentUser.id);
+    return (
+      <FaceIDRegistration
+        userId={currentUser.id}
+        onSuccess={handleFaceIDRegistrationSuccess}
+        onCancel={() => {
+          setShowFaceIDRegistration(false);
+          onClose();
+          navigate('/');
+        }}
+      />
+    );
+  }
 
   return (
     <div className="login-modal-overlay" onClick={onClose}>
@@ -610,9 +732,19 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
           )}
 
           {!isRegister && !isAdmin && (
-            <div className="forgot-password">
-              <a href="/forgot-password" className="forgot-link" onClick={(e) => { e.preventDefault(); onClose(); navigate('/forgot-password'); }}>{t('Forgot password')}?</a>
-            </div>
+            <>
+              <div className="forgot-password">
+                <a href="/forgot-password" className="forgot-link" onClick={(e) => { e.preventDefault(); onClose(); navigate('/forgot-password'); }}>{t('Forgot password')}?</a>
+              </div>
+              <button
+                type="button"
+                className="face-id-login-btn"
+                onClick={() => setShowFaceIDLogin(true)}
+                disabled={isLoading}
+              >
+                Login with Face ID
+              </button>
+            </>
           )}
 
           {message.text && (
@@ -641,8 +773,9 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
             <div className="divider">
               <span className="divider-text">{t('Or')}</span>
             </div>
-            <div id="google-signin-button" style={{ width: '100%', display: 'flex', justifyContent: 'center' }}></div>
-            {!googleButtonRendered && (
+            {googleButtonRendered && window.google && window.google.accounts ? (
+              <div id="google-signin-button" style={{ width: '100%', display: 'flex', justifyContent: 'center' }}></div>
+            ) : (
               <button
                 type="button"
                 className="google-login-btn"

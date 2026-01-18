@@ -35,6 +35,9 @@ public class User {
     private String facebookId;
     private String provider; // "local", "google", or "facebook"
     
+    // Face ID fields
+    private java.util.List<Double> faceDescriptor; // Face recognition descriptor
+    
     // Constructor
     public User() {
         this.createdAt = LocalDateTime.now();

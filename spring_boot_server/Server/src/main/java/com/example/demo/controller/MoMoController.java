@@ -52,4 +52,10 @@ public class MoMoController {
 		moMoService.markExpired(orderId);
 		return ResponseEntity.ok().build();
 	}
+
+	// Get all MoMo orders
+	@GetMapping("/orders")
+	public ResponseEntity<java.util.List<com.example.demo.model.MoMoOrder>> getAllOrders() {
+		return ResponseEntity.ok(moMoService.getAllOrders());
+	}
 }

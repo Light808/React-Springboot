@@ -23,6 +23,7 @@ const LanguageSwitcher = () => {
       >
         <option value="en">EN</option>
         <option value="vi">VI</option>
+        <option value="ja">JA</option>
       </select>
     </div>
   );

@@ -52,4 +52,10 @@ public class ZaloPayController {
 		zaloPayService.markExpired(appTransId);
 		return ResponseEntity.ok().build();
 	}
+
+	// Get all ZaloPay orders
+	@GetMapping("/orders")
+	public ResponseEntity<java.util.List<com.example.demo.model.ZaloPayOrder>> getAllOrders() {
+		return ResponseEntity.ok(zaloPayService.getAllOrders());
+	}
 }
