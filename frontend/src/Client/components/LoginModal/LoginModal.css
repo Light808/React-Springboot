@@ -556,3 +556,48 @@
     font-size: 0.8rem;
   }
 }
+
+/* Face ID Login Button */
+.face-id-login-btn {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  background: #f8f8f8;
+  color: rgb(46, 86, 216);
+  border: 2px solid rgb(46, 86, 216);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.face-id-login-btn:hover:not(:disabled) {
+  background: #1d4ed8;
+  color: white;
+  transform: translateY(-1px);
+}
+
+.face-id-login-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+@media (max-width: 768px) {
+  .face-id-login-btn {
+    padding: 0.75rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .face-id-login-btn {
+    padding: 0.75rem 1rem;
+    font-size: 0.8rem;
+  }
+}

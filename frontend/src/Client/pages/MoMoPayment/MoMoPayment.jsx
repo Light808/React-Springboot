@@ -5,12 +5,14 @@ import { createMoMoOrder, queryMoMoOrder } from '../../../services/momoService';
 import { bookTicket } from '../../../services/ticketService';
 import { createNotification, createBookingSuccessNotification } from '../../../services/notificationService';
 import './MoMoPayment.css';
+import { useTranslation } from 'react-i18next';
 
 // Polling time intervals and timeout
 const POLL_INTERVAL_MS = 2500;
 const POLL_TIMEOUT_MS = 5 * 60 * 1000;
 
 const MoMoPayment = () => {
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -24,6 +26,7 @@ const MoMoPayment = () => {
   const [timeLeft, setTimeLeft] = useState(Math.floor(POLL_TIMEOUT_MS / 1000));
   const pollRef = useRef(null);
   const timeoutRef = useRef(null);
+  const orderCreatedRef = useRef(false); // Prevent double order creation
 
   const amount = useMemo(() => summary?.totalPrice || summary?.amount || ticketData?.price || 0, [summary, ticketData]);
   const orderDescription = useMemo(() => (
@@ -32,11 +35,22 @@ const MoMoPayment = () => {
 
   useEffect(() => {
     if (!ticketData || !amount) {
-      setError('Missing order information.');
+      setError(t('Missing order information.'));
+      return;
+    }
+
+    // Prevent double order creation (React StrictMode or remount)
+    if (orderCreatedRef.current) {
       return;
     }
 
     const createOrder = async () => {
+      if (orderCreatedRef.current) {
+        return; 
+      }
+      
+      orderCreatedRef.current = true; // Mark as creating
+      
       try {
         setStatus('PENDING');
         setError('');
@@ -47,8 +61,9 @@ const MoMoPayment = () => {
         setPayUrl(res.payUrl || '');
         setQrUrl(res.qrUrl || '');
       } catch (e) {
+        orderCreatedRef.current = false; 
         setStatus('ERROR');
-        setError(e?.message || 'Failed to create MoMo order');
+        setError(e?.message || t('Failed to create MoMo order'));
       }
     };
 
@@ -65,7 +80,11 @@ const MoMoPayment = () => {
       try {
         const res = await queryMoMoOrder(orderId);
         const s = res?.status || res?.returnCode || 'PENDING';
-        if (s === 'PAID' || s === 1 || s === '1' || s === 'paid') {
+        // Normalize status to uppercase for comparison
+        const statusNormalized = String(s).toUpperCase().trim();
+        
+        // Check if paid 
+        if (statusNormalized === 'PAID' || statusNormalized === '1' || s === 1) {
           clearInterval(pollRef.current);
           clearTimeout(timeoutRef.current);
           setStatus('PAID');
@@ -99,7 +118,7 @@ const MoMoPayment = () => {
           } catch (err) {
             setError('Payment confirmed, but booking failed. Please contact support.');
           }
-        } else if (s === 'EXPIRED' || s === -1 || s === '-1' || s === 'expired') {
+        } else if (statusNormalized === 'EXPIRED' || statusNormalized === '-1' || s === -1) {
           clearInterval(pollRef.current);
           clearTimeout(timeoutRef.current);
           setStatus('EXPIRED');

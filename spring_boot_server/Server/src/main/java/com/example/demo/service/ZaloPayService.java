@@ -66,4 +66,8 @@ public class ZaloPayService {
 		order.setUpdatedAt(Instant.now());
 		repo.save(order);
 	}
+
+	public java.util.List<ZaloPayOrder> getAllOrders() {
+		return repo.findAll();
+	}
 }

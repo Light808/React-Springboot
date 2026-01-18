@@ -96,8 +96,33 @@ const ComboSelectionPage = () => {
     }, 0);
   };
 
+  // Calculate seat price based on seat type (same logic as SeatMapPage)
+  const getSeatPrice = (seat) => {
+    // If seat has explicit price, use it
+    if (seat?.price && seat.price > 0) {
+      return seat.price;
+    }
+    
+    // Otherwise calculate based on seat type
+    const basePrice = showtime?.price || 100000;
+    const seatType = seat?.seatType || 'REGULAR';
+    
+    switch (seatType) {
+      case 'VIP':
+        return basePrice * 1.5;
+      case 'COUPLE':
+        return basePrice * 2.0;
+      case 'REGULAR':
+      default:
+        return basePrice;
+    }
+  };
+
   const getTicketPrice = () => {
-    return (showtime?.price || 100000) * selectedSeats?.length || 0;
+    if (!selectedSeats || selectedSeats.length === 0) return 0;
+    return selectedSeats.reduce((total, seat) => {
+      return total + getSeatPrice(seat);
+    }, 0);
   };
 
   const getTotalPrice = () => {
@@ -235,22 +260,24 @@ const ComboSelectionPage = () => {
         totalPrice: totalPrice
       };
 
-      const orderPayload = {
-        amount: Number(summary.totalPrice) || 0,
-        orderInfo: `${ticketData.movieTitle} - ${ticketData.seatNumber}`.trim(),
-        method: selectedPaymentMethod,
-        userId: String(user?.id || `guest-${Date.now()}`),
-        userName: String(user?.name || user?.fullName || user?.username || 'Guest'),
-        userEmail: String(user?.email || 'guest@example.com'),
-      };
-      const order = await createPaymentOrder(orderPayload);
-
-      if (order?.payUrl) {
-        window.location.href = order.payUrl;
-        return;
-      }
       // Handle different payment methods
       if (selectedPaymentMethod === 'vietqr') {
+        // Create PaymentOrder for VietQR
+        const orderPayload = {
+          amount: Number(summary.totalPrice) || 0,
+          orderInfo: `${ticketData.movieTitle} - ${ticketData.seatNumber}`.trim(),
+          method: selectedPaymentMethod,
+          userId: String(user?.id || `guest-${Date.now()}`),
+          userName: String(user?.name || user?.fullName || user?.username || 'Guest'),
+          userEmail: String(user?.email || 'guest@example.com'),
+        };
+        const order = await createPaymentOrder(orderPayload);
+
+        if (order?.payUrl) {
+          window.location.href = order.payUrl;
+          return;
+        }
+
         navigate('/payment/vietqr', { 
           state: { 
             ticketData, 
@@ -262,6 +289,7 @@ const ComboSelectionPage = () => {
           } 
         });
       } else if (selectedPaymentMethod === 'zalopay') {
+        // ZaloPay creates its own order in ZaloPayPayment page
         navigate('/payment/zalopay', {
           state: {
             ticketData,
@@ -271,6 +299,7 @@ const ComboSelectionPage = () => {
           }
         });
       } else if (selectedPaymentMethod === 'momo') {
+        // MoMo creates its own order in MoMoPayment page
         navigate('/payment/momo', {
           state: {
             ticketData,

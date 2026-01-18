@@ -8,6 +8,7 @@ import { addFunds } from '../../../services/virtualWalletService';
 import { getMovieById } from '../../../services/movieService';
 import styles from './TicketListPage.module.css';
 import { useTranslation } from 'react-i18next';
+import i18n from '../../../i18n';
 
 const TicketListPage = ({ userId }) => {
   const {t} = useTranslation();
@@ -208,7 +209,7 @@ const TicketListPage = ({ userId }) => {
         modal.innerHTML = `
           <div class="${styles['modal-content']}">
             <div class="${styles['modal-header']}">
-              <h3>{t('Ticket details')}</h3>
+              <h3>${i18n.t('Ticket details')}</h3>
               <button class="${styles['close-btn']}">&times;</button>
             </div>
             <div class="${styles['modal-body']}">
@@ -217,7 +218,7 @@ const TicketListPage = ({ userId }) => {
                 <p><strong>{t('Ticket number')}:</strong> ${ticket.ticketNumber || ticket.id}</p>
                 <p><strong>{t('Movie')}:</strong> ${ticket.movieTitle || 'N/A'}</p>
                 <p><strong>{t('Cinema'):</strong> ${ticket.cinemaName || 'N/A'}</p>
-                ${ticket.cinemaAddress ? `<p><strong>Địa chỉ rạp:</strong> ${ticket.cinemaAddress}</p>` : ''}
+                ${ticket.cinemaAddress ? `<p><strong>${t('Cinema address')}:</strong> ${ticket.cinemaAddress}</p>` : ''}
                 <p><strong>{t('Show date')}:</strong> ${formatDate(ticket.showDate)}</p>
                 <p><strong>{t('Show time')}:</strong> ${formatTime(ticket.showTime)}</p>
                 <p><strong>{t('Seat')}:</strong> ${ticket.seatNumber || 'N/A'}</p>
@@ -376,77 +377,6 @@ const TicketListPage = ({ userId }) => {
           </div>
         </div>
 
-        {/* Stats Section */}
-        {showStats && ticketStats && (
-          <div className={`${styles['stats-section']}`}>
-            <h3>Thống kê vé của bạn</h3>
-            <div className={`${styles['stats-grid']}`}>
-              <div className={`${styles['stat-card']}`}>
-                <div className={`${styles['stat-icon']}`}>
-                  <Ticket size={24} />
-                </div>
-                <div className={`${styles['stat-content']}`}>
-                  <span className={`${styles['stat-number']}`}>{ticketStats.totalTickets}</span>
-                  <span className={`${styles['stat-label']}`}>Tổng vé</span>
-                </div>
-              </div>
-              <div className={`${styles['stat-card']}`}>
-                <div className={`${styles['stat-icon']} ${styles['confirmed']}`}>
-                  <CheckCircle size={24} />
-                </div>
-                <div className={`${styles['stat-content']}`}>
-                  <span className={`${styles['stat-number']}`}>{ticketStats.confirmedTickets}</span>
-                  <span className={`${styles['stat-label']}`}>Đã xác nhận</span>
-                </div>
-              </div>
-              <div className={`${styles['stat-card']}`}>
-                <div className={`${styles['stat-icon']} ${styles['used']}`}>
-                  <CheckCircle size={24} />
-                </div>
-                <div className={`${styles['stat-content']}`}>
-                  <span className={`${styles['stat-number']}`}>{ticketStats.usedTickets}</span>
-                  <span className={`${styles['stat-label']}`}>Đã sử dụng</span>
-                </div>
-              </div>
-              <div className={`${styles['stat-card']}`}>
-                <div className={`${styles['stat-icon']} ${styles['cancelled']}`}>
-                  <XCircle size={24} />
-                </div>
-                <div className={`${styles['stat-content']}`}>
-                  <span className={`${styles['stat-number']}`}>{ticketStats.cancelledTickets}</span>
-                  <span className={`${styles['stat-label']}`}>Đã hủy</span>
-                </div>
-              </div>
-              <div className={`${styles['stat-card']}`}>
-                <div className={`${styles['stat-icon']} ${styles['money']}`}>
-                  <BarChart3 size={24} />
-                </div>
-                <div className={`${styles['stat-content']}`}>
-                  <span className={`${styles['stat-number']}`}>{formatPrice(ticketStats.totalSpent)}</span>
-                  <span className={`${styles['stat-label']}`}>Tổng chi tiêu</span>
-                </div>
-              </div>
-              <div className={`${styles['stat-card']}`}>
-                <div className={`${styles['stat-icon']} ${styles['refund']}`}>
-                  <XCircle size={24} />
-                </div>
-                <div className={`${styles['stat-content']}`}>
-                  <span className={`${styles['stat-number']}`}>{ticketStats.refundedTickets || 0}</span>
-                  <span className={`${styles['stat-label']}`}>Vé đã hoàn tiền</span>
-                </div>
-              </div>
-              <div className={`${styles['stat-card']}`}>
-                <div className={`${styles['stat-icon']} ${styles['refund-amount']}`}>
-                  <BarChart3 size={24} />
-                </div>
-                <div className={`${styles['stat-content']}`}>
-                  <span className={`${styles['stat-number']}`}>{formatPrice(ticketStats.totalRefundAmount || 0)}</span>
-                  <span className={`${styles['stat-label']}`}>Tổng hoàn tiền</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Search and Filter */}
         <div className={`${styles['ticket-controls']}`}>
@@ -455,7 +385,7 @@ const TicketListPage = ({ userId }) => {
               <Search size={20} className={`${styles['search-icon']}`} />
               <input
                 type="text"
-                placeholder="Tìm kiếm theo tên phim, rạp chiếu..."
+                placeholder={t('Search by movie name, cinema name...')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className={`${styles['search-input']}`}
@@ -470,12 +400,12 @@ const TicketListPage = ({ userId }) => {
               onChange={(e) => setStatusFilter(e.target.value)}
               className={`${styles['status-filter']}`}
             >
-              <option value="all">Tất cả trạng thái</option>
-              <option value="confirmed">Đã xác nhận</option>
-              <option value="pending">Chờ xác nhận</option>
-              <option value="used">Đã sử dụng</option>
-              <option value="cancelled">Đã hủy</option>
-              <option value="expired">Hết hạn</option>
+              <option value="all">{t('All status')}</option>
+              <option value="confirmed">{t('Confirmed')}</option>
+              <option value="pending">{t('Pending')}</option>
+              <option value="used">{t('Used')}</option>
+              <option value="cancelled">{t('Cancelled')}</option>
+              <option value="expired">{t('Expired')}</option>
             </select>
           </div>
         </div>
@@ -484,7 +414,7 @@ const TicketListPage = ({ userId }) => {
         {loading && (
           <div className={`${styles['loading-state']}`}>
             <div className={`${styles['loading-spinner']}`}></div>
-            <p>Đang tải danh sách vé...</p>
+            <p>{t('Loading ticket list...')}</p>
           </div>
         )}
 
@@ -492,7 +422,7 @@ const TicketListPage = ({ userId }) => {
         {!loading && !error && movieTitlesLoading && (
           <div className={`${styles['loading-state']}`}>
             <div className={`${styles['loading-spinner']}`}></div>
-            <p>Đang tải thông tin phim...</p>
+            <p>{t('Loading movie information...')}</p>
           </div>
         )}
 
@@ -501,7 +431,7 @@ const TicketListPage = ({ userId }) => {
           <div className={`${styles['error-state']}`}>
             <p>{error}</p>
             <button onClick={() => window.location.reload()} className={`${styles['retry-btn']}`}>
-              Thử lại
+              {t('Try again')}
             </button>
           </div>
         )}
@@ -510,15 +440,15 @@ const TicketListPage = ({ userId }) => {
         {!loading && !error && !movieTitlesLoading && filteredTickets.length === 0 && (
           <div className={`${styles['empty-state']}`}>
             <Ticket size={64} className={`${styles['empty-icon']}`} />
-            <h3>Chưa có vé nào</h3>
+            <h3>{t('No tickets found')}</h3>
             <p>
               {searchQuery || statusFilter !== 'all'
-                ? 'Không tìm thấy vé phù hợp với bộ lọc của bạn'
-                : 'Bạn chưa đặt vé phim nào. Hãy khám phá và đặt vé ngay!'
+                ? t('No tickets found matching your filter')
+                : t('You have not booked any movie tickets. Explore and book tickets now!')
               }
             </p>
             {!searchQuery && statusFilter === 'all' && (
-              <Link to="/" className={`${styles['explore-btn']}`}>Khám phá phim</Link>
+              <Link to="/" className={`${styles['explore-btn']}`}>{t('Explore movies')}</Link>
             )}
           </div>
         )}
@@ -549,14 +479,14 @@ const TicketListPage = ({ userId }) => {
                           return ticket.movieTitle;
                         }
                         if (movieTitlesLoading) {
-                          return 'Đang tải...';
+                          return t('Loading...');
                         }
-                        return 'Tên phim';
+                        return t('Movie name');
                       })()}
                     </h3>
                     <p className={`${styles['cinema-name']}`}>
                       <MapPin size={16} />
-                      {ticket.cinemaName || 'Tên rạp'}
+                      {ticket.cinemaName || t('Cinema name')}
                     </p>
                   </div>
                   {getStatusBadge(ticket.status)}
@@ -573,7 +503,7 @@ const TicketListPage = ({ userId }) => {
                   </div>
                   <div className={`${styles['detail-row']}`}>
                     <Ticket size={16} />
-                    <span>Ghế: {ticket.seatNumber || ticket.seatId || 'N/A'}</span>
+                    <span>{t('Seat')}: {ticket.seatNumber || ticket.seatId || 'N/A'}</span>
                   </div>
                   <div className={`${styles['detail-row']}`}>
                     <span className={`${styles['price']}`}>{formatPrice(ticket.price)}</span>

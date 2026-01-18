@@ -23,3 +23,37 @@ export const queryZaloPayOrder = async (appTransId) => {
     throw error;
   }
 };
+
+export const getAllZaloPayOrders = async () => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/orders`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching ZaloPay orders:", error);
+    throw error;
+  }
+};
+
+export const markZaloPayPaid = async (appTransId) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/mark-paid`, null, {
+      params: { appTransId },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error marking ZaloPay order as paid:", error);
+    throw error;
+  }
+};
+
+export const markZaloPayExpired = async (appTransId) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/mark-expired`, null, {
+      params: { appTransId },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error marking ZaloPay order as expired:", error);
+    throw error;
+  }
+};
