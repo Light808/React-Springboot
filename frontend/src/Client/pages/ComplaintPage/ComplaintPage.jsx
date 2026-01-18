@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { 
   AlertTriangle, 
@@ -13,10 +13,19 @@ import {
   MessageSquare
 } from 'lucide-react';
 import { submitComplaint } from '../../../services/complaintService';
+import { useHoneypot, HoneypotField, HoneypotUrlField } from '../../../utils/useHoneypot';
 import './ComplaintPage.css';
 
 const ComplaintPage = () => {
   const { t } = useTranslation();
+  const { 
+    honeypotValue, 
+    setHoneypotValue, 
+    honeypotUrl, 
+    setHoneypotUrl, 
+    resetTimer, 
+    validateSubmission 
+  } = useHoneypot();
   const [complaintForm, setComplaintForm] = useState({
     name: '',
     email: '',
@@ -28,6 +37,11 @@ const ComplaintPage = () => {
   });
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
+
+  // Reset honeypot timer when component mounts
+  useEffect(() => {
+    resetTimer();
+  }, [resetTimer]);
 
   const complaintCategories = [
     { value: 'booking', label: t('Booking Issue') },
@@ -48,6 +62,13 @@ const ComplaintPage = () => {
   const handleComplaintSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    
+    // Honeypot validation
+    if (!validateSubmission()) {
+      console.warn('Honeypot validation failed - possible bot detected');
+      setError('Invalid submission. Please try again.');
+      return;
+    }
     
     // Validation
     if (!complaintForm.name || !complaintForm.email || !complaintForm.category || !complaintForm.description) {
@@ -123,6 +144,18 @@ const ComplaintPage = () => {
         <div className="complaint-form-section">
           <h2 className="complaint-form-title">{t('Complaint Details')}</h2>
           <form className="complaint-form" onSubmit={handleComplaintSubmit}>
+            {/* Honeypot fields */}
+            <HoneypotField 
+              value={honeypotValue} 
+              onChange={(e) => setHoneypotValue(e.target.value)} 
+              name="website"
+            />
+            <HoneypotUrlField 
+              value={honeypotUrl} 
+              onChange={(e) => setHoneypotUrl(e.target.value)} 
+              name="url"
+            />
+            
             <div className="form-row">
               <div className="form-group">
                 <label htmlFor="name">{t('Full Name')} <span className="required">*</span></label>

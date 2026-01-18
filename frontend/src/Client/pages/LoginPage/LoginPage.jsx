@@ -1,12 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { registerUser, loginUser } from '../../services/userService';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, User, Lock, Mail, Phone, UserCheck, LogIn, AlertCircle, CheckCircle } from 'lucide-react';
+import { useHoneypot, HoneypotField, HoneypotUrlField, HoneypotLink } from '../../utils/useHoneypot';
 import styles from './LoginPage.module.css';
 import { useTranslation } from 'react-i18next';
 
 const LoginPage = ({ onLogin }) => {
   const { t } = useTranslation();
+  const { 
+    honeypotValue, 
+    setHoneypotValue, 
+    honeypotUrl, 
+    setHoneypotUrl, 
+    resetTimer, 
+    validateSubmission 
+  } = useHoneypot();
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -23,6 +32,11 @@ const LoginPage = ({ onLogin }) => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
   const navigate = useNavigate();
+
+  // Reset honeypot timer when component mounts
+  useEffect(() => {
+    resetTimer();
+  }, [resetTimer]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -84,6 +98,16 @@ const LoginPage = ({ onLogin }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Honeypot validation
+    if (!validateSubmission()) {
+      console.warn('Honeypot validation failed - possible bot detected');
+      setMessage({
+        type: 'error',
+        text: 'Invalid submission. Please try again.'
+      });
+      return;
+    }
     
     if (!validateForm()) {
       return;
@@ -165,6 +189,10 @@ const LoginPage = ({ onLogin }) => {
 
   return (
     <div className={`${styles['auth-container']}`}>
+      {/* Honeypot links - hidden URLs for bot detection */}
+      <HoneypotLink href="/admin/login-direct" text="Direct Admin Login" />
+      <HoneypotLink href="/api/users/register-admin" text="Register as Admin" />
+      
       <div className={`${styles['auth-card']}`}>
         <div className={`${styles['auth-header']}`}>
           <div className={`${styles['auth-logo']}`}>
@@ -184,6 +212,18 @@ const LoginPage = ({ onLogin }) => {
         </div>
 
         <form onSubmit={handleSubmit} className={`${styles['auth-form']}`}>
+          {/* Honeypot fields */}
+          <HoneypotField 
+            value={honeypotValue} 
+            onChange={(e) => setHoneypotValue(e.target.value)} 
+            name="website"
+          />
+          <HoneypotUrlField 
+            value={honeypotUrl} 
+            onChange={(e) => setHoneypotUrl(e.target.value)} 
+            name="url"
+          />
+          
           {isRegister && (
             <>
               <div className={`${styles['form-group']}`}>

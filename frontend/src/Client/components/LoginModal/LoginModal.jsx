@@ -8,9 +8,18 @@ import { Eye, EyeOff, X, AlertCircle, CheckCircle, Shield } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import './LoginModal.css';
 import { useTranslation } from "react-i18next";
+import { useHoneypot, HoneypotField, HoneypotUrlField } from '../../../utils/useHoneypot';
 
 const LoginModal = ({ isOpen, onClose, onLogin }) => {
   const { t } = useTranslation();
+  const { 
+    honeypotValue, 
+    setHoneypotValue, 
+    honeypotUrl, 
+    setHoneypotUrl, 
+    resetTimer, 
+    validateSubmission 
+  } = useHoneypot();
 
   const [formData, setFormData] = useState({
     username: '',
@@ -67,8 +76,9 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
       setMessage({ type: '', text: '' });
       setIsRegister(false);
       setIsAdmin(false);
+      resetTimer(); // Reset honeypot timer
     }
-  }, [isOpen]);
+  }, [isOpen, resetTimer]);
 
   // Handle escape key
   useEffect(() => {
@@ -154,6 +164,16 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Honeypot validation
+    if (!validateSubmission()) {
+      console.warn('Honeypot validation failed - possible bot detected');
+      setMessage({
+        type: 'error',
+        text: 'Invalid submission. Please try again.'
+      });
+      return;
+    }
     
     if (!validateForm()) {
       return;
@@ -439,6 +459,18 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
         </div>
 
         <form onSubmit={handleSubmit} className="login-form">
+          {/* Honeypot fields */}
+          <HoneypotField 
+            value={honeypotValue} 
+            onChange={(e) => setHoneypotValue(e.target.value)} 
+            name="website"
+          />
+          <HoneypotUrlField 
+            value={honeypotUrl} 
+            onChange={(e) => setHoneypotUrl(e.target.value)} 
+            name="url"
+          />
+          
           <div className="form-group">
             <label className="form-label">{t('Username')}</label>
             <input

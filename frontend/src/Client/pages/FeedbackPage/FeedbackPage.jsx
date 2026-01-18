@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { 
   Star, 
@@ -10,10 +10,19 @@ import {
   Mail,
   Heart
 } from 'lucide-react';
+import { useHoneypot, HoneypotField, HoneypotUrlField } from '../../../utils/useHoneypot';
 import './FeedbackPage.css';
 
 const FeedbackPage = () => {
   const { t } = useTranslation();
+  const { 
+    honeypotValue, 
+    setHoneypotValue, 
+    honeypotUrl, 
+    setHoneypotUrl, 
+    resetTimer, 
+    validateSubmission 
+  } = useHoneypot();
   const [feedbackForm, setFeedbackForm] = useState({
     name: '',
     email: '',
@@ -23,6 +32,11 @@ const FeedbackPage = () => {
   });
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
+
+  // Reset honeypot timer when component mounts
+  useEffect(() => {
+    resetTimer();
+  }, [resetTimer]);
 
   const feedbackCategories = [
     { value: 'service', label: t('Customer Service') },
@@ -50,6 +64,13 @@ const FeedbackPage = () => {
   const handleFeedbackSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    
+    // Honeypot validation
+    if (!validateSubmission()) {
+      console.warn('Honeypot validation failed - possible bot detected');
+      setError('Invalid submission. Please try again.');
+      return;
+    }
     
     // Validation
     if (!feedbackForm.name || !feedbackForm.email || !feedbackForm.rating || !feedbackForm.feedback) {
