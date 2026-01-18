@@ -3,9 +3,11 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { Lock, Eye, EyeOff, ArrowLeft, CheckCircle } from 'lucide-react';
 import { resetPassword, verifyResetToken } from '../../../services/userService';
+import { useTranslation } from 'react-i18next';
 import './ResetPasswordPage.css';
 
 const ResetPasswordPage = () => {
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const token = searchParams.get('token');
@@ -179,7 +181,7 @@ const ResetPasswordPage = () => {
                   id="newPassword"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="Enter new password (min. 6 characters)"
+                  placeholder={t('Enter new password (min. 6 characters)')}
                   required
                   minLength={6}
                   disabled={loading}
@@ -204,7 +206,7 @@ const ResetPasswordPage = () => {
                   id="confirmPassword"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="Confirm new password"
+                  placeholder={t('Confirm new password')}
                   required
                   disabled={loading}
                 />

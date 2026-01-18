@@ -59,7 +59,7 @@ const AdminDashboard = () => {
     labels: Object.keys(stats.monthlyRevenue || {}),
     datasets: [
       {
-        label: 'Doanh thu (VNĐ)',
+        label: t('Revenue (VND)'),
         data: Object.values(stats.monthlyRevenue || {}),
         borderColor: 'rgb(75, 192, 192)',
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -72,7 +72,7 @@ const AdminDashboard = () => {
     labels: Object.keys(stats.weeklyTicketSales || {}),
     datasets: [
       {
-        label: 'Vé bán được',
+        label: t('Tickets sold'),
         data: Object.values(stats.weeklyTicketSales || {}),
         backgroundColor: 'rgba(54, 162, 235, 0.6)',
         borderColor: 'rgba(54, 162, 235, 1)',
@@ -85,7 +85,7 @@ const AdminDashboard = () => {
     labels: Object.keys(stats.weeklyUserGrowth || {}),
     datasets: [
       {
-        label: 'Người dùng mới',
+        label: t('New users'),
         data: Object.values(stats.weeklyUserGrowth || {}),
         backgroundColor: 'rgba(255, 99, 132, 0.6)',
         borderColor: 'rgba(255, 99, 132, 1)',
@@ -102,7 +102,7 @@ const AdminDashboard = () => {
       },
       title: {
         display: true,
-        text: 'Biểu đồ thống kê'
+        text: t('Statistics chart')
       }
     },
     scales: {
@@ -307,7 +307,7 @@ const AdminDashboard = () => {
         return <CinemaManagement />;
       
       default:
-        return <div>Tab không tồn tại</div>;
+        return <div>{t('Tab does not exist')}</div>;
     }
   };
 
@@ -416,7 +416,7 @@ const AdminDashboard = () => {
       <div className={styles.mainContent}>
         <div className={styles.header}>
           <h1>
-            {activeTab === 'dashboard' && 'Dashboard'}
+            {activeTab === 'dashboard' && t('Dashboard')}
             {activeTab === 'payments' && t('Payment management')}
             {activeTab === 'users' && t('User management')}
             {activeTab === 'tickets' && t('Ticket management')}

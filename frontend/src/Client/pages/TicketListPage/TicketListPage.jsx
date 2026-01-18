@@ -514,7 +514,7 @@ const TicketListPage = ({ userId }) => {
                   <button
                     onClick={() => handleViewTicket(ticket.id)}
                     className={`${styles['action-btn']} ${styles['view-btn']}`}
-                    title="Xem chi tiết"
+                    title={t('Xem chi tiết')}
                     disabled={actionLoading[ticket.id]}
                   >
                     <Eye size={16} />
@@ -524,7 +524,7 @@ const TicketListPage = ({ userId }) => {
                     <button
                       onClick={() => handleCancelTicket(ticket.id)}
                       className={`${styles['action-btn']} ${styles['cancel-btn']}`}
-                      title="Hủy vé"
+                      title={t('Hủy vé')}
                       disabled={actionLoading[ticket.id]}
                     >
                       <Trash2 size={16} />
@@ -535,7 +535,7 @@ const TicketListPage = ({ userId }) => {
                     <button
                       onClick={() => handleRefundTicket(ticket.id)}
                       className={`${styles['action-btn']} ${styles['refund-btn']}`}
-                      title="Hoàn tiền"
+                      title={t('Hoàn tiền')}
                       disabled={actionLoading[ticket.id]}
                     >
                       <BarChart3 size={16} />
@@ -597,7 +597,7 @@ const TicketListPage = ({ userId }) => {
                     id="cancelReason"
                     value={cancelReason}
                     onChange={(e) => setCancelReason(e.target.value)}
-                    placeholder="Nhập lý do hủy vé..."
+                    placeholder={t('Nhập lý do hủy vé...')}
                     rows={3}
                   />
                 </div>
@@ -659,7 +659,7 @@ const TicketListPage = ({ userId }) => {
                     id="refundAmount"
                     value={refundAmount}
                     onChange={(e) => setRefundAmount(e.target.value)}
-                    placeholder="Nhập số tiền hoàn..."
+                    placeholder={t('Nhập số tiền hoàn...')}
                     min="0"
                     max={selectedTicket.price}
                   />
@@ -670,7 +670,7 @@ const TicketListPage = ({ userId }) => {
                     id="refundReason"
                     value={refundReason}
                     onChange={(e) => setRefundReason(e.target.value)}
-                    placeholder="Nhập lý do hoàn tiền..."
+                    placeholder={t('Nhập lý do hoàn tiền...')}
                     rows={3}
                     required
                   />

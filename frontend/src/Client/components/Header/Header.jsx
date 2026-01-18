@@ -446,10 +446,10 @@ const Header = ({ user, setUser, onLogout }) => {
     const now = new Date();
     const diffInMinutes = Math.floor((now - date) / (1000 * 60));
     
-    if (diffInMinutes < 1) return 'Just now';
-    if (diffInMinutes < 60) return `${diffInMinutes} minutes ago`;
-    if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)} hours ago`;
-    if (diffInMinutes < 10080) return `${Math.floor(diffInMinutes / 1440)} days ago`;
+    if (diffInMinutes < 1) return t('Just now');
+    if (diffInMinutes < 60) return `${diffInMinutes} ${t('minutes ago')}`;
+    if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)} ${t('hours ago')}`;
+    if (diffInMinutes < 10080) return `${Math.floor(diffInMinutes / 1440)} ${t('days ago')}`;
     
     return date.toLocaleDateString('en-EN', {
       day: '2-digit',
@@ -835,7 +835,7 @@ const Header = ({ user, setUser, onLogout }) => {
                               <button
                                 className="delete-btn"
                                 onClick={() => handleDeleteNotification(notification.id)}
-                                title="delete notification"
+                                title={t('delete notification')}
                               >
                                 ✕
                               </button>

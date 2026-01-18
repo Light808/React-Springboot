@@ -141,7 +141,7 @@ const MovieManagement = () => {
   };
 
   const handleDeleteMovie = async (movieId) => {
-    if (window.confirm('Bạn có chắc chắn muốn xóa phim này?')) {
+    if (window.confirm(t('Are you sure you want to delete this movie?'))) {
       try {
         await deleteMovie(movieId);
         setMovies(prev => prev.filter(movie => movie.id !== movieId));

@@ -2,10 +2,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Send, MessageCircle, Loader2 } from "lucide-react";
 import "./ChatBox.css";
+import { useTranslation } from "react-i18next";
 import { sendMessage, getChatHistory, sendMessageWithMovies } from "../../../services/chatService";
 import MovieSuggestionCard from "./MovieSuggestionCard";
 
 const ChatBox = () => {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -141,7 +143,7 @@ const ChatBox = () => {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Enter your message..."
+              placeholder={t('Enter your message...')}
               disabled={isLoading}
             />
             <button onClick={handleSend}>

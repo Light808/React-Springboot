@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Trash2, Edit, Save, X, RefreshCw } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { createSeat, createMultipleSeats, updateSeat, deleteSeat,deleteSeatsByShowtime,getSeatsByShowtime,checkApiConnection } from '../../../services/seatService';
 import './SeatManager.css';
 
 const SeatManager = ({ onSeatsChange, showtimeId }) => {
+  const { t } = useTranslation();
   const [seats, setSeats] = useState([]);
   const [newSeat, setNewSeat] = useState({ row: 'A', number: 1, booked: false });
   const [pendingSeats, setPendingSeats] = useState([]);
@@ -52,7 +54,7 @@ const SeatManager = ({ onSeatsChange, showtimeId }) => {
 
     if (seats.find(s => s.seatNumber === seat.seatNumber) || 
         pendingSeats.find(s => s.seatNumber === seat.seatNumber)) {
-      alert('Ghế này đã tồn tại!');
+      alert(t('This seat already exists!'));
       return;
     }
 
@@ -71,7 +73,7 @@ const SeatManager = ({ onSeatsChange, showtimeId }) => {
 
     if (seats.find(s => s.seatNumber === seat.seatNumber) || 
         pendingSeats.find(s => s.seatNumber === seat.seatNumber)) {
-      alert('Ghế này đã tồn tại!');
+      alert(t('This seat already exists!'));
       return;
     }
 
@@ -97,9 +99,9 @@ const SeatManager = ({ onSeatsChange, showtimeId }) => {
         setSeats(updatedSeats);
         onSeatsChange(updatedSeats);
         setNewSeat({ row: 'A', number: 1, booked: false });
-        alert('Đã thêm ghế vào giao diện. Lưu ý: Ghế chưa được lưu vào database do lỗi kết nối API.');
+        alert(t('Seat added to interface. Note: Seat has not been saved to database due to API connection error.'));
       } else {
-        alert('Lỗi khi thêm và lưu ghế: ' + error.message);
+        alert(t('Error adding and saving seat: ') + error.message);
       }
     } finally {
       setSaving(false);
@@ -124,7 +126,7 @@ const SeatManager = ({ onSeatsChange, showtimeId }) => {
         setSeats(updatedSeats);
         onSeatsChange(updatedSeats);
       } else {
-        alert('Lỗi khi xóa ghế: ' + error.message);
+        alert(t('Error deleting seat: ') + error.message);
       }
     }
   };
@@ -160,7 +162,7 @@ const SeatManager = ({ onSeatsChange, showtimeId }) => {
       onSeatsChange(updatedSeats);
     } catch (error) {
       console.error('Error updating seat:', error);
-      alert('Lỗi khi cập nhật ghế: ' + error.message);
+      alert(t('Error updating seat: ') + error.message);
     }
   };
 
@@ -183,17 +185,17 @@ const SeatManager = ({ onSeatsChange, showtimeId }) => {
       setSeats(createdSeats);
       onSeatsChange(createdSeats);
     } catch (error) {
-      alert('Lỗi khi tạo ghế: ' + error.message);
+      alert(t('Error creating seat: ') + error.message);
     }
   };
 
   const clearAllSeats = async () => {
     if (!showtimeId) {
-      alert('Không thể xóa ghế: thiếu showtimeId');
+      alert(t('Cannot delete seats: missing showtimeId'));
       return;
     }
 
-    if (window.confirm('Bạn có chắc chắn muốn xóa tất cả ghế?')) {
+    if (window.confirm(t('Are you sure you want to delete all seats?'))) {
       try {
         // Thử xóa từ database trước
         await deleteSeatsByShowtime(showtimeId);
@@ -208,7 +210,7 @@ const SeatManager = ({ onSeatsChange, showtimeId }) => {
           setPendingSeats([]);
           onSeatsChange([]);
         } else {
-          alert('Lỗi khi xóa tất cả ghế: ' + error.message);
+          alert(t('Error deleting all seats: ') + error.message);
         }
       }
     }
@@ -236,7 +238,7 @@ const SeatManager = ({ onSeatsChange, showtimeId }) => {
         setPendingSeats([]);
         onSeatsChange(updatedSeats);
       } else {
-        alert('Lỗi khi lưu ghế: ' + error.message);
+        alert(t('Error saving seat: ') + error.message);
       }
     } finally {
       setSaving(false);
@@ -260,9 +262,9 @@ const SeatManager = ({ onSeatsChange, showtimeId }) => {
       console.error('Error refreshing seats:', error);
 
       if (error.message.includes('Failed to fetch') || error.message.includes('CORS')) {
-        alert('Không thể tải lại ghế từ database do lỗi kết nối API. Giao diện sẽ hiển thị dữ liệu hiện tại.');
+        alert(t('Cannot reload seats from database due to API connection error. Interface will display current data.'));
       } else {
-        alert('Lỗi khi tải lại ghế: ' + error.message);
+        alert(t('Error reloading seats: ') + error.message);
         setSeats([]);
         onSeatsChange([]);
       }

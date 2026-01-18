@@ -537,7 +537,7 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
       <div>
         <div className="profile-header">
           <h2>{t('Personal profile')}</h2>
-          <button className="exit-btn" onClick={handleCloseClick} title="Close">
+          <button className="exit-btn" onClick={handleCloseClick} title={t('Close')}>
             <X size={20} />
           </button>
         </div>

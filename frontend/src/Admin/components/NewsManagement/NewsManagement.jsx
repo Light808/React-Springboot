@@ -15,10 +15,12 @@ import CreateNews from '../CreateNews/CreateNews';
 import NewsDetailModal from '../NewsDetailModal/NewsDetailModal';
 import EditNewsModal from '../EditNewsModal/EditNewsModal';
 import useToast from '../../hooks/useToast';
+import { useTranslation } from 'react-i18next';
 import ToastContainer from '../Toast/ToastContainer';
 import styles from './NewsManagement.module.css';
 
 const NewsManagement = () => {
+  const { t } = useTranslation();
   const { showSuccess, showError, toasts, removeToast } = useToast();
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
