@@ -71,7 +71,7 @@ const DailySpinPage = () => {
   return (
     <div style={{ maxWidth: 1000, margin: '0 auto', padding: '24px' }}>
       <h1 style={{ marginBottom: 8 }}>{t('Coin')}</h1>
-      <p style={{ marginTop: 0, color: '#666' }}>Điểm danh mỗi ngày để nhận xu và đổi phần thưởng.</p>
+      <p style={{ marginTop: 0, color: '#666' }}>{t('Check in daily to earn coins and redeem rewards.')}</p>
 
       {message && (
         <div style={{ marginBottom: 12, padding: 10, background: '#ecfeff', border: '1px solid #a5f3fc', borderRadius: 8, color: '#0e7490' }}>
@@ -84,10 +84,10 @@ const DailySpinPage = () => {
           <div style={{ border: '1px solid #e5e7eb', borderRadius: 12, padding: 20 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div>
-                <div style={{ fontSize: 14, color: '#6b7280' }}>Số dư xu</div>
+                <div style={{ fontSize: 14, color: '#6b7280' }}>{t('Coin balance')}</div>
                 <div style={{ fontSize: 28, fontWeight: 800 }}>
                   {coins}
-                  <span style={{ fontSize: 16, marginLeft: 6 }}>xu</span>
+                  <span style={{ fontSize: 16, marginLeft: 6 }}>{t('coin')}</span>
                 </div>
               </div>
               <button
@@ -103,7 +103,7 @@ const DailySpinPage = () => {
                   fontWeight: 700
                 }}
               >
-                {checkedIn ? 'Đã điểm danh' : 'Điểm danh (+10 xu)'}
+                {checkedIn ? t('Attendance has been taken.') : t('Attendance check (+10 cents)')}
               </button>
             </div>
           </div>
@@ -111,12 +111,12 @@ const DailySpinPage = () => {
 
         <div style={{ flex: '2 1 480px', minWidth: 360 }}>
           <div style={{ border: '1px solid #e5e7eb', borderRadius: 12, padding: 20 }}>
-            <h3 style={{ marginTop: 0 }}>Đổi phần thưởng</h3>
+            <h3 style={{ marginTop: 0 }}>{t('Redeem rewards')}</h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 12 }}>
               {catalog.map(item => (
                 <div key={item.id} style={{ border: '1px solid #e5e7eb', borderRadius: 10, padding: 12 }}>
                   <div style={{ fontWeight: 700 }}>{item.label}</div>
-                  <div style={{ color: '#6b7280', fontSize: 13, marginTop: 2 }}>{item.coinCost} xu</div>
+                  <div style={{ color: '#6b7280', fontSize: 13, marginTop: 2 }}>{item.coinCost} {t('coin')}</div>
                   <button
                     onClick={() => handleRedeem(item.id)}
                     disabled={coins < item.coinCost}
@@ -132,7 +132,7 @@ const DailySpinPage = () => {
                       fontWeight: 700
                     }}
                   >
-                    {coins < item.coinCost ? 'Không đủ xu' : 'Đổi ngay'}
+                    {coins < item.coinCost ? t('Not enough coin') : t('reward exchange now')}
                   </button>
                 </div>
               ))}
@@ -142,9 +142,9 @@ const DailySpinPage = () => {
 
         <div style={{ flex: '1 1 360px', minWidth: 320 }}>
           <div style={{ border: '1px solid #e5e7eb', borderRadius: 12, padding: 20 }}>
-            <h3 style={{ marginTop: 0 }}>Lịch sử đổi thưởng</h3>
+            <h3 style={{ marginTop: 0 }}>{t('Redemption history')}</h3>
             {redeemHistory.length === 0 ? (
-              <p style={{ color: '#6b7280' }}>Chưa có lượt đổi thưởng nào.</p>
+              <p style={{ color: '#6b7280' }}>{t('No rewards have been redeemed yet.')}</p>
             ) : (
               <ul style={{ margin: 0, paddingLeft: 18 }}>
                 {redeemHistory.map(h => (

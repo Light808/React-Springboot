@@ -82,3 +82,72 @@ export const getLatestArticles = async (limit = 10) => {
     throw error;
   }
 };
+
+// Get articles for a specific movie
+export const getMovieArticles = async (movieId) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/movies/${movieId}/articles`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching movie articles:', error);
+    throw error;
+  }
+};
+
+// Add article to movie
+export const addArticleToMovie = async (movieId, articleId) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/movies/${movieId}/articles/${articleId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error adding article to movie:', error);
+    throw error;
+  }
+};
+
+// Remove article from movie
+export const removeArticleFromMovie = async (movieId, articleId) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/movies/${movieId}/articles/${articleId}`, {
+      method: 'DELETE',
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.ok;
+  } catch (error) {
+    console.error('Error removing article from movie:', error);
+    throw error;
+  }
+};
+
+// Create a new article
+export const createArticle = async (articleData) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/articles`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(articleData),
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error creating article:', error);
+    throw error;
+  }
+};

@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useCallback } from 'react';
-import { Eye, Edit, Trash2, Plus, Search, RefreshCw, Calendar, Clock, Star, Film, Shield, Building2 } from 'lucide-react';
+import { Eye, Edit, Trash2, Plus, Search, RefreshCw, Calendar, Clock, Star, Film, Shield, Building2, FileText } from 'lucide-react';
 import { getAllMovies, createMovie, updateMovie, deleteMovie } from '../../../services/movieService';
 import { createShowtime, updateShowtime, deleteShowtime } from '../../../services/showtimeService';
 import useToast from '../../../Admin/hooks/useToast';
@@ -9,6 +9,7 @@ import CreateMovieModal from './CreateMovieModal';
 import EditMovieModal from './EditMovieModal';
 import MovieDetailsModal from './MovieDetailsModal';
 import MovieCinemasModal from './MovieCinemasModal';
+import MovieArticlesModal from './MovieArticlesModal';
 import styles from './MovieManagement.module.css';
 import { useTranslation } from 'react-i18next';
 
@@ -22,6 +23,7 @@ const MovieManagement = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showCinemasModal, setShowCinemasModal] = useState(false);
+  const [showArticlesModal, setShowArticlesModal] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const { showSuccess, showError, toasts, removeToast } = useToast();
 
@@ -168,7 +170,16 @@ const MovieManagement = () => {
     setShowCinemasModal(true);
   };
 
+  const handleManageArticles = (movie) => {
+    setSelectedMovie(movie);
+    setShowArticlesModal(true);
+  };
+
   const handleCinemasUpdated = () => {
+    fetchMovies();
+  };
+
+  const handleArticlesUpdated = () => {
     fetchMovies();
   };
 
@@ -299,6 +310,13 @@ const MovieManagement = () => {
                     <Building2 size={20} />
                   </button>
                   <button
+                    className={`${styles.actionBtn} ${styles.articlesBtn}`}
+                    onClick={() => handleManageArticles(movie)}
+                    title="Quản lý bài viết"
+                  >
+                    <FileText size={20} />
+                  </button>
+                  <button
                     className={`${styles.actionBtn} ${styles.deleteBtn}`}
                     onClick={() => handleDeleteMovie(movie.id)}
                     title="Xóa phim"
@@ -406,6 +424,17 @@ const MovieManagement = () => {
             setSelectedMovie(null);
           }}
           onCinemasUpdated={handleCinemasUpdated}
+        />
+      )}
+
+      {showArticlesModal && selectedMovie && (
+        <MovieArticlesModal
+          movie={selectedMovie}
+          onClose={() => {
+            setShowArticlesModal(false);
+            setSelectedMovie(null);
+          }}
+          onArticlesUpdated={handleArticlesUpdated}
         />
       )}
 

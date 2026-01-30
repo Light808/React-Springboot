@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Send, MessageCircle, Loader2 } from "lucide-react";
 import "./ChatBox.css";
+
 import { useTranslation } from "react-i18next";
 import { sendMessage, getChatHistory, sendMessageWithMovies } from "../../../services/chatService";
 import MovieSuggestionCard from "./MovieSuggestionCard";
@@ -95,9 +96,9 @@ const ChatBox = () => {
         <div className="chat-popup">
           <div className="chat-header">
             <MessageCircle size={20}/>
-            Chat Movie Assistant
+            {t('Chat Movie Assistant')}
             <button onClick={() => setIsOpen(false)} className="btn-close">
-              ×
+              x
             </button>
           </div>
 
@@ -105,7 +106,7 @@ const ChatBox = () => {
             {messages.length === 0 && (
               <div className="chat-welcome">
                 <MessageCircle size={32} className="welcome-icon" />
-                <p>Hi, I'm Galaxy Studio's Chat Assistant. How can I help you today?</p>
+                <p>{t('Hi, I\'m HAK cinema\'s Chat Assistant. How can I help you today?')}</p>
                 <p className="welcome-hint">Try asking: "Suggest action movies" or "What movies are playing?"</p>
               </div>
             )}
@@ -119,7 +120,7 @@ const ChatBox = () => {
                   {msg.message && <div className="message-text">{msg.message}</div>}
                   {msg.movies && msg.movies.length > 0 && (
                     <div className="movie-suggestions">
-                      <div className="suggestions-label">Movie suggestions:</div>
+                      <div className="suggestions-label">{t('Movie suggestions:')}</div>
                       {msg.movies.map((movie) => (
                         <MovieSuggestionCard key={movie.id} movie={movie} />
                       ))}
@@ -131,7 +132,7 @@ const ChatBox = () => {
             {isLoading && (
               <div className="chat-message bot-msg loading-msg">
                 <Loader2 size={16} className="loader-icon" />
-                <span>Searching...</span>
+                <span>{t('Searching...')}</span>
               </div>
             )}
             <div ref={messagesEndRef} />
@@ -143,7 +144,7 @@ const ChatBox = () => {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder={t('Enter your message...')}
+              placeholder={t('Type your message...')}
               disabled={isLoading}
             />
             <button onClick={handleSend}>

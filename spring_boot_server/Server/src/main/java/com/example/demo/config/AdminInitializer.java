@@ -24,10 +24,10 @@ public class AdminInitializer implements CommandLineRunner {
             defaultAdmin.setEmail("huynhanhkhoa2707@gmail.com");
             defaultAdmin.setPhone("0932082976");
             defaultAdmin.setRole("super_admin");
-            defaultAdmin.setNotes("Admin mặc định của hệ thống");
+            defaultAdmin.setNotes("System default admin");
             
             adminRepository.save(defaultAdmin);
-            System.out.println("Đã tạo admin mặc định: admin / admin123");
+            System.out.println("System default admin account: admin / admin123");
         }
     }
 }

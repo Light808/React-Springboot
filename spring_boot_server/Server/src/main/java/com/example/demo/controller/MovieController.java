@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.Movie;
+import com.example.demo.model.Article;
 import com.example.demo.repository.MovieRepository;
+import com.example.demo.repository.ArticleRepository;
 import com.example.demo.service.MovieCinemaService;
 
 @RestController
@@ -30,6 +32,9 @@ public class MovieController {
     
     @Autowired
     private MovieCinemaService movieCinemaService;
+    
+    @Autowired
+    private ArticleRepository articleRepository;
 
     // Get all movies
     @GetMapping
@@ -246,6 +251,81 @@ public class MovieController {
         try {
             List<Movie> cinemaMovies = movieCinemaService.getMoviesByCinema(cinemaId);
             return ResponseEntity.ok(cinemaMovies);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    
+    // Get all articles for a movie
+    @GetMapping("/{movieId}/articles")
+    public ResponseEntity<List<Article>> getMovieArticles(@PathVariable String movieId) {
+        try {
+            if (!movieRepository.existsById(movieId)) {
+                return ResponseEntity.notFound().build();
+            }
+            List<Article> articles = articleRepository.findByMovieId(movieId);
+            return ResponseEntity.ok(articles);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    
+    // Add article to movie
+    @PostMapping("/{movieId}/articles/{articleId}")
+    public ResponseEntity<Article> addArticleToMovie(@PathVariable String movieId, @PathVariable String articleId) {
+        try {
+            Optional<Movie> movieOpt = movieRepository.findById(movieId);
+            Optional<Article> articleOpt = articleRepository.findById(articleId);
+            
+            if (!movieOpt.isPresent()) {
+                return ResponseEntity.notFound().build();
+            }
+            if (!articleOpt.isPresent()) {
+                return ResponseEntity.notFound().build();
+            }
+            
+            Article article = articleOpt.get();
+            article.setMovieId(movieId);
+            
+            // Also add to movieIds list if it exists
+            if (article.getMovieIds() == null) {
+                article.setMovieIds(new java.util.ArrayList<>());
+            }
+            if (!article.getMovieIds().contains(movieId)) {
+                article.getMovieIds().add(movieId);
+            }
+            
+            Article updatedArticle = articleRepository.save(article);
+            return ResponseEntity.ok(updatedArticle);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    
+    // Remove article from movie
+    @DeleteMapping("/{movieId}/articles/{articleId}")
+    public ResponseEntity<Void> removeArticleFromMovie(@PathVariable String movieId, @PathVariable String articleId) {
+        try {
+            Optional<Article> articleOpt = articleRepository.findById(articleId);
+            
+            if (!articleOpt.isPresent()) {
+                return ResponseEntity.notFound().build();
+            }
+            
+            Article article = articleOpt.get();
+            
+            // Remove movieId from article
+            if (movieId.equals(article.getMovieId())) {
+                article.setMovieId(null);
+            }
+            
+            // Remove from movieIds list if it exists
+            if (article.getMovieIds() != null) {
+                article.getMovieIds().remove(movieId);
+            }
+            
+            articleRepository.save(article);
+            return ResponseEntity.noContent().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

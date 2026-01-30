@@ -64,7 +64,6 @@ const Footer = () => {
           
           <div className="contact-info">
             <div className="contact-item">
-              <i className="contact-icon">📞</i>
               <div>
                 <p className="contact-label">{t('Hotline')}</p>
                 <p className="contact-value">093 208 2976</p>
@@ -72,7 +71,6 @@ const Footer = () => {
             </div>
             
             <div className="contact-item">
-              <i className="contact-icon">✉️</i>
               <div>
                 <p className="contact-label">{t('Email')}</p>
                 <p className="contact-value">HAKCGV@galaxystudio.vn</p>
@@ -80,7 +78,6 @@ const Footer = () => {
             </div>
             
             <div className="contact-item">
-              <i className="contact-icon">🕒</i>
               <div>
                 <p className="contact-label">{t('Business Hours')}</p>
                 <p className="contact-value">{t('8:00 AM - 12:00 PM')}</p>

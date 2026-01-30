@@ -2,7 +2,6 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import en from "./en.json";
 import vi from "./vi.json";
-import ja from "./ja.json";
 
 const savedLanguage = localStorage.getItem("language") || "en";
 
@@ -12,7 +11,6 @@ i18n
     resources: {
       en: { translation: en },
       vi: { translation: vi },
-      ja: { translation: ja },
     },
     lng: savedLanguage, 
     fallbackLng: "en",  

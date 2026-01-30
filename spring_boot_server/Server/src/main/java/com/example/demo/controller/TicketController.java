@@ -509,9 +509,18 @@ public class TicketController {
             if (!"pending".equals(ticket.getStatus())) {
                 return ResponseEntity.badRequest().body("Just pending tickets can be approved");
             }
+
+            String paymentMethod = ticket.getPaymentMethod();
+            boolean isDigitalWallet = paymentMethod != null && 
+                                    (paymentMethod.equalsIgnoreCase("momo") || 
+                                     paymentMethod.equalsIgnoreCase("zalopay"));
             
-            // Update ticket status to confirmed and payment status to paid
-            ticket.setStatus("confirmed");
+            if (isDigitalWallet) {
+                ticket.setStatus("pending");
+            } else {
+                ticket.setStatus("confirmed");
+            }
+            
             ticket.setPaymentStatus("paid");
             Ticket updatedTicket = ticketRepository.save(ticket);
             try {

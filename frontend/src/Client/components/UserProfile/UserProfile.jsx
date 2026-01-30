@@ -1,5 +1,6 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useRef } from 'react';
-import { getCurrentUserSync, updateUserProfile, getUserProfile } from '../../../services/userService';
+import { getCurrentUserSync, updateUserProfile, getUserProfile, updateUserAvatar } from '../../../services/userService';
 import { User, Settings, Crown, Gift, Star, Ticket, Calendar, CreditCard, Award, TrendingUp, Shield, Upload, X, Home, Info, Store, Gift as GiftIcon } from 'lucide-react';
 import { getBalance } from '../../../services/virtualWalletService';
 import { useTranslation } from 'react-i18next';
@@ -217,7 +218,6 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
   };
 
   // Refresh spending data
-  // eslint-disable-next-line no-unused-vars
   const refreshSpendingData = () => {
     calculateUserSpending();
   };
@@ -243,7 +243,6 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
   }, [isPopup]);
 
   // Handle closing animation
-  // eslint-disable-next-line no-unused-vars
   const handleClose = () => {
     if (popupRef.current) {
       popupRef.current.classList.add('closing');
@@ -327,7 +326,6 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
     }
   };
 
-  // eslint-disable-next-line no-unused-vars
   const generateNewAvatar = async () => {
     if (!user?.username) return;
     
@@ -378,22 +376,22 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
 
   setIsUploading(true);
 
-  // Create preview URL
+  // Create preview URL and persist to backend
   const reader = new FileReader();
-  reader.onload = (e) => {
+  reader.onload = async (e) => {
     const imageUrl = e.target.result;
     setUploadedAvatar(imageUrl);
     setAvatarUrl(imageUrl);
-    setIsUploading(false);
-
-  // Update user data
-  const updatedUser = { ...user, avatarUrl: imageUrl, customAvatar: true };
-  localStorage.setItem('currentUser', JSON.stringify(updatedUser));
-  setUser(updatedUser);
-
-    // Notify parent component
-    if (onAvatarChange) {
-      onAvatarChange(imageUrl, updatedUser);
+    try {
+      const updatedUser = await updateUserAvatar(imageUrl);
+      setUser(updatedUser);
+      if (onAvatarChange) {
+        onAvatarChange(updatedUser.avatarUrl, updatedUser);
+      }
+    } catch (err) {
+      alert(t('Failed to save avatar. It may not persist after logout.'));
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -402,32 +400,33 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
     setIsUploading(false);
   };
 
-    
-    reader.readAsDataURL(file);
+  reader.readAsDataURL(file);
   };
 
   const handleUploadClick = () => {
     fileInputRef.current?.click();
   };
 
-  const removeCustomAvatar = () => {
+  const removeCustomAvatar = async () => {
+    try {
+      await updateUserAvatar(null);
+    } catch (err) {
+      alert(t('Failed to clear avatar on server.'));
+    }
     setUploadedAvatar(null);
-    
-    // Create initials avatar again
+
     const generateInitials = (name) => {
       if (!name) return 'U';
-      const displayName = user.fullName || user.username;
+      const displayName = user?.fullName || user?.username || '';
       const words = displayName.trim().split(/\s+/);
       if (words.length >= 2) {
         return (words[0][0] + words[1][0]).toUpperCase();
-      } else {
-        return displayName.substring(0, 2).toUpperCase();
       }
+      return displayName ? displayName.substring(0, 2).toUpperCase() : 'U';
     };
-    const initials = generateInitials(user.fullName || user.username);
+    const initials = generateInitials(user?.fullName || user?.username);
     setAvatarUrl(initials);
-    
-    // Update localStorage
+
     const updatedUser = { ...user, avatarUrl: initials, customAvatar: false };
     localStorage.setItem('currentUser', JSON.stringify(updatedUser));
     setUser(updatedUser);
@@ -701,13 +700,7 @@ const UserProfile = ({ onClose, isPopup = false, onAvatarChange, initialOpenSett
                 <span className="stat-number">{userSpending.totalPoints}</span>
               </div>
             </div>
-            
-            <div className="stat-item">
-              <div className="stat-info">
-                <span className="stat-label">{t('Sandbox Wallet Balance')}</span>
-                <span className="stat-number">{formatCurrency(_walletBalance)}</span>
-              </div>
-            </div>
+          
           </div>
           
           <div className="level-progress">

@@ -2,8 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Clock, Star } from 'lucide-react';
 import './MovieSuggestionCard.css';
+import { useTranslation } from "react-i18next";
 
 const MovieSuggestionCard = ({ movie }) => {
+  const { t } = useTranslation();
   const getImageUrl = (movie) => {
     return movie.posterUrl || movie.poster || movie.imageUrl || movie.image || '/default-movie.jpg';
   };
@@ -51,7 +53,7 @@ const MovieSuggestionCard = ({ movie }) => {
         <div className="movie-meta">
           <span className="movie-duration">
             <Clock size={12} />
-            {getDuration(movie)} phút
+            {getDuration(movie)} {t('minutes')}
           </span>
         </div>
       </div>

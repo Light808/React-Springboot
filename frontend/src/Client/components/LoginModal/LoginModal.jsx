@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import { registerUser, loginUser, loginWithGoogle, handleGoogleLoginSuccess } from '../../../services/userService';
+import { registerUser, loginUser, loginWithGoogle, handleGoogleLoginSuccess, applyAvatarMapping } from '../../../services/userService';
 import { initializeGoogleAuth } from '../../../services/googleAuthService';
 import { loginWithFacebook } from '../../../services/facebookAuthService';
 import { adminLogin } from '../../../services/adminService';
@@ -445,12 +445,12 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
   // Handle Face ID login success
   const handleFaceIDLoginSuccess = async (user) => {
     try {
-      // Save user data to localStorage first (similar to password login)
+      applyAvatarMapping(user);
       if (user && user.id) {
         localStorage.setItem('authToken', 'user-token-' + user.id);
         localStorage.setItem('currentUser', JSON.stringify(user));
       }
-      
+
       await handleGoogleLoginSuccess(user);
       setMessage({
         type: 'success',
@@ -625,7 +625,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
                   value={formData.email}
                   onChange={handleInputChange}
                   className={`form-input ${errors.email ? 'error' : ''}`}
-                  placeholder={t('example@email.com')}
+                  placeholder="example@email.com"
                 />
                 {errors.email && (
                   <span className="message-error">{errors.email}</span>
@@ -640,7 +640,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
                   value={formData.phone}
                   onChange={handleInputChange}
                   className={`form-input ${errors.phone ? 'error' : ''}`}
-                  placeholder={t('0123456789')}
+                  placeholder="0123456789"
                 />
                 {errors.phone && (
                   <span className="message-error">{errors.phone}</span>

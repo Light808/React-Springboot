@@ -509,7 +509,7 @@ const MovieDetailPage = () => {
 
               {/* Related articles */}
               <div className={`${styles['related-articles']}`}>
-                <h3>{t('Bài viết liên quan')}</h3>
+                <h3>{t('Related articles')}</h3>
                 {articlesLoading ? (
                   <div className={`${styles['loading-message']}`}>{t('Đang tải bài viết liên quan...')}</div>
                 ) : articlesError ? (

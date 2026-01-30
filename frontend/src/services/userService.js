@@ -4,6 +4,42 @@ import { googleLogin, initializeGoogleAuth, renderGoogleSignInButton } from './g
 
 const API_BASE_URL = 'http://localhost:8080/api';
 
+/* Map backend user.avatar to frontend avatarUrl and customAvatar. */
+export function applyAvatarMapping(user) {
+  if (!user) return user;
+  const av = user.avatar;
+  if (av && String(av).startsWith('data:')) {
+    user.avatarUrl = av;
+    user.customAvatar = true;
+  } else {
+    user.avatarUrl = generateAIPersonAvatar(user.username);
+    user.customAvatar = false;
+  }
+  return user;
+}
+
+/**
+ * Persist avatar to backend. Pass data URL to save, or null to clear.
+ */
+export async function updateUserAvatar(avatarDataOrNull) {
+  const currentUser = getCurrentUserSync();
+  if (!currentUser || !currentUser.id) {
+    throw new Error('User not found');
+  }
+  const res = await fetch(`${API_BASE_URL}/users/${currentUser.id}/avatar`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ avatar: avatarDataOrNull })
+  });
+  if (!res.ok) {
+    throw new Error('Failed to save avatar');
+  }
+  const serverUser = await res.json();
+  const finalUser = applyAvatarMapping(serverUser);
+  localStorage.setItem('currentUser', JSON.stringify(finalUser));
+  return finalUser;
+}
+
 export async function registerUser(userData) {
   try {
     const res = await fetch(`${API_BASE_URL}/users/register`, {
@@ -62,14 +98,8 @@ export async function loginUser({ username, password }) {
     }
 
     const user = await res.json();
-    
-    if (!user.avatarUrl) {
-      const avatarUrl = generateAIPersonAvatar(user.username);
-      user.avatarUrl = avatarUrl;
-      user.customAvatar = false; 
-      console.log('Generated default AI avatar for login user:', user.username, 'URL:', avatarUrl);
-    }
-    
+    applyAvatarMapping(user);
+
     // save token and user to localStorage
     localStorage.setItem('authToken', 'user-token-' + user.id);
     localStorage.setItem('currentUser', JSON.stringify(user));
@@ -160,8 +190,9 @@ export async function getUserProfile() {
     }
 
     const userData = await res.json();
+    applyAvatarMapping(userData);
     localStorage.setItem('currentUser', JSON.stringify(userData));
-    
+
     return userData;
   } catch (error) {
     const localUser = getCurrentUserSync();
@@ -212,11 +243,7 @@ export async function updateUserProfile(userData) {
 
       if (res.ok) {
         const serverUser = await res.json();
-        const finalUser = {
-          ...serverUser,
-          avatarUrl: currentUser.avatarUrl,
-          customAvatar: currentUser.customAvatar
-        };
+        const finalUser = applyAvatarMapping(serverUser);
         localStorage.setItem('currentUser', JSON.stringify(finalUser));
         return finalUser;
       } else {
@@ -260,13 +287,9 @@ export async function changePassword({ currentPassword, newPassword }) {
     }
 
     const serverUser = await res.json();
-    const finalUser = {
-      ...serverUser,
-      avatarUrl: currentUser.avatarUrl,
-      customAvatar: currentUser.customAvatar
-    };
+    const finalUser = applyAvatarMapping(serverUser);
     localStorage.setItem('currentUser', JSON.stringify(finalUser));
-    
+
     return finalUser;
   } catch (error) {
     console.error('Change password error:', error);

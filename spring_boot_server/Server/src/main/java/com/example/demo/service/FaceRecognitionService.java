@@ -6,9 +6,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class FaceRecognitionService {
-    
-    // Calculate cosine similarity between two face descriptors
-    // Returns a value between 0 and 1, where 1 means identical faces
     public double calculateSimilarity(List<Double> descriptor1, List<Double> descriptor2) {
         if (descriptor1 == null || descriptor2 == null) {
             return 0.0;
@@ -58,13 +55,15 @@ public class FaceRecognitionService {
         }
         return normalized;
     }
-    
+    //Default 0.96 or 0.98 to recognize face has been registered
+    public static final double SIMILARITY_THRESHOLD = 0.96;
+
     public boolean isMatch(List<Double> descriptor1, List<Double> descriptor2) {
         List<Double> norm1 = normalizeDescriptor(descriptor1);
         List<Double> norm2 = normalizeDescriptor(descriptor2);
         
         double similarity = calculateSimilarity(norm1, norm2);
-        return similarity > 0.0;
+        return similarity > SIMILARITY_THRESHOLD;
     }
     
     // Get similarity score for debugging

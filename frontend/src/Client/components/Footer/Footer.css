@@ -76,7 +76,7 @@
   margin: 0.6rem 0;
   font-size: 0.9rem;
   line-height: 1.5;
-  color: #94a3b8;
+  color: #feffff;
 }
 
 .company-details strong {
@@ -120,7 +120,7 @@
 }
 
 .footer-links-list a {
-  color: #cbd5e1;
+  color: #ffffff;
   text-decoration: none;
   font-size: 0.9rem;
   transition: all 0.3s ease;
@@ -175,8 +175,8 @@
 }
 
 .contact-label {
-  color: #94a3b8;
-  font-size: 0.8rem;
+  color: #bf211cd1;
+  font-size: 1.1rem;
   margin: 0;
   font-weight: 500;
 }
@@ -194,7 +194,7 @@
 }
 
 .social-title {
-  color: #f8fafc;
+  color: #bf211cd1;
   font-size: 1rem;
   font-weight: 600;
   margin-bottom: 0.8rem;

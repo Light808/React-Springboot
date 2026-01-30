@@ -105,7 +105,7 @@ const MembershipPage = () => {
 
       {/* news */}
       <section style={{ border: '1px solid #e5e7eb', borderRadius: 8, padding: '1rem', marginTop: '1rem' }}>
-        <h2 style={{ marginTop: 0, fontSize: '1.125rem' }}>5. Tin tức & sự kiện</h2>
+        <h2 style={{ marginTop: 0, fontSize: '1.125rem' }}>{t('5. News & Events')}</h2>
         <ul style={{ margin: 0, paddingLeft: '1.25rem', color: '#374151', lineHeight: 1.8 }}>
           <li>{t('Member-only events: sneak previews, early screenings.')}</li>
           <li>{t('Regular member appreciation activities.')}</li>

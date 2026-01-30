@@ -149,11 +149,11 @@ export function updateStreakAfterSpin(userId) {
 
 // Rewards catalog and redemption
 export const DEFAULT_CATALOG = [
-  { id: 'voucher_10', label: 'Voucher 10% vé', coinCost: 50 },
-  { id: 'voucher_20', label: 'Voucher 20% vé', coinCost: 90 },
-  { id: 'free_popcorn', label: 'Bắp miễn phí', coinCost: 60 },
-  { id: 'free_drink', label: 'Nước miễn phí', coinCost: 60 },
-  { id: 'free_ticket', label: '1 vé miễn phí', coinCost: 200 }
+  { id: 'voucher_10', label: 'Voucher 10% ticket', coinCost: 50 },
+  { id: 'voucher_20', label: 'Voucher 20% ticket', coinCost: 90 },
+  { id: 'free_popcorn', label: 'Free corn', coinCost: 60 },
+  { id: 'free_drink', label: 'Free water', coinCost: 60 },
+  { id: 'free_ticket', label: '1 free ticket', coinCost: 200 }
 ];
 
 export function getCatalog() {
@@ -198,14 +198,14 @@ export function redeemReward(userId, rewardId) {
   return { ok: true, reward, coins: getCoins(userId) };
 }
 
-// Legacy prizes kept (not used by coin system)
+// Legacy prizes kept 
 export const DEFAULT_PRIZES = [
-  { id: 'voucher_10', label: 'Voucher 10% vé', weight: 25 },
-  { id: 'voucher_20', label: 'Voucher 20% vé', weight: 18 },
-  { id: 'free_popcorn', label: 'Bắp miễn phí', weight: 15 },
-  { id: 'free_drink', label: 'Nước miễn phí', weight: 15 },
-  { id: 'nothing', label: 'Chúc bạn may mắn lần sau', weight: 20 },
-  { id: 'free_ticket', label: '1 vé miễn phí', weight: 7 }
+  { id: 'voucher_10', label: 'Voucher 10% ticket', weight: 25 },
+  { id: 'voucher_20', label: 'Voucher 20% ticket', weight: 18 },
+  { id: 'free_popcorn', label: 'Free corn', weight: 15 },
+  { id: 'free_drink', label: 'Free water', weight: 15 },
+  { id: 'nothing', label: 'Better luck next time!', weight: 20 },
+  { id: 'free_ticket', label: '1 free ticket', weight: 7 }
 ];
 
 export function spinOnce(prizes = DEFAULT_PRIZES) {

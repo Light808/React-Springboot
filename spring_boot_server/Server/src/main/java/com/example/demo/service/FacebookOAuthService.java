@@ -15,6 +15,7 @@ public class FacebookOAuthService {
     private String appId;
 
     @Value("${facebook.oauth.app-secret}")
+    @SuppressWarnings("unused")
     private String appSecret;
 
     @Value("${facebook.oauth.redirect-uri}")
@@ -48,6 +49,7 @@ public class FacebookOAuthService {
         Map<String, String> userInfo = new HashMap<>();
         
         try {
+            @SuppressWarnings("unused")
             String verifyUrl = String.format(
         "https://graph.facebook.com/me?access_token=%s&fields=id,name,email,picture",
                 accessToken

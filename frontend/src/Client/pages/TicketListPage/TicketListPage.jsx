@@ -208,38 +208,38 @@ const TicketListPage = ({ userId }) => {
         modal.innerHTML = `
           <div class="${styles['modal-content']}">
             <div class="${styles['modal-header']}">
-              <h3>${i18n.t('Ticket details')}</h3>
+              <h2>${i18n.t('Ticket details')}</h2>
               <button class="${styles['close-btn']}">&times;</button>
             </div>
             <div class="${styles['modal-body']}">
               <div class="${styles['ticket-detail-info']}">
-                <h4>{t('Basic information')}</h4>
-                <p><strong>{t('Ticket number')}:</strong> ${ticket.ticketNumber || ticket.id}</p>
-                <p><strong>{t('Movie')}:</strong> ${ticket.movieTitle || 'N/A'}</p>
-                <p><strong>{t('Cinema'):</strong> ${ticket.cinemaName || 'N/A'}</p>
-                ${ticket.cinemaAddress ? `<p><strong>${t('Cinema address')}:</strong> ${ticket.cinemaAddress}</p>` : ''}
-                <p><strong>{t('Show date')}:</strong> ${formatDate(ticket.showDate)}</p>
-                <p><strong>{t('Show time')}:</strong> ${formatTime(ticket.showTime)}</p>
-                <p><strong>{t('Seat')}:</strong> ${ticket.seatNumber || 'N/A'}</p>
-                <p><strong>{t('Price')}:</strong> ${formatPrice(ticket.price)}</p>
-                <p><strong>{t('Status')}:</strong> ${getStatusBadge(ticket.status).props.children}</p>
-                <p><strong>{t('QR Code')}:</strong> ${ticket.qrCode || 'N/A'}</p>
+                <h3>${i18n.t('Basic information')}</h3>
+                <p><strong>${i18n.t('Ticket number')}:</strong> ${ticket.ticketNumber || ticket.id}</p>
+                <p><strong>${i18n.t('Movie')}:</strong> ${ticket.movieTitle || 'N/A'}</p>
+                <p><strong>${i18n.t('Cinema')}:</strong> ${ticket.cinemaName || 'N/A'}</p>
+                ${ticket.cinemaAddress ? `<p><strong>${i18n.t('Cinema address')}:</strong> ${ticket.cinemaAddress}</p>` : ''}
+                <p><strong>${i18n.t('Show date')}:</strong> ${formatDate(ticket.showDate)}</p>
+                <p><strong>${i18n.t('Show time')}:</strong> ${formatTime(ticket.showTime)}</p>
+                <p><strong>${i18n.t('Seat')}:</strong> ${ticket.seatNumber || 'N/A'}</p>
+                <p><strong>${i18n.t('Price')}:</strong> ${formatPrice(ticket.price)}</p>
+                <p><strong>${i18n.t('Status')}:</strong> ${getStatusBadge(ticket.status).props.children}</p>
+                <p><strong>${i18n.t('QR Code')}:</strong> ${ticket.qrCode || 'N/A'}</p>
                 
-                <h4>{t('Payment information')}</h4>
-                <p><strong>{t('Payment method')}:</strong> ${ticket.paymentMethod || 'N/A'}</p>
-                <p><strong>{t('Payment status')}:</strong> ${ticket.paymentStatus || 'N/A'}</p>
-                <p><strong>{t('Booking time')}:</strong> ${ticket.bookingTime ? formatDate(ticket.bookingTime) : 'N/A'}</p>
+                <h3>${i18n.t('Payment information')}</h3>
+                <p><strong>${i18n.t('Payment method')}:</strong> ${ticket.paymentMethod || 'N/A'}</p>
+                <p><strong>${i18n.t('Payment status')}:</strong> ${ticket.paymentStatus || 'N/A'}</p>
+                <p><strong>${i18n.t('Booking time')}:</strong> ${ticket.bookingTime ? formatDate(ticket.bookingTime) : 'N/A'}</p>
                 
                 ${ticket.usedAt ? `
-                  <h4>{t('Used information')}</h4>
-                  <p><strong>{t('Used time')}:</strong> ${formatDate(ticket.usedAt)}</p>
+                  <h3>${i18n.t('Used information')}</h3>
+                  <p><strong>${i18n.t('Used time')}:</strong> ${formatDate(ticket.usedAt)}</p>
                 ` : ''}
                 
                 ${ticket.refundedAt ? `
-                  <h4>{t('Refund information')}</h4>
-                  <p><strong>{t('Refund time')}:</strong> ${formatDate(ticket.refundedAt)}</p>
-                  <p><strong>{t('Refund amount')}:</strong> ${formatPrice(ticket.refundAmount || 0)}</p>
-                  <p><strong>{t('Refund reason')}:</strong> ${ticket.refundReason || 'N/A'}</p>
+                  <h3>${i18n.t('Refund information')}</h3>
+                  <p><strong>${i18n.t('Refund time')}:</strong> ${formatDate(ticket.refundedAt)}</p>
+                  <p><strong>${i18n.t('Refund amount')}:</strong> ${formatPrice(ticket.refundAmount || 0)}</p>
+                  <p><strong>${i18n.t('Refund reason')}:</strong> ${ticket.refundReason || 'N/A'}</p>
                 ` : ''}
               </div>
             </div>

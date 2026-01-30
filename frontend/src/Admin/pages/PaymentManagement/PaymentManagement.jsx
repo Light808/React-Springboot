@@ -36,7 +36,7 @@ function PaymentManagement() {
       // Normalize and merge all orders
       const allOrders = [];
       
-      // PaymentOrders (VietQR, etc.) - format: { orderId, amount, orderInfo, method, status, userId, userName, userEmail, createdAt }
+      // PaymentOrders
       if (paymentOrders.status === 'fulfilled' && Array.isArray(paymentOrders.value)) {
         paymentOrders.value.forEach(order => {
           allOrders.push({
@@ -122,10 +122,6 @@ function PaymentManagement() {
   const handleMark = async (id, status, method) => {
     setActionLoading(l => ({ ...l, [id]: true }));
     try {
-      // Check payment method and orderId format to determine correct API
-      // MoMo orders have orderId starting with "MM-"
-      // ZaloPay orders have orderId (appTransId) starting with "ZP-"
-      // PaymentOrders start with "local-"
       const isMoMoOrder = method === 'momo' && id && id.startsWith('MM-');
       const isZaloPayOrder = method === 'zalopay' && id && id.startsWith('ZP-');
       

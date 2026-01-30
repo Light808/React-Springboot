@@ -36,7 +36,7 @@ public class User {
     private String provider; // "local", "google", or "facebook"
     
     // Face ID fields
-    private java.util.List<Double> faceDescriptor; // Face recognition descriptor
+    private java.util.List<Double> faceDescriptor; 
     
     // Constructor
     public User() {

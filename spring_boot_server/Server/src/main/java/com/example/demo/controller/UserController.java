@@ -153,6 +153,26 @@ public class UserController {
         }
     }
 
+    @PutMapping("/{id}/avatar")
+    public ResponseEntity<User> updateAvatar(@PathVariable String id, @RequestBody Map<String, Object> body) {
+        try {
+            Optional<User> u = userRepository.findById(id);
+            if (!u.isPresent()) {
+                return ResponseEntity.notFound().build();
+            }
+            User user = u.get();
+            if (body.containsKey("avatar")) {
+                Object v = body.get("avatar");
+                user.setAvatar(v == null || "".equals(v) ? null : v.toString());
+            }
+            userRepository.save(user);
+            user.setPassword(null);
+            return ResponseEntity.ok(user);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable String id) {
         try {
@@ -605,7 +625,6 @@ public class UserController {
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             System.err.println("Register face error: " + e.getMessage());
-            e.printStackTrace();
             Map<String, Object> errorResponse = new java.util.HashMap<>();
             errorResponse.put("success", false);
             errorResponse.put("message", "Failed to register face: " + e.getMessage());
@@ -615,7 +634,7 @@ public class UserController {
     
     // Verify face descriptor for login
     @PostMapping("/verify-face")
-    public ResponseEntity<User> verifyFace(@RequestBody Map<String, Object> request) {
+    public ResponseEntity<Object> verifyFace(@RequestBody Map<String, Object> request) {
         try {
             @SuppressWarnings("unchecked")
             List<Double> inputDescriptor = (List<Double>) request.get("faceDescriptor");
@@ -652,20 +671,23 @@ public class UserController {
             
             System.out.println("Best similarity found: " + String.format("%.4f", bestSimilarity));
             
-            // Accept any face match (very lenient)
-            if (matchedUser != null && bestSimilarity > 0) {
+            // Accept any face match that exceeds the threshold
+            if (matchedUser != null && bestSimilarity > FaceRecognitionService.SIMILARITY_THRESHOLD) {
                 System.out.println("Face matched with user: " + matchedUser.getUsername() + " (similarity: " + String.format("%.4f", bestSimilarity) + ")");
                 matchedUser.setLastLoginAt(java.time.LocalDateTime.now());
                 userRepository.save(matchedUser);
                 matchedUser.setPassword(null);
                 return ResponseEntity.ok(matchedUser);
             } else {
-                System.out.println("No face match found. Best similarity: " + String.format("%.4f", bestSimilarity));
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                // Return error with similarity details for debugging
+                java.util.Map<String, Object> errorResponse = new java.util.HashMap<>();
+                errorResponse.put("message", "Face does not match");
+                errorResponse.put("bestSimilarity", bestSimilarity);
+                errorResponse.put("threshold", FaceRecognitionService.SIMILARITY_THRESHOLD);
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
             }
         } catch (Exception e) {
             System.err.println("Verify face error: " + e.getMessage());
-            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -729,7 +751,6 @@ public class UserController {
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             System.err.println("Delete face error: " + e.getMessage());
-            e.printStackTrace();
             Map<String, Object> errorResponse = new java.util.HashMap<>();
             errorResponse.put("success", false);
             errorResponse.put("message", "Failed to delete face: " + e.getMessage());

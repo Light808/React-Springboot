@@ -36,7 +36,7 @@ const NewsDetailPage = () => {
       setError(null);
     } catch (err) {
       console.error(t('Error fetching article:'), err);
-      setError(t('Không thể tải bài viết'));
+      setError(t('Can not load article'));
     } finally {
       setLoading(false);
     }
@@ -62,12 +62,12 @@ const NewsDetailPage = () => {
       });
     } else {
       navigator.clipboard.writeText(window.location.href);
-      alert(t('Đã sao chép link vào clipboard'));
+      alert(t('Link copied to clipboard'));
     }
   };
 
   const handleBookmark = () => {
-    alert(t('Đã thêm vào danh sách đánh dấu'));
+    alert(t('Added to bookmarks'));
   };
 
   if (loading) {
@@ -75,7 +75,7 @@ const NewsDetailPage = () => {
       <div className={`${styles['cnewsd-page']}`}>
         <div className={`${styles['cnewsd-loading-container']}`}>
           <div className={`${styles['cnewsd-loading-spinner']}`}></div>
-          <p>{t('Đang tải bài viết...')}</p>
+          <p>{t('Loading article...')}</p>
         </div>
       </div>
     );
@@ -85,11 +85,11 @@ const NewsDetailPage = () => {
     return (
       <div className={`${styles['cnewsd-page']}`}>
         <div className={`${styles['cnewsd-error-container']}`}>
-          <h3>{t('Không tìm thấy bài viết')}</h3>
-          <p>{error || t('Bài viết không tồn tại hoặc đã bị xóa')}</p>
+          <h3>{t('Article not found')}</h3>
+          <p>{error || t('Article does not exist or has been deleted')}</p>
           <button onClick={() => navigate('/news')}>
             <ArrowLeft size={16} />
-            {t('Quay lại tin tức')}
+            {t('Back to news')}
           </button>
         </div>
       </div>
@@ -106,7 +106,7 @@ const NewsDetailPage = () => {
             onClick={() => navigate('/news')}
           >
             <ArrowLeft size={20} />
-            {t('Quay lại tin tức')}
+            {t('Back to news')}
           </button>
         </div>
 
@@ -120,7 +120,7 @@ const NewsDetailPage = () => {
             </div>
             <div className={`${styles['cnewsd-article-views']}`}>
               <Eye size={16} />
-              {article.views.toLocaleString()} {t('lượt xem')}
+              {article.views.toLocaleString()} {t('views')}
             </div>
           </div>
 
@@ -140,7 +140,7 @@ const NewsDetailPage = () => {
               }}
             />
             {article.featured && (
-              <div className={`${styles['cnewsd-featured-badge']}`}>{t('Nổi bật')}</div>
+              <div className={`${styles['cnewsd-featured-badge']}`}>{t('Featured')}</div>
             )}
           </div>
 
@@ -167,16 +167,16 @@ const NewsDetailPage = () => {
           <div className={`${styles['cnewsd-article-footer']}`}>
             <div className={`${styles['cnewsd-article-author']}`}> 
               <User size={16} />
-              <span>{t('Tác giả:')} {article.author}</span>
+              <span>{t('Author:')} {article.author}</span>
             </div>
             <div className={`${styles['cnewsd-article-actions']}`}>
               <button className={`${styles['cnewsd-action-btn']}`} onClick={handleShare}>
                 <Share2 size={16} />
-                {t('Chia sẻ')}
+                {t('Share')}
               </button>
               <button className={`${styles['cnewsd-action-btn']}`} onClick={handleBookmark}>
                 <Bookmark size={16} />
-                {t('Đánh dấu')}
+                {t('Bookmark')}
               </button>
             </div>
           </div>
@@ -185,7 +185,7 @@ const NewsDetailPage = () => {
         {/* Related articles */}
         {relatedArticles.length > 0 && (
           <section className={`${styles['cnewsd-related-articles']}`}>
-            <h3>{t('Bài viết liên quan')}</h3>
+            <h3>{t('Related articles')}</h3>
             <div className={`${styles['cnewsd-related-grid']}`}>
               {relatedArticles.map(relatedArticle => (
                 <div key={relatedArticle.id} className={`${styles['cnewsd-related-card']}`}>

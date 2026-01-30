@@ -2,8 +2,10 @@ import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { Camera, CheckCircle, X, AlertCircle } from 'lucide-react';
 import { loadFaceModels, captureFaceDescriptor, verifyFaceDescriptor, detectFaceRealTime } from '../../../services/faceService';
 import './FaceIDLogin.css';
+import { useTranslation } from "react-i18next";
 
 const FaceIDLogin = ({ onSuccess, onCancel, onSwitchToPassword }) => {
+  const { t } = useTranslation();
   const videoRef = useRef(null);
   const streamRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -13,27 +15,28 @@ const FaceIDLogin = ({ onSuccess, onCancel, onSwitchToPassword }) => {
   const [faceDetected, setFaceDetected] = useState(false);
   const canvasRef = useRef(null);
   const detectionIntervalRef = useRef(null);
+  const autoVerifyTriggeredRef = useRef(false);
 
   // Real-time face detection for visualization
   const startFaceDetection = useCallback(() => {
     if (!videoRef.current || !canvasRef.current || !isModelsLoaded) return;
-    
+
     const video = videoRef.current;
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-    
+
     // Set canvas size to match video
     canvas.width = video.videoWidth || 640;
     canvas.height = video.videoHeight || 480;
-    
+
     detectionIntervalRef.current = setInterval(async () => {
       if (!video || video.readyState < 2) return;
-      
+
       const detection = await detectFaceRealTime(video);
-      
+
       // Clear canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
+
       if (detection) {
         setFaceDetected(true);
         // Draw face detection box
@@ -41,7 +44,7 @@ const FaceIDLogin = ({ onSuccess, onCancel, onSwitchToPassword }) => {
         ctx.strokeStyle = '#00ff00';
         ctx.lineWidth = 2;
         ctx.strokeRect(box.x, box.y, box.width, box.height);
-        
+
         // Draw landmarks
         if (detection.landmarks) {
           ctx.fillStyle = '#00ff00';
@@ -62,35 +65,34 @@ const FaceIDLogin = ({ onSuccess, onCancel, onSwitchToPassword }) => {
       try {
         // Load face models first
         setIsLoading(true);
-        setMessage({ type: 'info', text: 'Loading face recognition models...' });
+        setMessage({ type: 'info', text: t('Loading face recognition models...') });
         await loadFaceModels();
         setIsModelsLoaded(true);
-        setMessage({ type: 'info', text: 'Models loaded. Starting camera...' });
+        setMessage({ type: 'info', text: t('Models loaded. Starting camera...') });
 
-        // Start camera
+        // Start with font camera
         const stream = await navigator.mediaDevices.getUserMedia({
-          video: { 
-            width: 640, 
+          video: {
+            width: 640,
             height: 480,
-            facingMode: 'user' // Front camera
+            facingMode: 'user' 
           }
         });
-        
+        // Wait for video to be ready before starting detection
         streamRef.current = stream;
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
-          // Wait for video to be ready before starting detection
           videoRef.current.onloadedmetadata = () => {
             startFaceDetection();
           };
         }
-        
-        setMessage({ type: 'success', text: 'Camera ready. Position your face in the frame.' });
+
+        setMessage({ type: 'success', text: t('Camera ready. Position your face in the frame.') });
       } catch (error) {
         console.error('Error initializing camera:', error);
-        setMessage({ 
-          type: 'error', 
-          text: error.message || 'Failed to access camera. Please allow camera permissions.' 
+        setMessage({
+          type: 'error',
+          text: error.message || t('Failed to access camera. Please allow camera permissions.')
         });
       } finally {
         setIsLoading(false);
@@ -109,19 +111,29 @@ const FaceIDLogin = ({ onSuccess, onCancel, onSwitchToPassword }) => {
     };
   }, [startFaceDetection]);
 
+  // Auto-verify trigger - verify immediately when face detected
+  useEffect(() => {
+    if (faceDetected && !isVerifying && !autoVerifyTriggeredRef.current && isModelsLoaded) {
+      handleVerify();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [faceDetected, isVerifying, isModelsLoaded]); 
+
+
   const handleVerify = async () => {
     if (!videoRef.current || !isModelsLoaded) {
-      setMessage({ type: 'error', text: 'Camera or models not ready' });
+      setMessage({ type: 'error', text: t('Camera or models not ready') });
       return;
     }
 
-    if (!faceDetected) {
-      setMessage({ type: 'error', text: 'Please position your face in the frame first' });
+    if (!faceDetected && !autoVerifyTriggeredRef.current) {
+      setMessage({ type: 'error', text: t('Please position your face in the frame first') });
       return;
     }
 
     setIsVerifying(true);
-    setMessage({ type: 'info', text: 'Verifying face... Please stay still.' });
+    setMessage({ type: 'info', text: t('Verifying face... Please stay still.') });
+    autoVerifyTriggeredRef.current = true;
 
     // Stop real-time detection during verification
     if (detectionIntervalRef.current) {
@@ -130,33 +142,31 @@ const FaceIDLogin = ({ onSuccess, onCancel, onSwitchToPassword }) => {
     }
 
     try {
-      // Capture face descriptor with retry
       const descriptor = await captureFaceDescriptor(videoRef.current, 5);
-      
-      setMessage({ type: 'info', text: 'Matching face...' });
-      
+
+      setMessage({ type: 'info', text: t('Matching face...') });
+
       // Verify face descriptor
       const user = await verifyFaceDescriptor(descriptor);
-      
+
       // Stop camera
       if (streamRef.current) {
         streamRef.current.getTracks().forEach(track => track.stop());
       }
-      
-      setMessage({ type: 'success', text: 'Face verified successfully!' });
-      
-      setTimeout(() => {
-        if (onSuccess) onSuccess(user);
-      }, 1000);
+      setMessage({ type: 'success', text: t('Face verified successfully!') });
+
+      // Login if face recognized successfully
+      if (onSuccess) onSuccess(user);
     } catch (error) {
       console.error('Error verifying face:', error);
-      setMessage({ 
-        type: 'error', 
-        text: error.message || 'Face verification failed. Please try again or use password login.' 
+      setMessage({
+        type: 'error',
+        text: error.message || t('Face verification failed. Please try again or use password login.')
       });
       // Restart face detection
       if (videoRef.current && isModelsLoaded) {
         startFaceDetection();
+        autoVerifyTriggeredRef.current = false;
       }
     } finally {
       setIsVerifying(false);
@@ -174,7 +184,7 @@ const FaceIDLogin = ({ onSuccess, onCancel, onSwitchToPassword }) => {
     <div className="face-id-login-overlay">
       <div className="face-id-login-modal">
         <div className="face-id-login-header">
-          <h2>Face ID Login</h2>
+          <h2>{t('Face ID Login')}</h2>
           <button className="close-btn" onClick={handleCancel}>
             <X size={20} />
           </button>
@@ -196,12 +206,12 @@ const FaceIDLogin = ({ onSuccess, onCancel, onSwitchToPassword }) => {
             {!isModelsLoaded && (
               <div className="camera-overlay">
                 <div className="loading-spinner"></div>
-                <p>Loading models...</p>
+                <p>{t('Loading models...')}</p>
               </div>
             )}
             {isModelsLoaded && !faceDetected && (
               <div className="face-detection-hint">
-                <p>Position your face in the frame</p>
+                <p>{t('Position your face in the frame')}</p>
               </div>
             )}
             {faceDetected && (
@@ -215,10 +225,10 @@ const FaceIDLogin = ({ onSuccess, onCancel, onSwitchToPassword }) => {
           <div className="instructions">
             <h3>Instructions:</h3>
             <ul>
-              <li>Position your face in the center of the frame</li>
-              <li>Ensure good lighting</li>
-              <li>Look directly at the camera</li>
-              <li>Stay still when verifying</li>
+              <li>{t('Position your face in the center of the frame')}</li>
+              <li>{t('Ensure good lighting')}</li>
+              <li>{t('Look directly at the camera')}</li>
+              <li>{t('Stay still when verifying')}</li>
             </ul>
           </div>
 
@@ -240,15 +250,16 @@ const FaceIDLogin = ({ onSuccess, onCancel, onSwitchToPassword }) => {
               className="btn-verify"
               onClick={handleVerify}
               disabled={isLoading || isVerifying || !isModelsLoaded}
+              style={{ display: 'none' }}
             >
               {isVerifying ? (
                 <>
                   <div className="loading-spinner-small"></div>
-                  Verifying...
+                  {t('Verifying...')}
                 </>
               ) : (
                 <>
-                  Verify Face
+                  {t('Verify Face')}
                 </>
               )}
             </button>
@@ -257,14 +268,14 @@ const FaceIDLogin = ({ onSuccess, onCancel, onSwitchToPassword }) => {
               onClick={onSwitchToPassword}
               disabled={isVerifying}
             >
-              Use Password Instead
+              {t('Use Password To Login')}
             </button>
             <button
               className="btn-cancel"
               onClick={handleCancel}
               disabled={isVerifying}
             >
-              Cancel
+              {t('Cancel')}
             </button>
           </div>
         </div>

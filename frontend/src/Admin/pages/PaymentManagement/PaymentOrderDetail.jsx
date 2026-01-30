@@ -16,7 +16,6 @@ function PaymentOrderDetail({ order, onApprove, onReject, actionLoading }) {
     <div className="payment-order-detail">
       <div className="payment-detail-header">
         <div className="payment-detail-title">
-          <CreditCard size={20} />
           <h3>{t('Payment order detail')}</h3>
         </div>
 
@@ -26,7 +25,6 @@ function PaymentOrderDetail({ order, onApprove, onReject, actionLoading }) {
         {/* Order Information */}
         <div className="payment-detail-section">
           <h4 className="payment-section-title">
-            <FileText size={16} />
             {t('Order information')}
           </h4>
           <div className="payment-info-grid">
@@ -41,14 +39,12 @@ function PaymentOrderDetail({ order, onApprove, onReject, actionLoading }) {
             <div className="payment-info-item">
               <span className="payment-info-label">{t('Created date')}</span>
               <span className="payment-info-value">
-                <Calendar size={14} />
                 {order.createdAt ? new Date(order.createdAt).toLocaleString('vi-VN') : '-'}
               </span>
             </div>
             <div className="payment-info-item">
               <span className="payment-info-label">{t('Amount')}</span>
               <span className="payment-info-value amount">
-                <DollarSign size={14} />
                 {order.amount?.toLocaleString('vi-VN')}₫
               </span>
             </div>
@@ -58,7 +54,6 @@ function PaymentOrderDetail({ order, onApprove, onReject, actionLoading }) {
         {/* Order Description */}
         <div className="payment-detail-section">
           <h4 className="payment-section-title">
-            <FileText size={16} />
             {t('Order description')}
           </h4>
           <div className="payment-description-box">
@@ -69,27 +64,23 @@ function PaymentOrderDetail({ order, onApprove, onReject, actionLoading }) {
         {/* Customer Information */}
         <div className="payment-detail-section">
           <h4 className="payment-section-title">
-            <User size={16} />
             {t('Customer information')}
           </h4>
           <div className="payment-customer-info">
             <div className="payment-customer-item">
               <div className="payment-customer-label">
-                <User size={14} />
                 {t('Customer ID')}
               </div>
               <div className="payment-customer-value">{order.userId || t('N/A')}</div>
             </div>
             <div className="payment-customer-item">
               <div className="payment-customer-label">
-                <User size={14} />
                 {t('Customer name')}
               </div>
               <div className="payment-customer-value">{order.userName || t('N/A')}</div>
             </div>
             <div className="payment-customer-item">
               <div className="payment-customer-label">
-                <Mail size={14} />
                 {t('Email')}
               </div>
               <div className="payment-customer-value">{order.userEmail || t('N/A')}</div> 
@@ -100,7 +91,6 @@ function PaymentOrderDetail({ order, onApprove, onReject, actionLoading }) {
         {/* Actions */}
         <div className="payment-detail-section">
           <h4 className="payment-section-title">
-            <Clock size={16} />
             {t('Actions')}
           </h4>
           {order.status === 'pending' ? (
@@ -110,7 +100,6 @@ function PaymentOrderDetail({ order, onApprove, onReject, actionLoading }) {
                 onClick={() => onApprove && onApprove(order.orderId)}
                 disabled={actionLoading}
               >
-                {actionLoading ? <RefreshCw size={16} className="spinning" /> : <CheckCircle size={16} />}
                 {t('Approve')}
               </button>
               <button
@@ -118,7 +107,6 @@ function PaymentOrderDetail({ order, onApprove, onReject, actionLoading }) {
                 onClick={() => onReject && onReject(order.orderId)}
                 disabled={actionLoading}
               >
-                {actionLoading ? <RefreshCw size={16} className="spinning" /> : <XCircle size={16} />}
                 {t('Reject')}
               </button>
             </div>
@@ -126,9 +114,9 @@ function PaymentOrderDetail({ order, onApprove, onReject, actionLoading }) {
             <div className="payment-detail-status-info">
               <span className="payment-status-label">{t('Current status')}:</span>
               <div className={`payment-status-pill ${order.status}`}>
-                {order.status === 'paid' && <CheckCircle size={14} />}
-                {(order.status === 'expired' || order.status === 'failed') && <XCircle size={14} />}
-                {order.status === 'pending' && <Clock size={14} />}
+                {order.status === 'paid'}
+                {(order.status === 'expired' || order.status === 'failed')}
+                {order.status === 'pending' }
                 <span>{order.status}</span>
               </div>
             </div>

@@ -2,8 +2,10 @@ import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { Camera, CheckCircle, X, AlertCircle } from 'lucide-react';
 import { loadFaceModels, captureFaceDescriptor, registerFaceDescriptorMultiple, detectFaceRealTime } from '../../../services/faceService';
 import './FaceIDRegistration.css';
+import { useTranslation } from "react-i18next";
 
 const FaceIDRegistration = ({ userId, onSuccess, onCancel }) => {
+  const { t } = useTranslation();
   const videoRef = useRef(null);
   const streamRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -55,7 +57,7 @@ const FaceIDRegistration = ({ userId, onSuccess, onCancel }) => {
       } else {
         setFaceDetected(false);
       }
-    }, 100); // Check every 100ms
+    }, 100); 
   }, [isModelsLoaded]);
 
   useEffect(() => {
@@ -63,35 +65,34 @@ const FaceIDRegistration = ({ userId, onSuccess, onCancel }) => {
       try {
         // Load face models first
         setIsLoading(true);
-        setMessage({ type: 'info', text: 'Loading face recognition models...' });
+        setMessage({ type: 'info', text: t('Loading face recognition models...') });
         await loadFaceModels();
         setIsModelsLoaded(true);
-        setMessage({ type: 'info', text: 'Models loaded. Starting camera...' });
+        setMessage({ type: 'info', text: t('Models loaded. Starting camera...') });
 
         // Start camera
         const stream = await navigator.mediaDevices.getUserMedia({
           video: { 
             width: 640, 
             height: 480,
-            facingMode: 'user' // Front camera
+            facingMode: 'user' 
           }
         });
         
         streamRef.current = stream;
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
-          // Wait for video to be ready before starting detection
           videoRef.current.onloadedmetadata = () => {
             startFaceDetection();
           };
         }
         
-        setMessage({ type: 'success', text: 'Camera ready. Position your face in the frame.' });
+        setMessage({ type: 'success', text: t('Camera ready. Position your face in the frame.') });
       } catch (error) {
         console.error('Error initializing camera:', error);
         setMessage({ 
           type: 'error', 
-          text: error.message || 'Failed to access camera. Please allow camera permissions.' 
+          text: error.message || t('Failed to access camera. Please allow camera permissions.') 
         });
       } finally {
         setIsLoading(false);
@@ -113,12 +114,12 @@ const FaceIDRegistration = ({ userId, onSuccess, onCancel }) => {
 
   const handleCapture = async () => {
     if (!userId) {
-      setMessage({ type: 'error', text: 'User ID not found. Please login again.' });
+      setMessage({ type: 'error', text: t('User ID not found. Please login again.') });
       return;
     }
 
     if (!videoRef.current || !isModelsLoaded) {
-      setMessage({ type: 'error', text: 'Camera or models not ready' });
+      setMessage({ type: 'error', text: t('Camera or models not ready') });
       return;
     }
 
@@ -126,7 +127,7 @@ const FaceIDRegistration = ({ userId, onSuccess, onCancel }) => {
 
     setIsCapturing(true);
     setCaptureProgress(0);
-    setMessage({ type: 'info', text: 'Capturing face... Please stay still. We will capture 3 samples for better accuracy.' });
+    setMessage({ type: 'info', text: t('Capturing face... Please stay still. We will capture 3 samples for better accuracy.') });
 
     // Stop real-time detection during capture
     if (detectionIntervalRef.current) {
@@ -135,7 +136,6 @@ const FaceIDRegistration = ({ userId, onSuccess, onCancel }) => {
     }
 
     try {
-      // Capture multiple face descriptors for better accuracy (3 samples)
       const descriptors = [];
       const numSamples = 3;
       
@@ -152,12 +152,12 @@ const FaceIDRegistration = ({ userId, onSuccess, onCancel }) => {
         descriptors.push(descriptor);
       }
       
-      setMessage({ type: 'info', text: 'Processing and registering face...' });
+      setMessage({ type: 'info', text: t('Processing and registering face...') });
       
       // Register averaged face descriptor
       await registerFaceDescriptorMultiple(userId, descriptors);
       
-      setMessage({ type: 'success', text: 'Face registered successfully!' });
+      setMessage({ type: 'success', text: t('Face registered successfully!') });
       
       // Stop camera
       if (streamRef.current) {
@@ -171,7 +171,7 @@ const FaceIDRegistration = ({ userId, onSuccess, onCancel }) => {
       console.error('Error capturing face:', error);
       setMessage({ 
         type: 'error', 
-        text: error.message || 'Failed to register face. Please try again.' 
+        text: error.message || t('Failed to register face. Please try again.') 
       });
       // Restart face detection
       if (videoRef.current && isModelsLoaded) {
@@ -193,7 +193,7 @@ const FaceIDRegistration = ({ userId, onSuccess, onCancel }) => {
     <div className="face-id-registration-overlay">
       <div className="face-id-registration-modal">
         <div className="face-id-registration-header">
-          <h2>Register Face ID</h2>
+          <h2>{t('Register Face ID')}</h2>
           <button className="close-btn" onClick={handleCancel}>
             <X size={20} />
           </button>
@@ -215,7 +215,7 @@ const FaceIDRegistration = ({ userId, onSuccess, onCancel }) => {
             {!isModelsLoaded && (
               <div className="camera-overlay">
                 <div className="loading-spinner"></div>
-                <p>Loading models...</p>
+                <p>{t('Loading models...')}</p>
               </div>
             )}
             {isModelsLoaded && !faceDetected && (

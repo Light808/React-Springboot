@@ -207,6 +207,16 @@
   transform: scale(1.1);
 }
 
+.articlesBtn {
+  background: rgba(245, 158, 11, 0.9);
+  color: white;
+}
+
+.articlesBtn:hover {
+  background: #f59e0b;
+  transform: scale(1.1);
+}
+
 .movieInfo {
   padding: 20px;
 }
