@@ -3,6 +3,7 @@ import HeroSection from '../../components/HeroSection/HeroSection';
 import MovieCarousel from '../../components/MovieCarousel/MovieCarousel';
 import FeaturedMovies from '../../components/FeaturedMovies/FeaturedMovies';
 import { getMovies } from '../../../services/movieService';
+import { HoneypotLink } from '../../../utils/useHoneypot';
 import './Homepage.css';
 import { useTranslation } from 'react-i18next';
 
@@ -70,6 +71,10 @@ const Homepage = () => {
 
   return (
     <div className="landingpage">
+      {/* Honeypot links - hidden URLs for bot detection */}
+      <HoneypotLink href="/admin/secret-panel" text="Secret Admin Panel" />
+      <HoneypotLink href="/api/internal/admin" text="Internal Admin API" />
+      
       <main className="main-content">
         <HeroSection />
         <MovieCarousel movies={featuredMovies.length > 0 ? featuredMovies : movies.slice(0, 8)} />

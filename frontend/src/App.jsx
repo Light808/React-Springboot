@@ -23,6 +23,7 @@ import AdminRoute from './Admin/components/Admin/AdminRoute';
 import PaymentManagement from './Admin/pages/PaymentManagement/PaymentManagement';
 import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import { getCurrentUser, logoutUser, isAuthenticated } from './services/userService';
+import { HoneypotLink, HoneypotButton } from './utils/useHoneypot';
 import DailySpinPage from './Client/pages/DailySpinPage';
 import ChatBox from './Client/components/ChatBox/ChatBox';
 import VietQRPayment from './Client/pages/VietQRPayment/VietQRPayment.jsx';
@@ -103,6 +104,13 @@ function RouteAwareLayout({ user, setUser, onLogout }) {
 
   return (
     <div className="app">
+      {/* Honeypot links - hidden URLs that only bots can see/crawl */}
+      <HoneypotLink href="/admin/dashboard" text="Admin Dashboard" />
+      <HoneypotLink href="/admin/login" text="Admin Login" />
+      <HoneypotLink href="/api/admin/secret" text="Secret Admin API" />
+      <HoneypotLink href="/wp-admin" text="WordPress Admin" />
+      <HoneypotButton text="Delete All Data" />
+      
       {!hideHeader && <Header user={user} setUser={setUser} onLogout={onLogout} />}
       <main className={`app-main ${hideHeader ? 'no-header' : ''}`}>
         <Routes>

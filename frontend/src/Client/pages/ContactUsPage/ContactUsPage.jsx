@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { 
   Mail, 
@@ -12,10 +12,19 @@ import {
   User
 } from 'lucide-react';
 import { submitContact } from '../../../services/contactService';
+import { useHoneypot, HoneypotField, HoneypotUrlField, HoneypotLink } from '../../../utils/useHoneypot';
 import './ContactUsPage.css';
 
 const ContactUsPage = () => {
   const { t } = useTranslation();
+  const { 
+    honeypotValue, 
+    setHoneypotValue, 
+    honeypotUrl, 
+    setHoneypotUrl, 
+    resetTimer, 
+    validateSubmission 
+  } = useHoneypot();
   const [contactForm, setContactForm] = useState({
     name: '',
     email: '',
@@ -25,6 +34,11 @@ const ContactUsPage = () => {
   });
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
+
+  // Reset honeypot timer when component mounts
+  useEffect(() => {
+    resetTimer();
+  }, [resetTimer]);
 
   const contactInfo = [
     {
@@ -61,6 +75,13 @@ const ContactUsPage = () => {
     e.preventDefault();
     setError('');
     
+    // Honeypot validation
+    if (!validateSubmission()) {
+      console.warn('Honeypot validation failed - possible bot detected');
+      setError('Invalid submission. Please try again.');
+      return;
+    }
+    
     // Validation
     if (!contactForm.name || !contactForm.email || !contactForm.message) {
       setError(t('Please fill in all required fields'));
@@ -93,6 +114,10 @@ const ContactUsPage = () => {
 
   return (
     <div className="contact-page">
+      {/* Honeypot links - hidden URLs for bot detection */}
+      <HoneypotLink href="/contact-spam" text="Submit Spam" />
+      <HoneypotLink href="/api/contact/bulk-submit" text="Bulk Submit" />
+      
       <div className="contact-container">
         {/* Hero Section */}
         <div className="contact-hero">
@@ -137,6 +162,18 @@ const ContactUsPage = () => {
         {/* Contact Form */}
         <div className="contact-form-section">
           <form className="contact-form" onSubmit={handleContactSubmit}>
+              {/* Honeypot fields */}
+              <HoneypotField 
+                value={honeypotValue} 
+                onChange={(e) => setHoneypotValue(e.target.value)} 
+                name="website"
+              />
+              <HoneypotUrlField 
+                value={honeypotUrl} 
+                onChange={(e) => setHoneypotUrl(e.target.value)} 
+                name="url"
+              />
+              
               <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="name">{t('Full Name')} <span className="required">*</span></label>
