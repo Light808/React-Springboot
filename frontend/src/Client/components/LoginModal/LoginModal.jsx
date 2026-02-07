@@ -11,7 +11,7 @@ import { Eye, EyeOff, X, AlertCircle, CheckCircle, Shield, Camera } from 'lucide
 import { useNavigate } from 'react-router-dom';
 import './LoginModal.css';
 import { useTranslation } from "react-i18next";
-import { useHoneypot, HoneypotField, HoneypotUrlField } from '../../../utils/useHoneypot';
+import { useHoneypot, HoneypotField, HoneypotUrlField } from '../../../services/useHoneypot';
 
 const LoginModal = ({ isOpen, onClose, onLogin }) => {
   const { t } = useTranslation();

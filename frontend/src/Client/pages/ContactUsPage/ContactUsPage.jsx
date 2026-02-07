@@ -12,7 +12,7 @@ import {
   User
 } from 'lucide-react';
 import { submitContact } from '../../../services/contactService';
-import { useHoneypot, HoneypotField, HoneypotUrlField, HoneypotLink } from '../../../utils/useHoneypot';
+import { useHoneypot, HoneypotField, HoneypotUrlField, HoneypotLink } from '../../../services/useHoneypot';
 import './ContactUsPage.css';
 
 const ContactUsPage = () => {

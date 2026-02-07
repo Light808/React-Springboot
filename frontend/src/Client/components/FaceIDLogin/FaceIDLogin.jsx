@@ -63,7 +63,6 @@ const FaceIDLogin = ({ onSuccess, onCancel, onSwitchToPassword }) => {
   useEffect(() => {
     const initCamera = async () => {
       try {
-        // Load face models first
         setIsLoading(true);
         setMessage({ type: 'info', text: t('Loading face recognition models...') });
         await loadFaceModels();
@@ -78,7 +77,7 @@ const FaceIDLogin = ({ onSuccess, onCancel, onSwitchToPassword }) => {
             facingMode: 'user' 
           }
         });
-        // Wait for video to be ready before starting detection
+        // Start camera
         streamRef.current = stream;
         if (videoRef.current) {
           videoRef.current.srcObject = stream;

@@ -13,7 +13,7 @@ import {
   MessageSquare
 } from 'lucide-react';
 import { submitComplaint } from '../../../services/complaintService';
-import { useHoneypot, HoneypotField, HoneypotUrlField } from '../../../utils/useHoneypot';
+import { useHoneypot, HoneypotField, HoneypotUrlField } from '../../../services/useHoneypot';
 import './ComplaintPage.css';
 
 const ComplaintPage = () => {

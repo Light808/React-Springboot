@@ -10,7 +10,7 @@ import {
   Mail,
   Heart
 } from 'lucide-react';
-import { useHoneypot, HoneypotField, HoneypotUrlField } from '../../../utils/useHoneypot';
+import { useHoneypot, HoneypotField, HoneypotUrlField } from '../../../services/useHoneypot';
 import './FeedbackPage.css';
 
 const FeedbackPage = () => {

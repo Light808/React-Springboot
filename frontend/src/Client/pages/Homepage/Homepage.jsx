@@ -3,7 +3,7 @@ import HeroSection from '../../components/HeroSection/HeroSection';
 import MovieCarousel from '../../components/MovieCarousel/MovieCarousel';
 import FeaturedMovies from '../../components/FeaturedMovies/FeaturedMovies';
 import { getMovies } from '../../../services/movieService';
-import { HoneypotLink } from '../../../utils/useHoneypot';
+import { HoneypotLink } from '../../../services/useHoneypot';
 import './Homepage.css';
 import { useTranslation } from 'react-i18next';
 

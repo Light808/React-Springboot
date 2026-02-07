@@ -186,10 +186,10 @@ const MovieDetailPage = () => {
   }, [movieId]);
 
   const tabs = [
-    { id: 'info', label: t('Movie info: ') },
+    { id: 'info', label: t('Movie info') },
     { id: 'showtimes', label: t('Showtime') },
-    { id: 'reviews', label: t('Movie review: ') },
-    { id: 'news', label: t('News: ') },
+    { id: 'reviews', label: t('Movie review') },
+    { id: 'news', label: t('News') },
     { id: 'booking', label: t('Buy ticket') }
   ];
 
@@ -230,7 +230,7 @@ const MovieDetailPage = () => {
   };
 
   const getTitle = (movie) => {
-    return movie.title || movie.name || movie.movieName || t('Không có tiêu đề');
+    return movie.title || movie.name || movie.movieName || t('No title');
   };
 
   const getEnglishTitle = (movie) => {
@@ -563,7 +563,7 @@ const MovieDetailPage = () => {
                   </div>
                 )}
                 
-                {/* Reviews Grid - Hiển thị tối đa 3 đánh giá */}
+                {/* Reviews Grid*/}
                 {!reviewsLoading && !reviewsError && (
                   <div className={`${styles['reviews-grid']}`}>
                     {communityReviews.length === 0 ? (
@@ -642,13 +642,13 @@ const MovieDetailPage = () => {
                   </div>
                 )}
                 
-                {/* Xem thêm đánh giá  */}
+                {/* View more reviews */}
                 {!reviewsLoading && !reviewsError && communityReviews.length > 3 && (
                   <button 
                     className={`${styles['view-more-reviews-btn']}`}
                     onClick={() => {
                       setActiveTab('reviews');
-                      // Scroll to top khi chuyển tab
+                      // Scroll to top when switching tab
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
                   >

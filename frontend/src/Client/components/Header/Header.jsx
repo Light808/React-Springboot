@@ -138,7 +138,6 @@ const Header = ({ user, setUser, onLogout }) => {
       if (!data || data.length === 0) {
         setCinemas([]);
         setFilteredCinemas([]);
-        // Don't set error if it's just empty array (backend might be offline)
         return;
       }
       setCinemas(data);
@@ -151,7 +150,6 @@ const Header = ({ user, setUser, onLogout }) => {
       }
       filterCinemas(data, initialCity, cinemaSearchQuery);
     } catch (err) {
-      // Only set error if it's not a network error (already handled in service)
       if (!err.message.includes('Failed to fetch') && !err.message.includes('NetworkError')) {
         setError('cannot load cinema list');
         console.error('Error fetching cinemas:', err);

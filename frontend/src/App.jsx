@@ -23,7 +23,7 @@ import AdminRoute from './Admin/components/Admin/AdminRoute';
 import PaymentManagement from './Admin/pages/PaymentManagement/PaymentManagement';
 import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import { getCurrentUser, logoutUser, isAuthenticated } from './services/userService';
-import { HoneypotLink, HoneypotButton } from './utils/useHoneypot';
+import { HoneypotLink, HoneypotButton } from './services/useHoneypot.js';
 import DailySpinPage from './Client/pages/DailySpinPage';
 import ChatBox from './Client/components/ChatBox/ChatBox';
 import VietQRPayment from './Client/pages/VietQRPayment/VietQRPayment.jsx';

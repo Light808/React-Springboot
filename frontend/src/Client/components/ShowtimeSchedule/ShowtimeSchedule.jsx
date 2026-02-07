@@ -224,7 +224,7 @@ const ShowtimeSchedule = ({ movieId, movieTitle }) => {
   return (
     <div className={styles.showtimeSchedule}>
       <div className={styles.header}>
-        <h2>Lịch chiếu - {movieTitle}</h2>
+        <h2>{t('Showtime')} - {movieTitle}</h2>
         <div className={styles.controls}>
           <div className={styles.dateSelector}>
             <Calendar size={16} />
@@ -287,7 +287,6 @@ const ShowtimeSchedule = ({ movieId, movieTitle }) => {
                         </div>
                         {expandedCinemas.includes(cinema.id) && (
                           <div className={styles.cinemaShowtimesDetail}>
-                            {/* Lấy showtimes của cinema này */}
                             {(() => {
                               const cinemaShowtimes = showtimes.filter(st => st.cinemaId === cinema.id && st.movieId === movieId && (st.startTime ? new Date(st.startTime).toISOString().split('T')[0] === selectedDate : false));
                               if (cinemaShowtimes.length === 0) return <div className={styles.noShowtimesSmall}>Không có lịch chiếu cho ngày này</div>;
