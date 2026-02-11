@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.Review;
+import com.example.demo.model.User;
 import com.example.demo.repository.ReviewRepository;
+import com.example.demo.repository.UserRepository;
 
 @SuppressWarnings("unused")
 @RestController
@@ -29,11 +31,15 @@ public class ReviewController {
     @Autowired
     private ReviewRepository reviewRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     // Get all reviews
     @GetMapping
     public ResponseEntity<List<Review>> getAllReviews() {
         try {
             List<Review> reviews = reviewRepository.findByIsActiveTrueOrderByCreatedAtDesc();
+            enrichReviewsWithUserAvatar(reviews);
             return ResponseEntity.ok(reviews);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -46,7 +52,9 @@ public class ReviewController {
         try {
             Optional<Review> review = reviewRepository.findById(id);
             if (review.isPresent()) {
-                return ResponseEntity.ok(review.get());
+                Review r = review.get();
+                enrichReviewsWithUserAvatar(java.util.Collections.singletonList(r));
+                return ResponseEntity.ok(r);
             } else {
                 return ResponseEntity.notFound().build();
             }
@@ -60,9 +68,24 @@ public class ReviewController {
     public ResponseEntity<List<Review>> getReviewsByMovieId(@PathVariable String movieId) {
         try {
             List<Review> reviews = reviewRepository.findByMovieIdAndIsActiveTrueOrderByCreatedAtDesc(movieId);
+            enrichReviewsWithUserAvatar(reviews);
             return ResponseEntity.ok(reviews);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /** Fill userAvatar from User when review has userId but no userAvatar (e.g. old reviews). */
+    private void enrichReviewsWithUserAvatar(List<Review> reviews) {
+        if (reviews == null) return;
+        for (Review r : reviews) {
+            if ((r.getUserAvatar() == null || r.getUserAvatar().trim().isEmpty()) && r.getUserId() != null && !r.getUserId().trim().isEmpty()) {
+                userRepository.findById(r.getUserId()).ifPresent(user -> {
+                    if (user.getAvatar() != null && !user.getAvatar().trim().isEmpty()) {
+                        r.setUserAvatar(user.getAvatar());
+                    }
+                });
+            }
         }
     }
 
@@ -71,6 +94,7 @@ public class ReviewController {
     public ResponseEntity<List<Review>> getReviewsByUserId(@PathVariable String userId) {
         try {
             List<Review> reviews = reviewRepository.findByUserIdAndIsActiveTrueOrderByCreatedAtDesc(userId);
+            enrichReviewsWithUserAvatar(reviews);
             return ResponseEntity.ok(reviews);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -82,6 +106,7 @@ public class ReviewController {
     public ResponseEntity<List<Review>> getReviewsByMovieIdAndRating(@PathVariable String movieId, @PathVariable Integer rating) {
         try {
             List<Review> reviews = reviewRepository.findByMovieIdAndRatingAndIsActiveTrue(movieId, rating);
+            enrichReviewsWithUserAvatar(reviews);
             return ResponseEntity.ok(reviews);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -141,6 +166,15 @@ public class ReviewController {
             }
             if (review.getIsVerified() == null) {
                 review.setIsVerified(false);
+            }
+
+            // Use profile avatar when not provided
+            if (review.getUserAvatar() == null || review.getUserAvatar().trim().isEmpty()) {
+                userRepository.findById(review.getUserId()).ifPresent(user -> {
+                    if (user.getAvatar() != null && !user.getAvatar().trim().isEmpty()) {
+                        review.setUserAvatar(user.getAvatar());
+                    }
+                });
             }
 
             LocalDateTime now = LocalDateTime.now();

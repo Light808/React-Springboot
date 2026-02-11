@@ -56,11 +56,11 @@ const UserSettingsModal = ({ isOpen, onClose }) => {
         // Disable Face ID - delete face descriptor
         await deleteFaceDescriptor(user.id);
         setFaceIDEnabled(false);
-        setFaceIDSuccess('Face ID đã được tắt thành công');
+        setFaceIDSuccess(t('Face ID has been successfully disabled'));
         setTimeout(() => setFaceIDSuccess(''), 3000);
       }
     } catch (error) {
-      setFaceIDError(error.message || 'Có lỗi xảy ra');
+      setFaceIDError(error.message || t('An error occurred'));
       setTimeout(() => setFaceIDError(''), 3000);
     } finally {
       setLoadingFaceID(false);
@@ -70,7 +70,7 @@ const UserSettingsModal = ({ isOpen, onClose }) => {
   const handleFaceIDRegistrationSuccess = () => {
     setShowFaceIDRegistration(false);
     setFaceIDEnabled(true);
-    setFaceIDSuccess('Face ID đã được bật thành công');
+    setFaceIDSuccess(t('Face ID has been successfully enabled'));
     setTimeout(() => setFaceIDSuccess(''), 3000);
   };
 
@@ -94,19 +94,19 @@ const UserSettingsModal = ({ isOpen, onClose }) => {
     setPwdError('');
     setPwdSuccess('');
     if (!pwdForm.currentPassword || !pwdForm.newPassword || !pwdForm.confirmPassword) {
-      setPwdError(t('Vui lòng nhập đầy đủ các trường.'));
+      setPwdError(t('Please fill in all fields'));
       return false;
     }
     if (pwdForm.newPassword.length < 6) {
-      setPwdError(t('Mật khẩu mới phải có ít nhất 6 ký tự.'));
+      setPwdError(t('New password must be at least 6 characters long')); 
       return false;
     }
     if (pwdForm.newPassword === pwdForm.currentPassword) {
-      setPwdError(t('Mật khẩu mới không được trùng với mật khẩu hiện tại.'));
+      setPwdError(t('New password cannot be the same as the current password'));
       return false;
     }
     if (pwdForm.newPassword !== pwdForm.confirmPassword) {
-      setPwdError(t('Xác nhận mật khẩu không khớp.'));
+      setPwdError(t('Confirm password does not match'));
       return false;
     }
     return true;
@@ -121,10 +121,10 @@ const handleSubmit = async (e) => {
       currentPassword: pwdForm.currentPassword,
       newPassword: pwdForm.newPassword
     });
-    setPwdSuccess(t('Đổi mật khẩu thành công.'));
+    setPwdSuccess(t('Password changed successfully.'));
     setPwdForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
   } catch (err) {
-    setPwdError(err.message || t('Đổi mật khẩu thất bại.'));
+    setPwdError(err.message || t('Failed to change password.'));
   } finally {
     setChangingPwd(false);
   }
@@ -139,8 +139,8 @@ return (
   >
     <div>
       <div className="profile-header">
-        <h2>{t('Cài đặt tài khoản')}</h2>
-        <button className="close-btn" onClick={onClose} title={t('Đóng')}>
+        <h2>{t('Account Settings')}</h2>
+        <button className="close-btn" onClick={onClose} title={t('Close')}>
           <X size={20} />
         </button>
       </div>
@@ -151,18 +151,18 @@ return (
           <div className="settings-header" style={{ cursor: 'default' }}>
             <div className="settings-title">
               <Camera size={18} />
-              <h4>Face ID</h4>
+              <h4>{t('Face ID')}</h4>
             </div>
           </div>
           <div className="settings-content">
             <div className="face-id-settings-card">
               <div className="face-id-toggle-row">
                 <div className="face-id-info">
-                  <label>Bật/Tắt Face ID</label>
+                  <label>{t('Enable/Disable Face ID')}</label>
                   <p className="face-id-description">
                     {faceIDEnabled 
-                      ? 'Face ID đang được bật. Bạn có thể đăng nhập bằng khuôn mặt.'
-                      : 'Face ID đang được tắt. Bật để đăng nhập nhanh hơn bằng khuôn mặt.'}
+                      ? t('Face ID is enabled. You can login with your face.')
+                      : t('Face ID is disabled. Enable it to login faster with your face.')}
                   </p>
                 </div>
                 <label className="toggle-switch">
@@ -186,42 +186,42 @@ return (
           <div className="settings-header" style={{ cursor: 'default' }}>
             <div className="settings-title">
               <Settings size={18} />
-              <h4>{t('Đổi mật khẩu')}</h4>
+              <h4>{t('Change Password')}</h4>
             </div>
           </div>
           <div className="settings-content">
             <div className="change-password-card">
               <form className="change-password-form" onSubmit={handleSubmit}>
                 <div className="form-row">
-                  <label>{t('Mật khẩu hiện tại')}</label>
+                  <label>{t('Current Password')}</label>
                   <input
                     type="password"
                     value={pwdForm.currentPassword}
                     onChange={(e) =>
                       setPwdForm({ ...pwdForm, currentPassword: e.target.value })
                     }
-                    placeholder={t('Nhập mật khẩu hiện tại')}
+                    placeholder={t('Enter current password')}
                   />
                 </div>
                 <div className="form-row">
-                  <label>{t('Mật khẩu mới')}</label>
+                  <label>{t('New Password')}</label>
                   <input
                     type="password"
                     value={pwdForm.newPassword}
                     onChange={(e) =>
                       setPwdForm({ ...pwdForm, newPassword: e.target.value })
                     }
-                    placeholder={t('Ít nhất 6 ký tự')}
+                    placeholder={t('Enter new password (min. 6 characters)')}
                   />
                 </div>
                 <div className="form-row">
-                  <label>{t('Xác nhận mật khẩu mới')}</label>
-                    <input type="password" value={pwdForm.confirmPassword} onChange={(e) => setPwdForm({ ...pwdForm, confirmPassword: e.target.value })} placeholder={t('Nhập lại mật khẩu mới')} />
+                  <label>{t('Confirm New Password')}</label>
+                    <input type="password" value={pwdForm.confirmPassword} onChange={(e) => setPwdForm({ ...pwdForm, confirmPassword: e.target.value })} placeholder={t('Re-enter new password')} />
                   </div>
                   {pwdError && <div className="form-error">{pwdError}</div>}
                   {pwdSuccess && <div className="form-success">{pwdSuccess}</div>}
                   <div className="form-actions">
-                    <button type="submit" className="save-btn" disabled={changingPwd}>{changingPwd ? 'Đang đổi...' : 'Đổi mật khẩu'}</button>
+                    <button type="submit" className="save-btn" disabled={changingPwd}>{changingPwd ? t('Changing...') : t('Change Password')}</button>
                   </div>
                 </form>
               </div>

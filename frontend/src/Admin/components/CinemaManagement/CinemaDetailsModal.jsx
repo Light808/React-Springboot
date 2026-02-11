@@ -36,7 +36,6 @@ const CinemaDetailsModal = ({ cinema, onClose }) => {
         </div>
 
         <div className={styles.modalBody}>
-          {/* Cinema Image and Basic Info */}
           <div className={styles.cinemaHeader}>
             <div className={styles.cinemaImage}>
               {cinema.imageUrl ? (

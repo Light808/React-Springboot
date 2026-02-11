@@ -1,8 +1,12 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import { X, Calendar, Clock, Star, Film, User, Users, Globe, Play, Shield, MapPin } from 'lucide-react';
 import styles from './MovieDetailsModal.module.css';
+import { useTranslation } from 'react-i18next';
 
 const MovieDetailsModal = ({ movie, onClose }) => {
+  const { t } = useTranslation(); 
+
   const formatDate = (dateString) => {
     if (!dateString) return 'Chưa cập nhật';
     try {
@@ -13,29 +17,29 @@ const MovieDetailsModal = ({ movie, onClose }) => {
         day: 'numeric'
       });
     } catch (error) {
-      return 'Chưa cập nhật';
+      return 'Not updated';
     }
   };
 
   const formatDuration = (minutes) => {
-    if (!minutes) return 'Chưa cập nhật';
+    if (!minutes) return t('Not updated');
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
-    return hours > 0 ? `${hours} giờ ${mins} phút` : `${mins} phút`;
+    return hours > 0 ? `${hours} hours ${mins} minutes` : `${mins} minutes`;
   };
 
   const formatCast = (cast) => {
-    if (!cast || !Array.isArray(cast)) return 'Chưa cập nhật';
+    if (!cast || !Array.isArray(cast)) return 'Not updated';
     return cast.join(', ');
   };
 
   const formatAgeRating = (ageRating) => {
-    if (!ageRating) return 'Chưa cập nhật';
+    if (!ageRating) return 'Not updated';
     const ratings = {
-      'P': 'P - Mọi lứa tuổi',
-      'T13': 'T13 - Trên 13 tuổi',
-      'T16': 'T16 - Trên 16 tuổi',
-      'T18': 'T18 - Trên 18 tuổi'
+      'P': 'P - All ages',
+      'T13': 'T13 - Over 13 years old',
+      'T16': 'T16 - Over 16 years old',
+      'T18': 'T18 - Over 18 years old'
     };
     return ratings[ageRating] || ageRating;
   };
@@ -59,7 +63,7 @@ const MovieDetailsModal = ({ movie, onClose }) => {
     <div className={styles.modalOverlay} onClick={onClose}>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
         <div className={styles.modalHeader}>
-          <h2>Chi tiết phim</h2>
+          <h2>{t('Film detail')}</h2>
           <button className={styles.closeBtn} onClick={onClose}>
             <X size={20} />
           </button>
@@ -88,13 +92,13 @@ const MovieDetailsModal = ({ movie, onClose }) => {
                 style={{ display: (movie.posterUrl || movie.imageUrl || movie.poster || movie.image) ? 'none' : 'flex' }}
               >
                 <Film size={64} />
-                <span>Không có poster</span>
+                <span>{t('No posters')}</span>
               </div>
             </div>
 
             {/* Movie Info */}
             <div className={styles.infoSection}>
-              <h1 className={styles.movieTitle}>{movie.title || 'Chưa có tên'}</h1>
+              <h1 className={styles.movieTitle}>{movie.title || t('No name')}</h1>
               {movie.englishTitle && (
                 <h2 className={styles.englishTitle}>{movie.englishTitle}</h2>
               )}
@@ -104,7 +108,7 @@ const MovieDetailsModal = ({ movie, onClose }) => {
                 <div className={styles.infoItem}>
                   <Calendar className={styles.infoIcon} />
                   <div>
-                    <span className={styles.infoLabel}>Ngày phát hành</span>
+                    <span className={styles.infoLabel}>{t('Release date')}</span>
                     <span className={styles.infoValue}>{formatDate(movie.releaseDate)}</span>
                   </div>
                 </div>
@@ -112,7 +116,7 @@ const MovieDetailsModal = ({ movie, onClose }) => {
                 <div className={styles.infoItem}>
                   <Clock className={styles.infoIcon} />
                   <div>
-                    <span className={styles.infoLabel}>Thời lượng</span>
+                    <span className={styles.infoLabel}>T{t('Duration')}</span>
                     <span className={styles.infoValue}>{formatDuration(movie.duration)}</span>
                   </div>
                 </div>
@@ -120,7 +124,7 @@ const MovieDetailsModal = ({ movie, onClose }) => {
                 <div className={styles.infoItem}>
                   <Star className={styles.infoIcon} />
                   <div>
-                    <span className={styles.infoLabel}>Đánh giá</span>
+                    <span className={styles.infoLabel}>{t('Rate')}</span>
                     <span className={styles.infoValue}>{movie.rating || 'N/A'}</span>
                   </div>
                 </div>
@@ -129,14 +133,14 @@ const MovieDetailsModal = ({ movie, onClose }) => {
                   <Globe className={styles.infoIcon} />
                   <div>
                     <span className={styles.infoLabel}>Ngôn ngữ</span>
-                    <span className={styles.infoValue}>{movie.language || 'Chưa cập nhật'}</span>
+                    <span className={styles.infoValue}>{movie.language || 'No updated'}</span>
                   </div>
                 </div>
 
                 <div className={styles.infoItem}>
                   <Shield className={styles.infoIcon} />
                   <div>
-                    <span className={styles.infoLabel}>Giới hạn độ tuổi</span>
+                    <span className={styles.infoLabel}>{t('Age limited')}</span>
                     <span className={styles.infoValue}>{formatAgeRating(movie.ageRating)}</span>
                   </div>
                 </div>

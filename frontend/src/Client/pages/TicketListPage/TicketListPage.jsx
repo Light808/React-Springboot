@@ -516,8 +516,7 @@ const TicketListPage = ({ userId }) => {
                     title={t('Xem chi tiết')}
                     disabled={actionLoading[ticket.id]}
                   >
-                    <Eye size={16} />
-                    {actionLoading[ticket.id] ? '...' : 'Xem'}
+                    {actionLoading[ticket.id] ? '...' : t('View')}
                   </button>
                   {(ticket.status === 'confirmed' || ticket.status === 'pending') && (
                     <button
@@ -526,8 +525,7 @@ const TicketListPage = ({ userId }) => {
                       title={t('Hủy vé')}
                       disabled={actionLoading[ticket.id]}
                     >
-                      <Trash2 size={16} />
-                      {actionLoading[ticket.id] ? '...' : 'Hủy'}
+                      {actionLoading[ticket.id] ? '...' : t('Cancel')}
                     </button>
                   )}
                   {ticket.status === 'cancelled' && ticket.isRefundable && !ticket.refundedAt && (
@@ -538,16 +536,16 @@ const TicketListPage = ({ userId }) => {
                       disabled={actionLoading[ticket.id]}
                     >
                       <BarChart3 size={16} />
-                      {actionLoading[ticket.id] ? '...' : 'Hoàn tiền'}
+                      {actionLoading[ticket.id] ? '...' : t('Refund')}
                     </button>
                   )}
                 </div>
 
                 <div className={`${styles['ticket-footer']}`}>
                   <p className={`${styles['booking-time']}`}>
-                    Đặt lúc: {ticket.bookingTime ? formatDate(ticket.bookingTime) + ' ' + formatTime(ticket.bookingTime) : 'N/A'}
+                    {t('Booked at')}: {ticket.bookingTime ? formatDate(ticket.bookingTime) + ' ' + formatTime(ticket.bookingTime) : 'N/A'}
                   </p>
-                  <p className={`${styles['ticket-id']}`}>Mã vé: {ticket.id}</p>
+                  <p className={`${styles['ticket-id']}`}>{t('Ticket ID')}: {ticket.id}</p>
                 </div>
               </div>
             ))}
@@ -558,7 +556,7 @@ const TicketListPage = ({ userId }) => {
         {!loading && !error && !movieTitlesLoading && filteredTickets.length > 0 && (
           <div className={`${styles['ticket-summary']}`}>
             <p>
-              Hiển thị {filteredTickets.length} vé 
+              {t('Displaying')} {filteredTickets.length} {t('tickets')} 
               {searchQuery && ` cho "${searchQuery}"`}
               {statusFilter !== 'all' && ` - Trạng thái: ${getStatusBadge(statusFilter).text}`}
             </p>
@@ -570,7 +568,7 @@ const TicketListPage = ({ userId }) => {
           <div className={`${styles['modal-overlay']}`}>
             <div className={`${styles['modal-content']}`}>
               <div className={`${styles['modal-header']}`}>
-                <h3>Hủy vé</h3>
+                <h3>{t('Cancel ticket')}</h3>
                 <button
                   className={`${styles['close-btn']}`}
                   onClick={() => {
@@ -584,14 +582,14 @@ const TicketListPage = ({ userId }) => {
               </div>
               <div className={`${styles['modal-body']}`}>
                 <div className={`${styles['ticket-info']}`}>
-                  <p><strong>Phim:</strong> {selectedTicket.movieTitle || 'N/A'}</p>
-                  <p><strong>Rạp:</strong> {selectedTicket.cinemaName || 'N/A'}</p>
-                  <p><strong>Ngày:</strong> {formatDate(selectedTicket.showDate)}</p>
-                  <p><strong>Giờ:</strong> {formatTime(selectedTicket.showTime)}</p>
-                  <p><strong>Ghế:</strong> {selectedTicket.seatNumber || 'N/A'}</p>
+                  <p><strong>{t('Movie')}:</strong> {selectedTicket.movieTitle || 'N/A'}</p>
+                  <p><strong>{t('Cinema')}:</strong> {selectedTicket.cinemaName || 'N/A'}</p>
+                  <p><strong>{t('Date')}:</strong> {formatDate(selectedTicket.showDate)}</p>
+                  <p><strong>{t('Time')}:</strong> {formatTime(selectedTicket.showTime)}</p>
+                  <p><strong>{t('Seat')}:</strong> {selectedTicket.seatNumber || 'N/A'}</p>
                 </div>
                 <div className={`${styles['form-group']}`}>
-                  <label htmlFor="cancelReason">Lý do hủy vé (tùy chọn):</label>
+                  <label htmlFor="cancelReason">{t('Reason for canceling the ticket (optional)')}:</label>
                   <textarea
                     id="cancelReason"
                     value={cancelReason}
@@ -609,14 +607,14 @@ const TicketListPage = ({ userId }) => {
                     }}
                     className={`${styles['btn-secondary']}`}
                   >
-                    Hủy
+                    {t('Cancel')}
                   </button>
                   <button
                     onClick={confirmCancelTicket}
                     className={`${styles['btn-danger']}`}
                     disabled={actionLoading[selectedTicket.id]}
                   >
-                    {actionLoading[selectedTicket.id] ? 'Đang hủy...' : 'Xác nhận hủy'}
+                    {actionLoading[selectedTicket.id] ? t('Processing...') : t('Confirm cancel')}
                   </button>
                 </div>
               </div>
@@ -629,7 +627,7 @@ const TicketListPage = ({ userId }) => {
           <div className={`${styles['modal-overlay']}`}>
             <div className={`${styles['modal-content']}`}>
               <div className={`${styles['modal-header']}`}>
-                <h3>Hoàn tiền vé</h3>
+                <h3>{t('Refund ticket')}</h3>
                 <button
                   className={`${styles['close-btn']}`}
                   onClick={() => {
@@ -644,15 +642,15 @@ const TicketListPage = ({ userId }) => {
               </div>
               <div className={`${styles['modal-body']}`}>
                 <div className={`${styles['ticket-info']}`}>
-                  <p><strong>Phim:</strong> {selectedTicket.movieTitle || 'N/A'}</p>
-                  <p><strong>Rạp:</strong> {selectedTicket.cinemaName || 'N/A'}</p>
-                  <p><strong>Ngày:</strong> {formatDate(selectedTicket.showDate)}</p>
-                  <p><strong>Giờ:</strong> {formatTime(selectedTicket.showTime)}</p>
-                  <p><strong>Ghế:</strong> {selectedTicket.seatNumber || 'N/A'}</p>
-                  <p><strong>Giá vé:</strong> {formatPrice(selectedTicket.price)}</p>
+                  <p><strong>{t('Movie')}:</strong> {selectedTicket.movieTitle || 'N/A'}</p>
+                  <p><strong>{t('Cinema')}:</strong> {selectedTicket.cinemaName || 'N/A'}</p>
+                  <p><strong>{t('Date')}:</strong> {formatDate(selectedTicket.showDate)}</p>
+                  <p><strong>{t('Time')}:</strong> {formatTime(selectedTicket.showTime)}</p>
+                  <p><strong>{t('Seat')}:</strong> {selectedTicket.seatNumber || 'N/A'}</p>
+                  <p><strong>{t('Price')}:</strong> {formatPrice(selectedTicket.price)}</p>
                 </div>
                 <div className={`${styles['form-group']}`}>
-                  <label htmlFor="refundAmount">Số tiền hoàn (VND):</label>
+                  <label htmlFor="refundAmount">{t('Refund amount (VND)')}:</label>
                   <input
                     type="number"
                     id="refundAmount"
@@ -664,7 +662,7 @@ const TicketListPage = ({ userId }) => {
                   />
                 </div>
                 <div className={`${styles['form-group']}`}>
-                  <label htmlFor="refundReason">Lý do hoàn tiền:</label>
+                  <label htmlFor="refundReason">{t('Refund reason')}:</label>
                   <textarea
                     id="refundReason"
                     value={refundReason}
@@ -684,14 +682,14 @@ const TicketListPage = ({ userId }) => {
                     }}
                     className={`${styles['btn-secondary']}`} 
                   >
-                    Hủy
+                    {t('Cancel')}
                   </button>
                   <button
                     onClick={confirmRefundTicket}
                     className={`${styles['btn-primary']}`}
                     disabled={actionLoading[selectedTicket.id]}
                   >
-                    {actionLoading[selectedTicket.id] ? 'Đang xử lý...' : 'Xác nhận hoàn tiền'}
+                    {actionLoading[selectedTicket.id] ? t('Processing...') : t('Confirm refund')}
                   </button>
                 </div>
               </div>

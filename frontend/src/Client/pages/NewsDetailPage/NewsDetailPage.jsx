@@ -88,7 +88,6 @@ const NewsDetailPage = () => {
           <h3>{t('Article not found')}</h3>
           <p>{error || t('Article does not exist or has been deleted')}</p>
           <button onClick={() => navigate('/news')}>
-            <ArrowLeft size={16} />
             {t('Back to news')}
           </button>
         </div>
@@ -105,7 +104,6 @@ const NewsDetailPage = () => {
             className={`${styles['cnewsd-back-button']}`}
             onClick={() => navigate('/news')}
           >
-            <ArrowLeft size={20} />
             {t('Back to news')}
           </button>
         </div>
@@ -115,7 +113,6 @@ const NewsDetailPage = () => {
           <div className={`${styles['cnewsd-article-meta']}`}>
             <div className={`${styles['cnewsd-article-category']}`}>{article.category}</div>
             <div className={`${styles['cnewsd-article-date']}`}>
-              <Calendar size={16} />
               {formatDate(article.publishDate)}
             </div>
             <div className={`${styles['cnewsd-article-views']}`}>

@@ -289,7 +289,7 @@ const ShowtimeSchedule = ({ movieId, movieTitle }) => {
                           <div className={styles.cinemaShowtimesDetail}>
                             {(() => {
                               const cinemaShowtimes = showtimes.filter(st => st.cinemaId === cinema.id && st.movieId === movieId && (st.startTime ? new Date(st.startTime).toISOString().split('T')[0] === selectedDate : false));
-                              if (cinemaShowtimes.length === 0) return <div className={styles.noShowtimesSmall}>Không có lịch chiếu cho ngày này</div>;
+                              if (cinemaShowtimes.length === 0) return <div className={styles.noShowtimesSmall}>{t('Không có lịch chiếu cho ngày này')}</div>;
                               const byFormat = cinemaShowtimes.reduce((acc, st) => {
                                 const fmt = st.format || '2D';
                                 if (!acc[fmt]) acc[fmt] = [];

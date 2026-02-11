@@ -80,7 +80,6 @@ const NewsDetailModal = ({ news, onClose, onEdit }) => {
               style={{ display: news.imageUrl ? 'none' : 'flex' }}
             >
               <div className={`${styles['no-image-content']}`}>
-                <div className={`${styles['no-image-icon']}`}>📰</div>
                 <p>Không có hình ảnh</p>
               </div>
             </div>

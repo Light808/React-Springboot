@@ -201,7 +201,6 @@ const MovieCard = ({ movie, cinemaId, selectedDate }) => {
           <Link to={`/movie/${movie.id}?tab=info`} className="btn-trailer">Trailer</Link>
         </div>
 
-        {/* Showtimes hidden on homepage; still visible on cinema page via props */}
         {cinemaId ? (
           <div className="showtimes-section">
             {loading ? (

@@ -97,7 +97,7 @@ const MovieDetailPage = () => {
         comment: review.comment,
         likes: review.likes || 0,
         dislikes: review.dislikes || 0,
-        avatar: getCachedAvatar(review.userName)
+        avatar: review.userAvatar || getCachedAvatar(review.userName)
       }));
       
       setCommunityReviews(transformedReviews);
@@ -254,7 +254,7 @@ const MovieDetailPage = () => {
 
   const getDuration = (movie) => {
     const duration = movie.duration || movie.runtime || movie.length;
-    return duration ? `${duration} phút` : t('Không có thông tin');
+    return duration ? `${duration} ${t('minutes')}` : t('Không có thông tin');
   };
 
   const getReleaseDate = (movie) => {
@@ -310,7 +310,6 @@ const MovieDetailPage = () => {
       if (typeof window !== 'undefined' && movieId) {
         localStorage.setItem(`liked_movie_${movieId}`, 'true');
       }
-      // Nếu có API, gọi API like ở đây
     } else {
       setLiked(false);
       if (typeof window !== 'undefined' && movieId) {
@@ -318,13 +317,12 @@ const MovieDetailPage = () => {
       }
     }
   };
-  // Xử lý nút Đánh giá
+  // Solve button rate movie
   const handleRateMovie = () => {
-    // Chuyển sang tab reviews và cuộn đến phần đánh giá
     setActiveTab('reviews');
     setPendingScroll('reviews');
   };
-  // Xử lý nút Mua vé
+  // Solve button buy ticket
   const handleBuyTicket = () => {
     setActiveTab('booking');
     setPendingScroll('booking');
@@ -582,10 +580,11 @@ const MovieDetailPage = () => {
                                 title={review.userId ? t('Click to view profile') : ''}
                               >
                                 <img 
-                                  src={review.avatar} 
+                                  src={review.avatar || getCachedAvatar(review.userName)} 
                                   alt={review.userName}
                                   onError={(e) => {
-                                    e.target.src = '/default-avatar.jpg';
+                                    const fallback = getCachedAvatar(review.userName) || '/default-avatar.jpg';
+                                    if (e.target.src !== fallback) e.target.src = fallback;
                                   }}
                                 />
                               </div>
@@ -711,10 +710,11 @@ const MovieDetailPage = () => {
                               title={review.userId ? t('Click to view profile') : ''}
                             >
                               <img 
-                                src={review.avatar} 
+                                src={review.avatar || getCachedAvatar(review.userName)} 
                                 alt={review.userName}
                                 onError={(e) => {
-                                  e.target.src = '/default-avatar.jpg';
+                                  const fallback = getCachedAvatar(review.userName) || '/default-avatar.jpg';
+                                  if (e.target.src !== fallback) e.target.src = fallback;
                                 }}
                               />
                             </div>

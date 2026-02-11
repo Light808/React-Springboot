@@ -6,6 +6,8 @@ import { bookTicket } from '../../../services/ticketService';
 import { getAllCombos } from '../../../services/comboService';
 import { createNotification, createBookingSuccessNotification } from '../../../services/notificationService';
 import { createPaymentOrder } from '../../../services/paymentService';
+import { validatePromoCode, getUnusedDiscountCards, markDiscountCardUsed } from '../../../services/rewardService';
+import { getCurrentUserSync } from '../../../services/userService';
 import './ComboSelectionPage.css';
 import { useTranslation } from 'react-i18next';
 
@@ -26,6 +28,11 @@ const ComboSelectionPage = () => {
   const [combos, setCombos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [promoCodeInput, setPromoCodeInput] = useState('');
+  const [appliedPromo, setAppliedPromo] = useState(null);
+  const [promoCodeError, setPromoCodeError] = useState('');
+  const [selectedDiscountCard, setSelectedDiscountCard] = useState(null);
+  const [discountCards, setDiscountCards] = useState([]);
 
   // Load data from location state or URL params
   useEffect(() => {
@@ -33,7 +40,7 @@ const ComboSelectionPage = () => {
       setShowtime(location.state.showtime);
       setMovie(location.state.movie);
       setSelectedSeats(location.state.selectedSeats || []);
-      setUser(location.state.user);
+      setUser(location.state.user || getCurrentUserSync());
     } else {
       try {
         const showtimeParam = searchParams.get('showtime');
@@ -45,6 +52,7 @@ const ComboSelectionPage = () => {
         if (movieParam) setMovie(JSON.parse(decodeURIComponent(movieParam)));
         if (seatsParam) setSelectedSeats(JSON.parse(decodeURIComponent(seatsParam)));
         if (userParam) setUser(JSON.parse(decodeURIComponent(userParam)));
+        if (!userParam) setUser(getCurrentUserSync());
       } catch (error) {
         console.error('Error parsing URL params:', error);
       }
@@ -70,6 +78,15 @@ const ComboSelectionPage = () => {
 
     fetchCombos();
   }, []);
+
+  useEffect(() => {
+    if (user?.id) {
+      setDiscountCards(getUnusedDiscountCards(user.id));
+    } else {
+      setDiscountCards([]);
+      setSelectedDiscountCard(null);
+    }
+  }, [user?.id]);
 
 
   const handleComboQuantityChange = (comboId, change) => {
@@ -125,8 +142,68 @@ const ComboSelectionPage = () => {
     }, 0);
   };
 
-  const getTotalPrice = () => {
+  const getSubtotal = () => {
     return getTicketPrice() + getTotalComboPrice();
+  };
+
+  const getDiscountAmount = () => {
+    const subtotal = getSubtotal();
+    let discount = 0;
+    if (appliedPromo) {
+      if (appliedPromo.discountPercent) {
+        discount += Math.floor(subtotal * appliedPromo.discountPercent / 100);
+      }
+      if (appliedPromo.discountFixed) {
+        discount += Math.min(appliedPromo.discountFixed, subtotal - discount);
+      }
+    }
+    if (selectedDiscountCard) {
+      const r = selectedDiscountCard.rewardId;
+      if (r === 'voucher_10') discount += Math.floor(getTicketPrice() * 0.1);
+      if (r === 'voucher_20') discount += Math.floor(getTicketPrice() * 0.2);
+      if (r === 'free_ticket') discount += getTicketPrice();
+      if (r === 'free_popcorn' || r === 'free_drink') {
+        const comboPrice = getTotalComboPrice();
+        discount += Math.min(50000, comboPrice);
+      }
+    }
+    return Math.min(discount, subtotal);
+  };
+
+  const getTotalPrice = () => {
+    return Math.max(0, getSubtotal() - getDiscountAmount());
+  };
+
+  const handleApplyPromoCode = () => {
+    setPromoCodeError('');
+    if (!promoCodeInput.trim()) {
+      setPromoCodeError(t('PleaseEnterPromoCode'));
+      return;
+    }
+    const promo = validatePromoCode(promoCodeInput);
+    if (promo) {
+      setAppliedPromo(promo);
+      setPromoCodeError('');
+    } else {
+      setAppliedPromo(null);
+      setPromoCodeError(t('InvalidPromoCode'));
+    }
+  };
+
+  const handleRemovePromoCode = () => {
+    setAppliedPromo(null);
+    setPromoCodeInput('');
+    setPromoCodeError('');
+  };
+
+  const handleSelectDiscountCard = (e) => {
+    const cardId = e.target.value;
+    if (!cardId) {
+      setSelectedDiscountCard(null);
+      return;
+    }
+    const card = discountCards.find(c => c.id === cardId);
+    setSelectedDiscountCard(card || null);
   };
 
   const formatPrice = (price) => {
@@ -205,6 +282,7 @@ const ComboSelectionPage = () => {
       const seatIds = selectedSeats?.map(seat => seat.id).join(', ') || '';
       const totalPrice = getTotalPrice();
       const comboPrice = getTotalComboPrice();
+      const discountAmount = getDiscountAmount();
 
       let showDate, showTime;
       
@@ -257,8 +335,15 @@ const ComboSelectionPage = () => {
       const summary = {
         ticketPrice: getTicketPrice(),
         comboPrice,
+        discountAmount,
+        appliedPromo: appliedPromo ? { code: appliedPromo.code, discountPercent: appliedPromo.discountPercent, discountFixed: appliedPromo.discountFixed } : null,
+        discountCard: selectedDiscountCard || null,
         totalPrice: totalPrice
       };
+
+      if (selectedDiscountCard && user?.id) {
+        markDiscountCardUsed(user.id, selectedDiscountCard.id);
+      }
 
       // Handle different payment methods
       if (selectedPaymentMethod === 'vietqr') {
@@ -442,6 +527,51 @@ const ComboSelectionPage = () => {
               })}
             </div>
           )}
+
+          <div className="summary-section discount-section">
+            <h3>{t('PromoCodeAndDiscount')}</h3>
+            <div className="promo-code-row">
+              <input
+                type="text"
+                className="promo-input"
+                placeholder={t('EnterPromoCode')}
+                value={promoCodeInput}
+                onChange={(e) => setPromoCodeInput(e.target.value)}
+                disabled={!!appliedPromo}
+              />
+              {appliedPromo ? (
+                <button type="button" className="promo-btn promo-btn-remove" onClick={handleRemovePromoCode}>
+                  {t('Remove')}
+                </button>
+              ) : (
+                <button type="button" className="promo-btn" onClick={handleApplyPromoCode}>
+                  {t('Apply')}
+                </button>
+              )}
+            </div>
+            {promoCodeError && <span className="promo-error">{promoCodeError}</span>}
+            {user?.id && discountCards.length > 0 && (
+              <div className="discount-card-row">
+                <label className="discount-card-label">{t('DiscountCardFromCheckin')}</label>
+                <select
+                  className="discount-card-select"
+                  value={selectedDiscountCard?.id || ''}
+                  onChange={handleSelectDiscountCard}
+                >
+                  <option value="">{t('SelectDiscountCard')}</option>
+                  {discountCards.map((card) => (
+                    <option key={card.id} value={card.id}>{card.label}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+            {getDiscountAmount() > 0 && (
+              <div className="summary-item discount-item">
+                <span>{t('Discount')}:</span>
+                <span className="discount-value">-{formatPrice(getDiscountAmount())}</span>
+              </div>
+            )}
+          </div>
 
           <div className="summary-section total">
             <div className="summary-item">

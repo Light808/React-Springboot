@@ -54,6 +54,7 @@ const ReviewForm = ({ movieId, onReviewAdded }) => {
         movieId: movieId,
         userId: currentUser.id || currentUser.username,
         userName: userName,
+        userAvatar: currentUser.avatarUrl || currentUser.avatar || null,
         rating: rating,
         comment: comment.trim(),
         likes: 0,

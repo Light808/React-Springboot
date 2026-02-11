@@ -5,8 +5,78 @@ const STORAGE_KEYS = {
   STREAK: (userId) => `reward_spin_streak_${userId}`,
   CHECKIN_DATE: (userId) => `reward_checkin_date_${userId}`,
   COINS: (userId) => `reward_coins_${userId}`,
-  REDEEM_HISTORY: (userId) => `reward_redeem_history_${userId}`
+  REDEEM_HISTORY: (userId) => `reward_redeem_history_${userId}`,
+  DISCOUNT_CARDS: (userId) => `reward_discount_cards_${userId}`
 };
+
+// Promo codes: { code, discountPercent, discountFixed }
+export const PROMO_CODES = [
+  { code: 'CGV10', discountPercent: 10 },
+  { code: 'CGV20', discountPercent: 20 },
+  { code: 'CGV50K', discountFixed: 50000 }
+];
+
+export function validatePromoCode(code) {
+  if (!code || typeof code !== 'string') return null;
+  const normalized = code.trim().toUpperCase();
+  return PROMO_CODES.find(p => p.code === normalized) || null;
+}
+
+export function getUnusedDiscountCards(userId) {
+  if (!userId) return [];
+  try {
+    const raw = localStorage.getItem(STORAGE_KEYS.DISCOUNT_CARDS(userId));
+    const cards = raw ? JSON.parse(raw) : [];
+    return cards.filter(c => !c.used);
+  } catch {
+    return [];
+  }
+}
+
+function getDiscountCardsRaw(userId) {
+  if (!userId) return [];
+  try {
+    const raw = localStorage.getItem(STORAGE_KEYS.DISCOUNT_CARDS(userId));
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function setDiscountCards(userId, cards) {
+  if (!userId) return;
+  try {
+    localStorage.setItem(STORAGE_KEYS.DISCOUNT_CARDS(userId), JSON.stringify(cards));
+  } catch {}
+}
+
+export function addToDiscountCards(userId, reward) {
+  if (!userId || !reward) return [];
+  const voucherIds = ['voucher_10', 'voucher_20', 'free_popcorn', 'free_drink', 'free_ticket'];
+  if (!voucherIds.includes(reward.id)) return getUnusedDiscountCards(userId);
+  const cards = getDiscountCardsRaw(userId);
+  const newCard = {
+    id: `card_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+    rewardId: reward.id,
+    label: reward.label,
+    used: false,
+    redeemedAt: new Date().toISOString()
+  };
+  cards.push(newCard);
+  setDiscountCards(userId, cards);
+  return getUnusedDiscountCards(userId);
+}
+
+export function markDiscountCardUsed(userId, cardId) {
+  if (!userId || !cardId) return false;
+  const cards = getDiscountCardsRaw(userId);
+  const idx = cards.findIndex(c => c.id === cardId);
+  if (idx < 0) return false;
+  cards[idx].used = true;
+  cards[idx].usedAt = new Date().toISOString();
+  setDiscountCards(userId, cards);
+  return true;
+}
 
 function getTodayISODate() {
   const now = new Date();
@@ -195,6 +265,7 @@ export function redeemReward(userId, rewardId) {
 
   setCoins(userId, balance - reward.coinCost);
   addRedeemHistory(userId, reward);
+  addToDiscountCards(userId, reward);
   return { ok: true, reward, coins: getCoins(userId) };
 }
 

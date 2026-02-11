@@ -34,7 +34,7 @@ const MovieManagement = () => {
       setMovies(moviesData);
     } catch (error) {
       console.error('Error fetching movies:', error);
-      showError('Không thể tải danh sách phim');
+      showError('Cannot fetch movie list');
     } finally {
       setLoading(false);
     }
@@ -84,15 +84,15 @@ const MovieManagement = () => {
           }));
         } catch (showtimeError) {
           console.error('Error creating showtimes:', showtimeError);
-          showError('Phim đã được tạo nhưng có lỗi khi tạo suất chiếu');
+          showError('Movie created successfully but error creating showtimes');
         }
       }
       
       setShowCreateModal(false);
-      showSuccess('Thêm phim thành công!');
+      showSuccess(t('Movie created successfully!'));
     } catch (error) {
       console.error('Error creating movie:', error);
-      showError('Không thể thêm phim. Vui lòng thử lại.');
+      showError(t('Cannot add movie. Please try again.'));
     }
   };
 
@@ -129,16 +129,16 @@ const MovieManagement = () => {
           }));
         } catch (showtimeError) {
           console.error('Error updating showtimes:', showtimeError);
-          showError('Phim đã được cập nhật nhưng có lỗi khi cập nhật suất chiếu');
+          showError(t('Movie updated successfully but error updating showtimes'));
         }
       }
       
       setShowEditModal(false);
       setSelectedMovie(null);
-      showSuccess('Cập nhật phim thành công!');
+      showSuccess(t('Movie updated successfully!'));
     } catch (error) {
       console.error('Error updating movie:', error);
-      showError('Không thể cập nhật phim. Vui lòng thử lại.');
+      showError(t('Cannot update movie. Please try again.'));
     }
   };
 
@@ -147,10 +147,10 @@ const MovieManagement = () => {
       try {
         await deleteMovie(movieId);
         setMovies(prev => prev.filter(movie => movie.id !== movieId));
-        showSuccess('Xóa phim thành công!');
+        showSuccess('Delete movie successfully!');
       } catch (error) {
         console.error('Error deleting movie:', error);
-        showError('Không thể xóa phim. Vui lòng thử lại.');
+        showError(t('Cannot delete movie. Please try again.'));
       }
     }
   };
@@ -184,7 +184,7 @@ const MovieManagement = () => {
   };
 
   const formatDate = (dateString) => {
-    if (!dateString) return 'Chưa cập nhật';
+    if (!dateString) return t('Not updated');
     try {
       const date = new Date(dateString);
       return date.toLocaleDateString('vi-VN', {
@@ -193,19 +193,19 @@ const MovieManagement = () => {
         day: '2-digit'
       });
     } catch (error) {
-      return 'Chưa cập nhật';
+      return t('Not updated');
     }
   };
 
   const formatDuration = (minutes) => {
-    if (!minutes) return 'Chưa cập nhật';
+    if (!minutes) return t('Not updated');
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
     return hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
   };
 
   const formatAgeRating = (ageRating) => {
-    if (!ageRating) return 'Chưa cập nhật';
+    if (!ageRating) return t('Not updated');
     const ratings = {
       'P': 'P',
       'T13': 'T13',
@@ -219,7 +219,7 @@ const MovieManagement = () => {
     return (
       <div className={styles.loadingContainer}>
         <div className={styles.loadingSpinner}></div>
-        <p>Đang tải danh sách phim...</p>
+        <p>{t('Loading movie list...')}</p>
       </div>
     );
   }
@@ -245,7 +245,7 @@ const MovieManagement = () => {
           <Search size={22} />
           <input
             type="text"
-            placeholder="Tìm kiếm phim theo tên, thể loại, đạo diễn..."
+            placeholder={t('Search movie by name, genre, director...')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className={styles.searchInput}
@@ -254,7 +254,7 @@ const MovieManagement = () => {
         <button 
           className={styles.refreshButton}
           onClick={fetchMovies}
-          title="Làm mới danh sách"
+          title={t('Refresh movie list')}
         >
           <RefreshCw size={20} />
         </button>
@@ -291,35 +291,35 @@ const MovieManagement = () => {
                   <button
                     className={`${styles.actionBtn} ${styles.viewBtn}`}
                     onClick={() => handleViewMovie(movie)}
-                    title="Xem chi tiết"
+                    title={t('View details')}
                   >
                     <Eye size={20} />
                   </button>
                   <button
                     className={`${styles.actionBtn} ${styles.editBtn}`}
                     onClick={() => handleEditMovie(movie)}
-                    title="Chỉnh sửa"
+                    title={t('Edit')}
                   >
                     <Edit size={20} />
                   </button>
                   <button
                     className={`${styles.actionBtn} ${styles.cinemasBtn}`}
                     onClick={() => handleManageCinemas(movie)}
-                    title="Quản lý rạp"
+                    title={t('Manage cinemas')}
                   >
                     <Building2 size={20} />
                   </button>
                   <button
                     className={`${styles.actionBtn} ${styles.articlesBtn}`}
                     onClick={() => handleManageArticles(movie)}
-                    title="Quản lý bài viết"
+                    title={t('Manage articles')}
                   >
                     <FileText size={20} />
                   </button>
                   <button
                     className={`${styles.actionBtn} ${styles.deleteBtn}`}
                     onClick={() => handleDeleteMovie(movie.id)}
-                    title="Xóa phim"
+                    title={t('Delete movie')}
                   >
                     <Trash2 size={20} />
                   </button>
@@ -327,7 +327,7 @@ const MovieManagement = () => {
               </div>
 
               <div className={styles.movieInfo}>
-                <h3 className={styles.movieTitle}>{movie.title || 'Chưa có tên'}</h3>
+                <h3 className={styles.movieTitle}>{movie.title || t('Do not get movie name')}</h3>
                 {movie.englishTitle && (
                   <h4 className={styles.englishTitle}>{movie.englishTitle}</h4>
                 )}
@@ -353,10 +353,10 @@ const MovieManagement = () => {
 
                 <div className={styles.movieDetails}>
                   <p className={styles.genre}>
-                    <strong>Thể loại:</strong> {movie.genre || 'Chưa cập nhật'}
+                    <strong>{t('Genre')}:</strong> {movie.genre || t('Not updated')}
                   </p>
                   <p className={styles.director}>
-                    <strong>Đạo diễn:</strong> {movie.director || 'Chưa cập nhật'}
+                    <strong>{t('Director')}:</strong> {movie.director || t('Not updated')}
                   </p>
                   <p className={styles.description}>
                     {movie.description ? 
@@ -364,7 +364,7 @@ const MovieManagement = () => {
                         `${movie.description.substring(0, 100)}...` : 
                         movie.description
                       ) : 
-                      'Chưa có mô tả'
+                      t('Do not have description')
                     }
                   </p>
                 </div>
@@ -375,14 +375,14 @@ const MovieManagement = () => {
       ) : (
         <div className={styles.emptyState}>
           <Film size={64} />
-          <h3>Không có phim nào</h3>
-          <p>Hãy thêm phim đầu tiên của bạn</p>
+          <h3>{t('NoMoviesToDisplay')}</h3>
+          <p>{t('Please add your first movie.')}</p>
           <button 
             className={styles.createButton}
             onClick={() => setShowCreateModal(true)}
           >
             <Plus size={20} />
-            Thêm phim mới
+            {t('Addnewfilm')}
           </button>
         </div>
       )}

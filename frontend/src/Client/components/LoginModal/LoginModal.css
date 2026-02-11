@@ -422,6 +422,19 @@
   padding: 0 2rem 1rem 2rem;
 }
 
+/* Ensure Google and Facebook buttons have equal size */
+#google-signin-button {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 0.75rem;
+}
+
+#google-signin-button > div,
+#google-signin-button iframe {
+  width: 100% !important;
+  min-height: 48px !important;
+}
+
 .divider {
   position: relative;
   text-align: center;
@@ -448,8 +461,10 @@
   z-index: 1;
 }
 
-.google-login-btn {
+.google-login-btn,
+.facebook-login-btn {
   width: 100%;
+  min-height: 48px;
   padding: 0.875rem 1rem;
   background: white;
   color: #374151;
@@ -465,6 +480,7 @@
   gap: 0.75rem;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   margin-top: 0.75rem;
+  box-sizing: border-box;
 }
 
 .google-login-btn:hover:not(:disabled) {
@@ -506,25 +522,7 @@
   }
 }
 
-/* Facebook Login Styles */
-.facebook-login-btn {
-  width: 100%;
-  padding: 0.875rem 1rem;
-  background: white;
-  color: #374151;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  margin-top: 0.75rem;
-}
+/* Facebook Login Styles - shared with .google-login-btn above */
 
 .facebook-login-btn:hover:not(:disabled) {
   background: #f9fafb;

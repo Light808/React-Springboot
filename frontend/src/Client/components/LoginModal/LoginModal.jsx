@@ -515,9 +515,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
         }
       }
     };
-    
-    // Don't check on every username change, only after successful login
-  }, [formData.username, isRegister, isAdmin]);
+      }, [formData.username, isRegister, isAdmin]);
 
   if (!isOpen) return null;
 
@@ -774,7 +772,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
               <span className="divider-text">{t('Or')}</span>
             </div>
             {googleButtonRendered && window.google && window.google.accounts ? (
-              <div id="google-signin-button" style={{ width: '100%', display: 'flex', justifyContent: 'center' }}></div>
+              <div id="google-signin-button" style={{ width: '100%' }}></div>
             ) : (
               <button
                 type="button"

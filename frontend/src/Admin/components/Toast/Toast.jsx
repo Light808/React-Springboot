@@ -6,7 +6,6 @@ const Toast = ({ message, type = 'success', duration = 3000, onClose }) => {
   const [isVisible, setIsVisible] = useState(true);
   const [progress, setProgress] = useState(100);
   const [isPaused, setIsPaused] = useState(false);
-  const progressRef = useRef(null);
   const startTimeRef = useRef(Date.now());
   const pausedTimeRef = useRef(0);
 
